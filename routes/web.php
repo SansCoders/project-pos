@@ -30,6 +30,8 @@ Route::post('/login/cashier', 'Auth\LoginController@cashierLogin');
 Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin', 'AdminController@index')->name('admin.home');
     Route::get('/admin/users-sales', 'AdminController@UsersSales')->name('admin.users-sales');
+    Route::post('/admin/users-sales', 'AdminController@storeUserSales')->name('admin.users-sales.store');
+
     Route::get('/admin/users-cashier', 'AdminController@UsersCashier')->name('admin.users-cashier');
 
     Route::get('/admin/products', 'ProductController@getAllProducts')->name('admin.products');

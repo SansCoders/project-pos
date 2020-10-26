@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -17,10 +18,17 @@ class AdminController extends Controller
 
     public function UsersSales()
     {
-        return view('admin.users-sales');
+        $sales = User::all();
+        return view('admin.users-sales', compact('sales'));
     }
+
     public function UsersCashier()
     {
         return view('admin.users-cashier');
+    }
+
+    public function storeUserSales(Request $request)
+    {
+        dd($request);
     }
 }

@@ -6,7 +6,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
           <!-- Navbar links -->
-          <ul class="navbar-nav align-items-center  ml-md-auto ">
+          <ul class="navbar-nav align-items-center ml-auto ml-md-auto ">
             <li class="nav-item d-xl-none">
               <!-- Sidenav toggler -->
               <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
@@ -179,7 +179,7 @@
               </div>
             </li>
           </ul>
-          <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+          <ul class="navbar-nav align-items-center ml-1 ml-md-0 ">
             <li class="nav-item dropdown">
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="media align-items-center">
@@ -227,8 +227,8 @@
     </nav>
     @yield('header-content')
     <!-- Page content -->
-    <div class="container-fluid">
-      @yield('content')
+    {{-- <div class="container-fluid"> --}}
+    @yield('content')
       @yield('footer')
       <!-- Footer -->
       {{-- <footer class="footer pt-0">
@@ -256,6 +256,6 @@
           </div>
         </div>
       </footer> --}}
-    </div>
+    {{-- </div> --}}
   </div>
 @endsection
