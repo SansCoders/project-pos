@@ -31,6 +31,11 @@
                                 </tr>
                             </thead>
                             <tbody> 
+                                @if($categories->isEmpty())
+                                <tr>
+                                    <td colspan="4" class="text-muted text-center">no record</td>
+                                </tr>
+                                @endif
                                 @foreach ($categories as $index => $category)
                                 <tr>
                                     <td>{{ $categories->firstitem() + $index }}</td>

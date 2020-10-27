@@ -20,12 +20,12 @@
                         </thead>
                         <tbody>
                             @foreach ($sales as $index => $user)
-                            <tr>
+                            <tr class="data-row">
                             <td>{{ $sales->firstitem() + $index }}</td>
                             <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
                                 <td class="table-actions">
                                     <span data-toggle="modal" data-target="#editUser">
-                                        <a href="#!" class="table-action text-light ec" data-toggle="tooltip" data-original-title="Edit Pengguna">
+                                        <a href="#!" class="table-action text-light ec" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
                                                 <i class="fas fa-user-edit"></i>
                                         </a>
                                     </span>
@@ -75,4 +75,39 @@
           </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editUserLabel">Edit Sales</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                  <form method="POST" action="#">
+                    @csrf
+                    <div class="form-group">
+                        <label class="form-control-label" for="new_name">Nama<span class="text-danger">*</span> </label>
+                        <input id="edit_name" type="text" class="form-control" name="name" value="{{ old('name') }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Update</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $('.ec').on('click',function(){
+            $(this).addClass('edit-user-trigger-clicked');
+            console.log($(this).data('user-id'));
+        });
+    </script>
+@endpush

@@ -80,14 +80,14 @@
                   </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link collapsed" href="#navbar-tables" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
+                <a class="nav-link collapsed {{ set_active('stock.add') }}" href="#navbar-tables" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
                   <i class="ni ni-box-2 text-default"></i>
                   <span class="nav-link-text">Stocks</span>
                 </a>
                 <div class="collapse" id="navbar-tables">
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
-                      <a href="#" class="nav-link "> 
+                      <a href="{{route('stock.add')}}" class="nav-link "> 
                         <span class=""> Stock In </span>
                       </a>
                     </li>
@@ -113,7 +113,7 @@
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
                       <a href="#" class="nav-link "> 
-                        <span class=""> Stock In </span>
+                        <span class=""> summary </span>
                       </a>
                     </li>
                   </ul>

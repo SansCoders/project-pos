@@ -32,26 +32,28 @@
   </div>
   <div class="row">
     @foreach ($products as $product)
-    <div class="col-sm-2 col-md-3 col-xs-2 card m-3 shadow-sm p-0" style="background: rgba(155, 89, 182, 0.3)">
-      <img class="card-img-top" style="align-self: center" src="{{ $product->img }}" alt="gambar {{ $product->nama_product }}">
-      <div class="card-body">
-        <h3 class="text-dark">
-          {{ $product->nama_product }}
-        </h3>
-        <h2 class="priceProduct text-gray">{{ $product->price }}</h2>
-            
-        <h5 class="text-muted">Tersedia :
-        @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
-        @else
-        <span class="text-danger">stok habis</span>
-        @endisset
-        </h5>
-        {{-- <span class="badge badge-info">
-          {{ $product->category->name }}
-        </span> --}}
-        <div class="text-right">
-          <button class="btn btn-icon btn-white btn-sm m-1"><i class="fa fa-eye"></i></button>
-          <button class="btn btn-icon btn-light btn-sm m-1"><i class="fa fa-cog"></i></button>
+    <div class="col-sm-2 col-md-3 col-xs-2 ">
+      <div class="card m-3 shadow-sm p-0" style="background: rgba(155, 89, 182, 0.3)">
+        <img class="card-img-top" style="align-self: center" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
+        <div class="card-body">
+          <h3 class="text-dark">
+            {{ $product->nama_product }}
+          </h3>
+          <h2 class="priceProduct text-gray">{{ $product->price }}</h2>
+              
+          <h5 class="text-muted">Tersedia :
+          @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
+          @else
+          <span class="text-danger">stok habis</span>
+          @endisset
+          </h5>
+          {{-- <span class="badge badge-info">
+            {{ $product->category->name }}
+          </span> --}}
+          <div class="text-right">
+            <button class="btn btn-icon btn-white btn-sm m-1"><i class="fa fa-eye"></i></button>
+            <button class="btn btn-icon btn-light btn-sm m-1"><i class="fa fa-cog"></i></button>
+          </div>
         </div>
       </div>
     </div>
@@ -90,7 +92,7 @@
               </div>
             </div>
             <div class="col-lg-6">
-                <form method="POST" action="{{route('cashier.products.store')}}">
+                <form method="POST" action="{{route('cashier.products.store')}}" enctype="multipart/form-data">
                   @csrf
                   <div class="form-group">
                     <label for="pKode" class="form-control-label">Kode Produk <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
@@ -120,6 +122,9 @@
                         <div class="input-group input-group-merge">
                           <input type="text" class="form-control justnumber" name="pStok" placeholder="0">
                           <select name="pUnit" id="pUnit" class="form-control">
+                            @if ($units->isEmpty())
+                            <option disabled>no record</option>
+                            @endif
                             @foreach ($units as $u)
                               <option value="{{ $u->id }}">{{ $u->unit }}</option>
                             @endforeach
@@ -142,8 +147,6 @@
                       <input type="file" class="custom-file-input" id="imgproduct" name="imgproduct" lang="id" accept="image/*">
                       <label class="custom-file-label" for="imgproduct">Select file</label>
                     </div>
-                    <span class="text-center">or</span>
-                    <input id="imgproductURL" type="text" class="form-control" placeholder="url">
                   </div>
                   <div class="form-group">
                     <label for="pDescription" class="form-control-label">Deskripsi</label>
@@ -208,18 +211,6 @@
       }
     });
   }
-
-  $(function() {
-                $("#load").click(function() {
-                    var new_url = $("#url").val();
-
-                    // Checks that the user typed "http://" or not
-                    if(new_url.substr(0,7)!="http://")
-                        new_url = "http://"+new_url;
-
-                    $("#main_frame").attr("src", new_url);
-                });
-             });
   // $('.justnumber').keyup(function(event) {
   //    // skip for arrow keys
   //     if(event.which >= 37 && event.which <= 40) return;
@@ -246,14 +237,6 @@
 
     $("#imgproduct").change(function() {
       readURL(this);
-    });
-    $(function() {
-    $("#imgproductURL").on('keyup',function() {
-      var new_url = $(this).val();
-      if(new_url.substr(0,7) != "http://")
-                        new_url = "http://"+new_url;
-      $('#preview_img').html('<img src="' +new_url+'" class="img-fluid" />');
-    });
     });
 </script>
 @endpush

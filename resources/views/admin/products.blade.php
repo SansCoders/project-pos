@@ -5,7 +5,9 @@
   <button class="btn btn-success btn-icon btn-sm"  data-toggle="modal" data-target="#addProduct"><i class="fa fa-plus"></i></button>
   @foreach ($products as $product)
       {{ $product->nama_product }}
+      @isset($product->category->name)
       {{ $product->category->name }}
+      @endisset
       <img src="{{ $product->img }}" alt="" />    
   @endforeach
 

@@ -48,4 +48,11 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier', 'CashierController@index')->name('cashier.home');
     Route::get('/cashier/products', 'ProductController@getAllProducts')->name('cashier.products');
     Route::post('/cashier/products', 'ProductController@storeProduct')->name('cashier.products.store');
+
+    Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
+});
+
+Route::group(['middleware' => ['auth:admin,cashier']], function () {
+
+    Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');
 });

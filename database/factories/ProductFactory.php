@@ -12,6 +12,6 @@ $factory->define(Product::class, function (Faker $faker) {
         'nama_product' => $faker->name,
         'description' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid aperiam debitis, perspiciatis, impedit placeat quis, facilis voluptates reprehenderit et in veniam?',
         'price' => rand(10000, 50000),
-        'img' => 'https://freepngimg.com/thumb/food/6-2-food-png-clipart-thumb.png'
+        'img' => 'product-img/default-img-product.png'
     ];
 });

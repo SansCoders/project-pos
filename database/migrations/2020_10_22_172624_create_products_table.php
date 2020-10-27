@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('description');
             $table->integer('price')->default(0);
             $table->string('img');
+            $table->integer('unit_id')->default(0);
             $table->timestamps();
         });
     }
