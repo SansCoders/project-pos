@@ -39,7 +39,7 @@
                                     <td class="table-actions">
                                         <span data-toggle="modal" data-target="#editCategory">
                                             <a href="#!" class="table-action text-light ec" data-toggle="tooltip" data-original-title="Ubah kategori">
-                                                    <i class="fas fa-user-edit"></i>
+                                                    <i class="fas fa-edit"></i>
                                             </a>
                                         </span>
                                         <a href="#!" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus kategori">
