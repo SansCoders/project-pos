@@ -32,7 +32,7 @@
   </div>
   <div class="row">
     @foreach ($products as $product)
-    <div class="col-sm-2 col-md-3 col-xs-2 ">
+    <div class="col-sm-5 col-md-4 col-xs-4 ">
       <div class="card m-3 shadow-sm p-0" style="background: rgba(155, 89, 182, 0.3)">
         <img class="card-img-top" style="align-self: center" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
         <div class="card-body">

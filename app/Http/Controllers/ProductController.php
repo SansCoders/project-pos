@@ -9,6 +9,7 @@ use App\StockActivity;
 use App\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
 use PDO;
 
 class ProductController extends Controller
@@ -47,7 +48,11 @@ class ProductController extends Controller
 
         if ($request->hasFile('imgproduct')) {
 
-            $extension = $request->imgproduct->extension();
+            // $extension = $request->imgproduct->extension();
+            $gambar = $request->file('imgproduct');
+            $new_gambar = time() . $gambar->getClientOriginalName();
+            $lokasi_gambar = public_path('/product-img');
+            $gmbr = Image::make($gambar->path());
         } else {
             $pathimg = 'product-img/default-img-product.png';
         }

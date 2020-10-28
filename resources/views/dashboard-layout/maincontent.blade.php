@@ -8,7 +8,7 @@
           <!-- Navbar links -->
           <ul class="navbar-nav align-items-center ml-auto ml-md-auto ">
             {{-- <li class="nav-item d-xl-none"> --}}
-            @if(!Auth::guard('sales'))
+            @if(!Auth::guard('web')->check())
             <li class="nav-item d-xl-none">
               <!-- Sidenav toggler -->
               <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
