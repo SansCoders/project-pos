@@ -10,6 +10,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    protected $guard = 'sales';
     protected $fillable = [
         'name', 'username', 'password',
     ];

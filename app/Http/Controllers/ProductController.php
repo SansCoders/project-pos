@@ -29,6 +29,11 @@ class ProductController extends Controller
             return view('cashier.products', compact(['products', 'categories', 'units']));
         }
     }
+    public function getAllUnits()
+    {
+        $units = Unit::paginate(10);
+        return view('admin.units', compact('units'));
+    }
     public function storeProduct(Request $request)
     {
         $user = Auth::user();
@@ -81,5 +86,10 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'nope! ');
         }
         // dd($product);
+    }
+
+    public function detailsProduct($id)
+    {
+        return "asdsad";
     }
 }

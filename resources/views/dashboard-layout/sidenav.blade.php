@@ -1,11 +1,24 @@
 @section('sidenav')
+
+@if(Auth::guard('sales'))
+@else
 <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" style="z-index: 1" id="sidenav-main">
     <div class="scrollbar-inner">
-      <div class="sidenav-header  align-items-center">
+      <div class="sidenav-header d-flex  align-items-center">
         <a class="navbar-brand d-flex flex-column" href="javascript:void(0)">
           {{-- <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="..."> --}}
           <i class="ni ni-shop"></i><h2>POS</h2>
         </a>
+        <div class=" ml-auto ">
+          <!-- Sidenav toggler -->
+          <div class="sidenav-toggler d-none d-xl-block active" data-action="sidenav-unpin" data-target="#sidenav-main">
+            <div class="sidenav-toggler-inner">
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="navbar-inner">
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
@@ -125,4 +138,5 @@
       </div>
     </div>
 </nav>  
+@endif
 @endsection

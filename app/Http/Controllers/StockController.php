@@ -13,7 +13,7 @@ class StockController extends Controller
     }
     public function addStock()
     {
-        $products = Product::paginate(10)->sortByDesc("created_at");
+        $products = Product::paginate(10)->sortByDesc("stock");
         return view('cashier.addStock', compact('products'));
     }
 }

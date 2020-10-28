@@ -50,8 +50,6 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
         return $this->sendFailedLoginResponse($request);
     }
-
-
     public function showAdminLoginForm()
     {
         return view('auth.login', ['url' => 'admin']);

@@ -5,6 +5,11 @@
 @endsection
 
 @section('content')
+@if(session()->get('success'))
+<div class="alert alert-success">
+    s
+</div>
+@endif
 <div class="container-fluid mt-3">
     <div class="row">
         <div class="col">
@@ -40,7 +45,16 @@
                                 <tr>
                                     <td>{{ $categories->firstitem() + $index }}</td>
                                     <td>{{ $category->name }}</td>
-                                    <td></td>
+                                    <td>
+                                        @php
+                                            $count = DB::table('products')->where('category_id', $category->id)->count();
+                                            if($count > 0) {
+                                               echo $count; 
+                                            }else {
+                                                echo "0"; 
+                                            }
+                                        @endphp
+                                    </td>
                                     <td class="table-actions">
                                         <span data-toggle="modal" data-target="#editCategory">
                                             <a href="#!" class="table-action text-light ec" data-toggle="tooltip" data-original-title="Ubah kategori">
@@ -106,7 +120,7 @@
             @method('put')
             <input type="hidden" id="idC" name="idC">
             <label for="fcategory">Nama Kategori</label>
-            <input id="fcategory" name="ename" type="text" class="form-control" required>
+            <input id="fcategory" name="name" type="text" class="form-control" required>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Simpan</button>
@@ -127,13 +141,18 @@
             let dataC = $tr.children("td").map(function(){
                 return $(this).text();
             }).get();
+            let id = dataC[0];
             let idC = "route('admin.categorys.update',"+dataC[0]+")";
-            let url = '{{ route('admin.categorys.update', 'dataC[0]') }}';
+            let url = '{{ route('admin.categorys.update', 'id') }}';
             console.log(url);
             $('#feCategory').attr('action',url)
             $('#idC').val(dataC[0]);
             $('#fcategory').val(dataC[1]);
         });
+        function getid(id){
+            var zz = '{{ route('admin.categorys.update', '+id+') }}';
+            return zz;
+        }
     });
 </script>
 

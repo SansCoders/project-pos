@@ -19,6 +19,10 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        'sales' => [
+            'driver' => 'token',
+            'provider' => 'users',
+        ],
         'cashier' => [
             'driver' => 'session',
             'provider' => 'cashiers',

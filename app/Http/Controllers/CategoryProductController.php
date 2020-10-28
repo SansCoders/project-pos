@@ -47,11 +47,12 @@ class CategoryProductController extends Controller
     public function updateCategory(Request $request, $id)
     {
         $request->validate([
-            'ename' => 'required|min:3|max:90|unique:category_products',
+            'name' => 'required|min:3|max:90|unique:category_products',
         ]);
 
         $eCP = CategoryProduct::find($id);
-        $eCP->name = htmlspecialchars($request->ename, ENT_QUOTES);
+        $eCP->name = htmlspecialchars($request->name, ENT_QUOTES);
         $eCP->save();
+        return redirect()->back()->with('success', 'editted');
     }
 }

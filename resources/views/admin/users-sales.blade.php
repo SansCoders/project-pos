@@ -1,6 +1,7 @@
 @extends('dashboard-layout.master')
 @section('content')
     <div class="container-fluid">
+        <h1 class="h3 text-muted">Manajemen Pengguna Sales</h1>
         @if(session()->get('success'))
             <div class="alert alert-success">
                 asd &times;
