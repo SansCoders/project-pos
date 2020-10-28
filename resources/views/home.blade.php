@@ -7,7 +7,7 @@
 <div class="container mt-5 h-100vh">
     <div class="list-group flex-wrap flex-row align-items-center" >
         @foreach ($products as $product)
-        <a href="#" class="nav-link col-lg-4 col-md-6 mb-3">
+        <a href="{{route('details.product',$product->slug)}}" class="nav-link col-lg-4 col-md-6 mb-3">
             <div class="card shadow-none m-0">
                 <div class="card-body d-flex">
                     <img class="card-img mr-3" style="max-width: 50%; min-width:5%" src="{{ $product->img }}" alt="" />  

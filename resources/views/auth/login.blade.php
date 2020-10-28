@@ -55,7 +55,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-key"></i></span>
                   </div>
-                  <input  id="username" class="form-control @error('username') is-invalid @enderror" placeholder="username" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+                  <input id="username" class="form-control @error('username') is-invalid @enderror" placeholder="username" type="text" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
                   @error('username')
                       <span class="invalid-feedback" role="alert">
                           <strong>{{ $message }}</strong>
@@ -68,7 +68,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                   </div>
-                  <input  id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" type="password" name="password" required autocomplete="current-password">
+                  <input id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" type="password" name="password" required autocomplete="current-password">
                     @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

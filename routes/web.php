@@ -53,7 +53,9 @@ Route::group(['middleware' => ['auth:cashier']], function () {
 
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
 });
-
+Route::group(['middleware' => ['auth:web']], function () {
+    Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
+});
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
 
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');

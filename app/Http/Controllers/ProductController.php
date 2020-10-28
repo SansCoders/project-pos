@@ -10,6 +10,7 @@ use App\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Str;
 use PDO;
 
 class ProductController extends Controller
@@ -40,7 +41,7 @@ class ProductController extends Controller
         $user = Auth::user();
         $request->validate([
             // 'pCategory' => 'numeric|required|min:3',
-            'pKode' => 'required|min:3',
+            // 'pKode' => 'required|min:3|exists:App\Product,kodebrg',
             'pNama' => 'required|min:3|max:90',
             'pStok' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014',
@@ -50,20 +51,22 @@ class ProductController extends Controller
 
             // $extension = $request->imgproduct->extension();
             $gambar = $request->file('imgproduct');
-            $new_gambar = time() . $gambar->getClientOriginalName();
+            $new_gambar = $request->pKode . '_' . time() . $gambar->getClientOriginalName();
             $lokasi_gambar = public_path('/product-img');
             $gmbr = Image::make($gambar->path());
+            $gambar->move('product-img/', $new_gambar);
         } else {
-            $pathimg = 'product-img/default-img-product.png';
+            $new_gambar = 'default-img-product.png';
         }
         $product = new Product([
             'category_id' => $request->pCategory,
             'kodebrg' => $request->pKode,
             'nama_product' => $request->pNama,
             'price' => $request->pPrice,
-            'img' => $pathimg,
+            'img' => 'product-img/' . $new_gambar,
             'description' => $request->pDescription,
             'unit_id' => $request->pUnit,
+            'slug' => Str::slug($request->pNama)
         ]);
         $savepoduct = $product->save();
 
@@ -93,8 +96,9 @@ class ProductController extends Controller
         // dd($product);
     }
 
-    public function detailsProduct($id)
+    public function detailsProduct($slug)
     {
-        return "asdsad";
+        $data = Product::where('slug', $slug)->get();
+        dd($data);
     }
 }
