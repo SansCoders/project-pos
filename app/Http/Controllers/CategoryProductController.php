@@ -50,8 +50,8 @@ class CategoryProductController extends Controller
             'name' => 'required|min:3|max:90|unique:category_products',
         ]);
 
-        $eCP = CategoryProduct::find($id);
-        $eCP->name = htmlspecialchars($request->name, ENT_QUOTES);
+        $eCP = CategoryProduct::find($request->get('idC'));
+        $eCP->name = $request->get('name');
         $eCP->save();
         return redirect()->back()->with('success', 'editted');
     }
