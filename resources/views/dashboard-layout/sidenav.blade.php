@@ -1,7 +1,7 @@
 @section('sidenav')
 
-@if(Auth::guard('sales'))
-@else
+{{-- @if(Auth::guard('sales'))
+@else --}}
 <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" style="z-index: 1" id="sidenav-main">
     <div class="scrollbar-inner">
       <div class="sidenav-header d-flex  align-items-center">
@@ -138,5 +138,5 @@
       </div>
     </div>
 </nav>  
-@endif
+{{-- @endif --}}
 @endsection
