@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Cashier;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -37,13 +36,13 @@ class AdminController extends Controller
             'username' => 'required|min:3',
             'password' => 'required|min:6',
         ]);
-        $encpass = Hash::make($request->password, [
-            'rounds' => 12,
-        ]);
+        // $encpass = Hash::make($request->password, [
+        //     'rounds' => 12,
+        // ]);
         $newUser = new User([
             'name' => $request->name,
             'username' => $request->username,
-            'password' => $encpass
+            'password' => bcrypt($request->password)
         ]);
         $newUser->save();
         return redirect()->back()->with('success', "success added user");
@@ -56,13 +55,10 @@ class AdminController extends Controller
             'username' => 'required|min:3',
             'password' => 'required|min:6',
         ]);
-        $encpass = Hash::make($request->password, [
-            'rounds' => 12,
-        ]);
         $newUser = new Cashier([
             'name' => $request->name,
             'username' => $request->username,
-            'password' => $encpass
+            'password' => bcrypt($request->password)
         ]);
         $newUser->save();
         return redirect()->back()->with('success', "success added user");
