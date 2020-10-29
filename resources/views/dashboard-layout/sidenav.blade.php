@@ -22,6 +22,7 @@
       </div>
       <div class="navbar-inner">
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+
             @if(Auth::guard('admin')->check())
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -74,6 +75,15 @@
                       </ul>
                     </div>
                   </li>
+            </ul>
+            <div class="my-3"></div>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link {{ set_active('admin.settings') }}" href="{{ route('admin.settings') }}">
+                  <i class="ni ni-settings-gear-65 text-default"></i>
+                  <span class="nav-link-text">Settings</span>
+                </a>
+              </li>
             </ul>
             @elseif(Auth::guard('cashier')->check())
             <ul class="navbar-nav">
@@ -134,6 +144,7 @@
               </li>
             </ul>
             @endif
+
         </div>
       </div>
     </div>

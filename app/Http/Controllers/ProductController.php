@@ -98,7 +98,8 @@ class ProductController extends Controller
 
     public function detailsProduct($slug)
     {
-        $data = Product::where('slug', $slug)->get();
-        dd($data);
+        // $data = Product::where('slug', $slug)->get();
+        // dd($data);
+        return view('product-overview', ['item_product' => Product::findOrFail($slug)]);
     }
 }

@@ -39,10 +39,13 @@
             </div>
           </div>
           <div class="card-body px-lg-5 py-lg-5">
-          <b class="text-center">
-            Login @isset($url)
-                {{ $url }}
-              @endisset
+            @if($errors->any())
+            <div class="alert alert-danger">{{$errors->first()}}</div>
+            @endif
+            <b class="text-center">
+              Login @isset($url)
+                  {{ $url }}
+                @endisset
             </b>
             @isset($url)
               <form  role="form" method="POST" action='{{ url("login/$url") }}' aria-label="{{ __('Login') }}">

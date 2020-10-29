@@ -9,7 +9,7 @@
         @foreach ($products as $product)
         <a href="{{route('details.product',$product->slug)}}" class="nav-link col-lg-4 col-md-6 mb-3">
             <div class="card shadow-none m-0">
-                <div class="card-body d-flex">
+                <div class="card-body d-flex" style="max-height: 150px">
                     <img class="card-img mr-3" style="max-width: 50%; min-width:5%" src="{{ $product->img }}" alt="" />  
                     <div class="product-info d-flex flex-column">
                         @isset($product->category->name)
@@ -19,10 +19,10 @@
                         @else
                         &nbsp;
                         @endisset
-                        <h3>
+                        <h3 class="h4">
                             {{$product->nama_product}}
                         </h3>
-                        <span class="text-muted h5 mb-0 mt-3">stock : @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
+                        <span class="text-muted h5 mb-0 mt-auto">stock : @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
                             @else
                             <b class="text-danger">habis</b> @endisset
                         </span>
