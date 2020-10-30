@@ -58,6 +58,10 @@ Route::group(['middleware' => ['auth:cashier']], function () {
 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
+    Route::get('/addtocart', function () {
+        return redirect()->back();
+    });
+    Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');

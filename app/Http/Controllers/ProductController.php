@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CategoryProduct;
+use App\Keranjang;
 use App\Product;
 use App\Stock;
 use App\StockActivity;
@@ -22,7 +23,7 @@ class ProductController extends Controller
 
     public function getAllProducts()
     {
-        $products = Product::paginate(10)->sortByDesc("created_at");
+        $products = Product::all()->sortByDesc("created_at");
         $categories = CategoryProduct::get();
         $units = Unit::get();
         if (Auth::guard('admin')->check()) {
@@ -98,11 +99,40 @@ class ProductController extends Controller
 
     public function detailsProduct($slug)
     {
+        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
         $data = Product::where('slug', $slug)->get();
         if ($data->count() > 0) {
-            return view('product-overview', compact('data'));
+            return view('product-overview', compact('data', 'cart'));
         } else {
             return redirect()->back()->with('error', 'product not found');
+        }
+    }
+
+    public function addToCart(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'valbuy' => 'required|min:1|numeric',
+            'dataproduct' => 'required|numeric',
+        ]);
+        $data = Product::where('id', $request->dataproduct)->get();
+        if ($data->count() == 0) return redirect()->back()->with('error', 'data tidak valid');
+
+        $exist_cart = Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->first();
+        if ($exist_cart != null) {
+            Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)
+                ->update(['buy_value' => ($exist_cart->buy_value + $request->valbuy)]);
+            return redirect()->back()->with('success_added', 'Berhasil ditambah ke keranjang');
+        }
+        $cart = new Keranjang([
+            'user_id' => $user->id,
+            'product_id' => $request->dataproduct,
+            'buy_value' => $request->valbuy
+        ]);
+        if ($cart->save()) {
+            return redirect()->back()->with('success_added', 'Berhasil ditambah ke keranjang');
+        } else {
+            dd($data);
         }
     }
 }

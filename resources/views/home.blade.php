@@ -21,10 +21,14 @@
                       </form>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <button class="btn btn-icon btn-primary">
+                    <a href="#" role="button" class="btn btn-icon btn-primary">
                         <span class="btn-inner--icon"><i class="fa fa-cash-register"></i></span>
+                        @if ($cart->count() > 0)
+                        <span class="btn-inner--text">Checkout ({{$cart->count()}}) </span>
+                        @else
                         <span class="btn-inner--text">Checkout</span>
-                    </button>
+                        @endif
+                    </a>
                 </div>
             </div>
         </div>
@@ -48,7 +52,10 @@
                         <h3 class="h4">
                             {{$product->nama_product}}
                         </h3>
-                        <span class="text-muted h5 mb-0 mt-auto">stock : @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
+                        <span class="text-muted h5 mb-0 mt-auto">
+                            <b>@currency($product->price)</b>
+                            <br>
+                            stock : @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
                             @else
                             <b class="text-danger">habis</b> @endisset
                         </span>
