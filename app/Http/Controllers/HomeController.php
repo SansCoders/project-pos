@@ -16,7 +16,7 @@ class HomeController extends Controller
     public function index()
     {
         $categories = CategoryProduct::all();
-        $products = Product::paginate(10)->sortByDesc("created_at");
+        $products = Product::all()->sortByDesc("created_at");
         return view('home', compact(['products', 'categories']));
     }
 }

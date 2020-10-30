@@ -98,8 +98,11 @@ class ProductController extends Controller
 
     public function detailsProduct($slug)
     {
-        // $data = Product::where('slug', $slug)->get();
-        // dd($data);
-        return view('product-overview', ['item_product' => Product::findOrFail($slug)]);
+        $data = Product::where('slug', $slug)->get();
+        if ($data->count() > 0) {
+            return view('product-overview', compact('data'));
+        } else {
+            return redirect()->back()->with('error', 'product not found');
+        }
     }
 }

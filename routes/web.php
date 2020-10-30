@@ -60,6 +60,5 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
-
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');
 });

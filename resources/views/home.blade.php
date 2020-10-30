@@ -1,9 +1,35 @@
 @extends('dashboard-layout.master')
 
 @section('content')
-<div class="header bg-gradient-danger mt-5 pb-6">
-    s
-</div>
+<nav class="header bg-gradient-gray">
+    <div class="container">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
+                        <div class="form-group mb-0">
+                          <div class="input-group input-group-alternative input-group-merge">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input class="form-control" placeholder="Cari Produk" type="text">
+                          </div>
+                        </div>
+                        <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </form>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <button class="btn btn-icon btn-primary">
+                        <span class="btn-inner--icon"><i class="fa fa-cash-register"></i></span>
+                        <span class="btn-inner--text">Checkout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 <div class="container mt-5 h-100vh">
     <div class="list-group flex-wrap flex-row align-items-center" >
         @foreach ($products as $product)
