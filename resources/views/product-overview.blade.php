@@ -31,7 +31,7 @@
                           </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="#" role="button" class="btn btn-icon btn-primary">
+                        <a href="{{route('checkout')}}" role="button" class="btn btn-icon btn-primary">
                             <span class="btn-inner--icon"><i class="fa fa-cash-register"></i></span>
                             @if ($cart->count() > 0)
                             <span class="btn-inner--text">Checkout ({{$cart->count()}}) </span>
@@ -55,6 +55,7 @@
                             {{$the_product->nama_product}}
                         </h2>
                         <span class="badge badge-white text-left mt-2">{{$the_product->category->name}}</span>
+                        <h3 class="h2 font-weight-900">@currency($the_product->price)</h3>
                         <span class="my-4">
                             {!! $the_product->description !!}
                         </span>

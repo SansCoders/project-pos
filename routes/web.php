@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth/login');
+    return redirect('/home');
 });
 
 Auth::routes(['register' => false]);
@@ -62,6 +62,8 @@ Route::group(['middleware' => ['auth:web']], function () {
         return redirect()->back();
     });
     Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
+
+    Route::get('/checkout', 'ProductController@checkOutProducts')->name('checkout');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');

@@ -116,8 +116,15 @@ class ProductController extends Controller
             'dataproduct' => 'required|numeric',
         ]);
         $data = Product::where('id', $request->dataproduct)->get();
+        foreach ($data as $p) {
+            if (!isset($p->stocks->stock)) {
+                return redirect()->back()->with('error', 'stock tidak tersedia');
+            }
+            if ($request->valbuy > $p->stocks->stock) {
+                return redirect()->back()->with('error', 'melebihi persediaan barang');
+            }
+        }
         if ($data->count() == 0) return redirect()->back()->with('error', 'data tidak valid');
-
         $exist_cart = Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->first();
         if ($exist_cart != null) {
             Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)
@@ -134,5 +141,11 @@ class ProductController extends Controller
         } else {
             dd($data);
         }
+    }
+
+    public function checkOutProducts()
+    {
+        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
+        return view('checkout', compact('cart'));
     }
 }

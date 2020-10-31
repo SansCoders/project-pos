@@ -21,7 +21,7 @@
                       </form>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a href="#" role="button" class="btn btn-icon btn-primary">
+                    <a href="{{route('checkout')}}" role="button" class="btn btn-icon btn-primary">
                         <span class="btn-inner--icon"><i class="fa fa-cash-register"></i></span>
                         @if ($cart->count() > 0)
                         <span class="btn-inner--text">Checkout ({{$cart->count()}}) </span>

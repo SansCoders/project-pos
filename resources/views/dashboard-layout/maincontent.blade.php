@@ -60,7 +60,7 @@
                   @endforeach
                 </div>
                 <!-- View all -->
-                <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+                <a href="{{route('checkout')}}" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
               </div>
             </li>
             @endif
