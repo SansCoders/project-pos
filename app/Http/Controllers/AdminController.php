@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AboutUs;
 use App\Cashier;
 use App\User;
 use Illuminate\Http\Request;
@@ -62,5 +63,11 @@ class AdminController extends Controller
         ]);
         $newUser->save();
         return redirect()->back()->with('success', "success added user");
+    }
+
+    public function settingsPage()
+    {
+        $aboutUs = AboutUs::first();
+        return view('admin.settings', compact('aboutUs'));
     }
 }

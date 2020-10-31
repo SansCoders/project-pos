@@ -52,10 +52,12 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
         return $this->sendFailedLoginResponse($request);
     }
+
     public function showAdminLoginForm()
     {
         return view('auth.login', ['url' => 'admin']);
     }
+
     public function adminLogin(Request $request)
     {
         $this->validate($request, [
@@ -69,13 +71,14 @@ class LoginController extends Controller
         if (Auth::guard('admin')->attempt(['username' => $request->username, 'password' => $request->password], $request->get('remember'))) {
             return redirect()->intended('/admin');
         }
-        return back()->withInput($request->only('username', 'remember'));
+        return back()->withInput($request->only('username'))->withErrors(['Cek kembali username dan passwordnya']);
     }
 
     public function showCashierLoginForm()
     {
         return view('auth.login', ['url' => 'cashier']);
     }
+
     public function cashierLogin(Request $request)
     {
         $this->validate($request, [
@@ -89,6 +92,6 @@ class LoginController extends Controller
         if (Auth::guard('cashier')->attempt(['username' => $request->username, 'password' => $request->password], $request->get('remember'))) {
             return redirect()->intended('/cashier');
         }
-        return back()->withInput($request->only('username', 'remember'));
+        return back()->withInput($request->only('username'))->withErrors(['Cek kembali username dan passwordnya']);
     }
 }
