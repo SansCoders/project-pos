@@ -67,6 +67,7 @@
                         </div>
                     </div>
                 </div>
+                <button class="btn btn-primary w-100">kirim ke kasir</button>
             </div>
         </div>
     </div>
