@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid my-4">
-        <a href="#" class="btn btn-neutral">back</a>
+        <a href="{{ url()->previous() }}" class="btn btn-neutral">back</a>
         <h2 class="mb-4"><i class="fa fa-shopping-cart"></i> Keranjang</h2>
         <div class="row">
             <div class="col-lg-8">
