@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/home');
 });
 
 Auth::routes(['register' => false]);
@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin/categorys', 'CategoryProductController@getAllCategory')->name('admin.categorys');
     Route::post('/admin/categorys', 'CategoryProductController@storeCategory')->name('admin.categorys.store');
     Route::put('/admin/categorys/{id}', 'CategoryProductController@updateCategory')->name('admin.categorys.update');
+
+    Route::get('/admin/settings', 'AdminController@settingsPage')->name('admin.settings');
 });
 
 Route::group(['middleware' => ['auth:cashier']], function () {
@@ -54,7 +56,15 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
 });
 
-Route::group(['middleware' => ['auth:admin,cashier']], function () {
+Route::group(['middleware' => ['auth:web']], function () {
+    Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
+    Route::get('/addtocart', function () {
+        return redirect()->back();
+    });
+    Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
 
+    Route::get('/checkout', 'ProductController@checkOutProducts')->name('checkout');
+});
+Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');
 });

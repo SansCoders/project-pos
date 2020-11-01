@@ -10,7 +10,7 @@
                 <a href="#" class="badge badge-danger badge-lg">stock habis</a>
             </div>
         </div>
-        <div class="card">
+        <div class="card shadow-none">
             <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
                     <h3 class="mb-0">s</h3>
@@ -43,7 +43,7 @@
                             <th scope="row">
                                 <div class="media align-items-center">
                                     <a href="#" class="avatar rounded-circle mr-3">
-                                      <img alt="Image placeholder" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
+                                      <img alt="Image placeholder" style="height: inherit" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
                                     </a>
                                     <div class="media-body">
                                       <span class="name mb-0 text-sm">{{$product->nama_product}}</span>
@@ -99,17 +99,54 @@
               </button>
             </div>
             <div class="modal-body">
-              <form action="" method="POST">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="kode barang" aria-label="kode barang" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button" id="button-addon2"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+              {{-- <form action="" method="POST">
                 <div class="form-group">
                     <label for="formControlRange">Example Range input</label>
                     <input type="range" class="form-control-range" id="formControlRange" min="1" max="3" value="2">
                   </div>
-              </form>
+              </form> --}}
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-primary">Simpan</button>
             </div>
           </div>
         </div>
-      </div>
+    </div>
+
+
+    <div class="modal fade" id="searchProduct" tabindex="-1" role="dialog" aria-labelledby="searchProductLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="searchProductLabel">Add Stock</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="kode barang" aria-label="kode barang" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button" id="button-addon2"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+              {{-- <form action="" method="POST">
+                <div class="form-group">
+                    <label for="formControlRange">Example Range input</label>
+                    <input type="range" class="form-control-range" id="formControlRange" min="1" max="3" value="2">
+                  </div>
+              </form> --}}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">Simpan</button>
+            </div>
+          </div>
+        </div>
+    </div>
 @endsection

@@ -16,6 +16,7 @@
                     <table class="table table-hover ">
                         <thead>
                             <th>no</th>
+                            <th>username</th>
                             <th>nama</th>
                             <th>action</th>
                         </thead>
@@ -23,6 +24,7 @@
                             @foreach ($sales as $index => $user)
                             <tr class="data-row">
                             <td>{{ $sales->firstitem() + $index }}</td>
+                            <td>{{$user->username}}</td>
                             <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
                                 <td class="table-actions">
                                     <span data-toggle="modal" data-target="#editUser">

@@ -8,7 +8,7 @@
           <!-- Navbar links -->
           <ul class="navbar-nav align-items-center ml-auto ml-md-auto ">
             {{-- <li class="nav-item d-xl-none"> --}}
-            @if(!Auth::guard('sales'))
+            @if(!Auth::guard('web')->check())
             <li class="nav-item d-xl-none">
               <!-- Sidenav toggler -->
               <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
@@ -17,6 +17,50 @@
                   <i class="sidenav-toggler-line bg-dark"></i>
                   <i class="sidenav-toggler-line bg-dark"></i>
                 </div>
+              </div>
+            </li>
+            @endif
+            @if(Auth::guard('web')->check())
+            <li class="nav-item dropdown">
+              <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @if ($cart->count() > 0)
+                  <i class="fa fa-shopping-cart text-warning"></i>
+                  <span class="position-absolute badge badge-default">{{ $cart->count() }}</span>
+                  @else
+                  <i class="fa fa-shopping-cart text-dark"></i>
+                @endif
+              </a>
+              <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden">
+                <!-- Dropdown header -->
+                <div class="px-3 py-3">
+                  <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">{{$cart->count()}}</strong> items in cart.</h6>
+                </div>
+                <!-- List group -->
+                <div class="list-group list-group-flush">
+                  @foreach ($cart as $item)
+                    <a href="#!" class="list-group-item list-group-item-action">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          <!-- Avatar -->
+                          <img alt="Image placeholder" src="{{asset($item->product->img)}}" class="avatar rounded-circle">
+                        </div>
+                        <div class="col ml--2">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <h4 class="mb-0 text-sm">{{$item->product->nama_product}}</h4>
+                            </div>
+                            <div class="text-right text-muted">
+                              <small>{{$item->buy_value}} {{$item->product->unit->unit}}</small>
+                            </div>
+                          </div>
+                          <p class="text-sm mb-0">@currency($item->buy_value * $item->product->price ) ({{$item->buy_value}} x @currency($item->product->price))</p>
+                        </div>
+                      </div>
+                    </a>
+                  @endforeach
+                </div>
+                <!-- View all -->
+                <a href="{{route('checkout')}}" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
               </div>
             </li>
             @endif

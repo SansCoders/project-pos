@@ -10,13 +10,13 @@
     <meta name="author" content="Creative Tim">
     
     <title>
-    @if(Auth::guard('admin')->check())
-    Administraor
-    @elseif(Auth::guard('cashier')->check())
-    Cashier
-    @else 
-    Sales
-    @endif
+        @if(Auth::guard('admin')->check())
+            Administraor
+        @elseif(Auth::guard('cashier')->check())
+            Cashier
+        @else 
+            Sales
+        @endif
      - Nama Toko</title>
     <link rel="icon" href="{{ asset('assets/img/brand/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
