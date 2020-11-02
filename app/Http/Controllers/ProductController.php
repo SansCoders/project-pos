@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CategoryProduct;
 use App\Keranjang;
 use App\Product;
+use App\Receipts_Transaction;
 use App\Stock;
 use App\StockActivity;
 use App\Unit;
@@ -147,5 +148,70 @@ class ProductController extends Controller
     {
         $cart = Keranjang::where('user_id', Auth::user()->id)->get();
         return view('checkout', compact('cart'));
+    }
+
+    public function processCheckOut()
+    {
+        // $cart = Keranjang::where('user_id', Auth::user()->id)->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->with('product')->get();
+        $buyer = Auth::user();
+        foreach ($cart as $item) {
+            $cekStock = Stock::where('product_id', $item->product_id)->first();
+            if ($item->buy_value > $cekStock->stock) return redirect()->back()->with('err', 'Transaksi Gagal! Pembelian Produk ' . $item->product->nama_product . ' melebihi stock yang tersedia, yaitu ' . $cekStock->stock . ' ' . $item->product->unit->unit);
+            $products_id[] = $item->product_id;
+            $products_list[] = $item->product->nama_product;
+            $products_price[] = $item->product->price;
+            $buy_values[] = $item->buy_value;
+        }
+
+        $latestOrder = Receipts_Transaction::orderBy('created_at', 'DESC')->first();
+        if ($latestOrder == null) {
+            $latestOrder = 0;
+        } else {
+            $latestOrder = $latestOrder->count();
+        }
+
+        //debug
+        // $data[] = [
+        //     // 'transaction_id' => str_pad($latestOrder->id + 1, 8, "0", STR_PAD_LEFT),
+        //     'transaction_id' => rand(1, 100),
+        //     'user_id' => $buyer->id,
+        //     'user_fullname' => $buyer->name,
+        //     'cashier_name' => null,
+        //     'product_id' => $products_id,
+        //     'product_list' => $products_list,
+        //     'buy_val' => $buy_values,
+        //     'type' => 1,
+        //     'done_time' => null,
+        //     'status' => 1
+        // ];
+
+        $receipt = new Receipts_Transaction([
+            'transaction_id' => date('Ymd') . $buyer->id . str_pad($latestOrder + 1, 5, "0", STR_PAD_LEFT),
+            'user_id' => $buyer->id,
+            'user_fullname' => $buyer->name,
+            'cashier_name' => null,
+            'products_id' => json_encode($products_id),
+            'products_list' => json_encode($products_list),
+            'products_buyvalues' => json_encode($buy_values),
+            'products_prices' => json_encode($products_price),
+            'type' => 1,
+            'is_done' => 0,
+            'done_time' => null
+        ]);
+        $sreceipt = $receipt->save();
+        if ($sreceipt) {
+            Keranjang::where('user_id', Auth::user()->id)->delete();
+            return redirect()->back()->with('success', 'Berhasil dikirim ke kasir, silahkan menunggu untuk diproses');
+        } else {
+            dd($receipt);
+        }
+    }
+
+    public function destroyItemFromCheckout($id)
+    {
+        $item = Keranjang::find($id);
+        $item->delete();
+        return redirect()->back()->with('success', 'Item deleted!');
     }
 }

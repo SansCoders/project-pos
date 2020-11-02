@@ -21,7 +21,7 @@
                       </form>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a href="#" role="button" class="btn btn-icon btn-primary">
+                    <a href="{{route('checkout')}}" role="button" class="btn btn-icon btn-primary">
                         <span class="btn-inner--icon"><i class="fa fa-cash-register"></i></span>
                         @if ($cart->count() > 0)
                         <span class="btn-inner--text">Checkout ({{$cart->count()}}) </span>
@@ -35,6 +35,20 @@
     </div>
 </nav>
 <div class="container mt-5 h-100vh">
+    @if ($cekTransactions->count() > 0)
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="#">
+                    <div class="alert alert-default d-flex align-items-center" role="alert">
+                        <div class="alert-desc">
+                            <strong>1 Transaksi</strong> menunggu diproses 
+                        </div>
+                        <span class="ml-auto">Lihat</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    @endif
     <div class="list-group flex-wrap flex-row align-items-center" >
         @foreach ($products as $product)
         <a href="{{route('details.product',$product->slug)}}" class="nav-link col-lg-4 col-md-6 mb-3">

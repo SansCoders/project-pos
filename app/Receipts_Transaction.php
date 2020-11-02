@@ -8,7 +8,7 @@ class Receipts_Transaction extends Model
 {
     protected $fillable = [
         'transaction_id', 'user_id', 'user_fullname', 'cashier_name', 'products_id', 'products_list', 'products_buyvalues', 'products_prices',
-        'type', 'done_time'
+        'type', 'is_done', 'done_time'
     ];
 
     public function buyer()

@@ -15,16 +15,17 @@ class CreateReceiptsTransactionsTable extends Migration
     {
         Schema::create('receipts__transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('transaction_id');
+            $table->bigInteger('transaction_id');
             $table->integer('user_id')->nullable();
             $table->string('user_fullname');
-            $table->string('cashier_name');
+            $table->string('cashier_name')->nullable();
             $table->string('products_id')->nullable();
-            $table->string('products_list');
+            $table->string('products_list')->nullable();
             $table->string('products_buyvalues');
             $table->string('products_prices');
             $table->enum('type', ['COD'])->nullable();
-            $table->timestamp('done_time');
+            $table->boolean('is_done')->default(0);
+            $table->timestamp('done_time')->nullable();
             $table->timestamps();
         });
     }

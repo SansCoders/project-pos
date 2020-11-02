@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->integer('category_id')->default(0);
             $table->string('kodebrg');
             $table->string('nama_product');
-            $table->string('description');
+            $table->text('description');
             $table->integer('price')->default(0);
             $table->string('img');
             $table->integer('unit_id')->default(0);

@@ -64,6 +64,8 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
 
     Route::get('/checkout', 'ProductController@checkOutProducts')->name('checkout');
+    Route::post('/checkout/process', 'ProductController@processCheckOut')->name('checkout.process');
+    Route::delete('/checkout/{id}', 'ProductController@destroyItemFromCheckout')->name('checkout.destroy');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');

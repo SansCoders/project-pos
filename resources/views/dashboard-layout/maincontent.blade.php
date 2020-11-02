@@ -5,6 +5,11 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
+          @if(Auth::guard('web')->check())
+          <ul class="navbar-nav align-items-center mr-auto mr-md-auto ">
+            <a href="{{route('home')}}" class="nav-link font-weight-bold text-default">Nama Toko</a>
+          </ul>
+          @endif
           <!-- Navbar links -->
           <ul class="navbar-nav align-items-center ml-auto ml-md-auto ">
             {{-- <li class="nav-item d-xl-none"> --}}
