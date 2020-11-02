@@ -47,9 +47,6 @@
           <span class="text-danger">stok habis</span>
           @endisset
           </h5>
-          {{-- <span class="badge badge-info">
-            {{ $product->category->name }}
-          </span> --}}
           <div class="text-right">
             <button class="btn btn-icon btn-white btn-sm m-1"><i class="fa fa-eye"></i></button>
             <button class="btn btn-icon btn-light btn-sm m-1"><i class="fa fa-cog"></i></button>

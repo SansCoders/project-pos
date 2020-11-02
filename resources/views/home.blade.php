@@ -44,7 +44,7 @@
                 <a href="#">
                     <div class="alert alert-default d-flex align-items-center" role="alert">
                         <div class="alert-desc">
-                            <strong>1 Transaksi</strong> menunggu diproses 
+                            <strong>{{$cekTransactions->count()}} Pesanan</strong> menunggu diproses 
                         </div>
                         <span class="ml-auto">Lihat</span>
                     </div>
