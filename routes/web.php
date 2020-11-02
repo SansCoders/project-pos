@@ -58,10 +58,13 @@ Route::group(['middleware' => ['auth:cashier']], function () {
 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
+    Route::get('/product/search', 'ProductController@searchProduct')->name('search.product');
     Route::get('/addtocart', function () {
         return redirect()->back();
     });
     Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
+
+    Route::get('/category/{name}', 'HomeController@getProductbyCategorybyName')->name('categ.name');
 
     Route::get('/checkout', 'ProductController@checkOutProducts')->name('checkout');
     Route::post('/checkout/process', 'ProductController@processCheckOut')->name('checkout.process');

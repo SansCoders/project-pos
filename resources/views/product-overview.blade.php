@@ -25,7 +25,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb breadcrumb-dark mb-0">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('home') }}">{{$the_product->category->name}}</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('categ.name',$the_product->category->name) }}">{{$the_product->category->name}}</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">{{$the_product->nama_product}}</li>
                             </ol>
                           </nav>

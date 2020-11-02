@@ -38,6 +38,13 @@ class ProductController extends Controller
         $units = Unit::paginate(10);
         return view('admin.units', compact('units'));
     }
+
+    public function searchProduct(Request $request)
+    {
+        $cari = $request->cari;
+        dd($cari);
+    }
+
     public function storeProduct(Request $request)
     {
         $user = Auth::user();
@@ -100,10 +107,11 @@ class ProductController extends Controller
 
     public function detailsProduct($slug)
     {
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->get();
         $data = Product::where('slug', $slug)->get();
         if ($data->count() > 0) {
-            return view('product-overview', compact('data', 'cart'));
+            return view('product-overview', compact('data', 'cart', 'cekTransactions'));
         } else {
             return redirect()->back()->with('error', 'product not found');
         }
@@ -143,11 +151,11 @@ class ProductController extends Controller
             dd($data);
         }
     }
-
     public function checkOutProducts()
     {
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->get();
-        return view('checkout', compact('cart'));
+        return view('checkout', compact('cart', 'cekTransactions'));
     }
 
     public function processCheckOut()
@@ -201,6 +209,7 @@ class ProductController extends Controller
         ]);
         $sreceipt = $receipt->save();
         if ($sreceipt) {
+
             Keranjang::where('user_id', Auth::user()->id)->delete();
             return redirect()->back()->with('success', 'Berhasil dikirim ke kasir, silahkan menunggu untuk diproses');
         } else {
