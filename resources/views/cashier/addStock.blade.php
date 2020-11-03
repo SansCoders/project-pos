@@ -15,7 +15,7 @@
                 <div class="d-flex justify-content-between">
                     <h3 class="mb-0">s</h3>
                     <div class="">
-                        <a data-toggle="modal" href="#addStock" role="button" class="btn btn-sm btn-success btn-round btn-icon" data-toggle="tooltip" data-original-title="tambah stock product">
+                        <a data-toggle="modal" href="#addStock" role="button" class="btn btn-sm btn-success btn-round btn-icon" >
                             <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
                             <span class="btn-inner--text">Tambah</span>
                         </a>
@@ -102,7 +102,7 @@
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="kode barang" aria-label="kode barang" aria-describedby="button-addon2">
                     <div class="input-group-append">
-                      <button class="btn btn-primary" type="button" id="button-addon2"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-primary" type="button" id="sp" data-toggle="modal" data-target="searchProduct"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
               {{-- <form action="" method="POST">
@@ -130,18 +130,34 @@
               </button>
             </div>
             <div class="modal-body">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="kode barang" aria-label="kode barang" aria-describedby="button-addon2">
-                    <div class="input-group-append">
-                      <button class="btn btn-primary" type="button" id="button-addon2"><i class="fa fa-search"></i></button>
-                    </div>
-                </div>
-              {{-- <form action="" method="POST">
-                <div class="form-group">
-                    <label for="formControlRange">Example Range input</label>
-                    <input type="range" class="form-control-range" id="formControlRange" min="1" max="3" value="2">
-                  </div>
-              </form> --}}
+              <div class="table-responsive">
+                <table class="table table-flush">
+                      <thead>
+                        <tr>
+                          <th>no</th>
+                          <th>kode produk</th>
+                          <th>nama produk</th>
+                          <th>stock</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @foreach ($products as $index => $product)
+                        <tr>
+                          <th role="row">x</th>
+                          <td>{{ $product->kodebrg }}</td>
+                          <td>{{ $product->nama_product }}</td>
+                          <td>@isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
+                            @else
+                                <span class="text-danger">0</span>
+                            @endisset
+                          </td>
+                          <td><button class="btn btn-primary btn-sm">pilih</button></td>
+                        </tr>
+                        @endforeach
+                      </tbody>
+                </table>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-primary">Simpan</button>
@@ -150,3 +166,14 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+      $(document).ready(function(){
+        $('#sp').click(function(){
+          $('#addStock').modal('toggle');
+          $('#searchProduct').modal('toggle');
+        });
+      });
+    </script>
+@endpush

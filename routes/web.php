@@ -53,17 +53,25 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier/products', 'ProductController@getAllProducts')->name('cashier.products');
     Route::post('/cashier/products', 'ProductController@storeProduct')->name('cashier.products.store');
 
+    Route::get('/cashier/transaction', 'CashierController@transactionProduct')->name('cashier.transaction');
+    Route::get('/cashier/t/{orderid}', 'CashierController@processCheckout')->name('cashier.check.checkout');
+
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
 });
 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
+    Route::get('/product/search', 'ProductController@searchProduct')->name('search.product');
     Route::get('/addtocart', function () {
         return redirect()->back();
     });
     Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
 
+    Route::get('/category/{name}', 'HomeController@getProductbyCategorybyName')->name('categ.name');
+
     Route::get('/checkout', 'ProductController@checkOutProducts')->name('checkout');
+    Route::post('/checkout/process', 'ProductController@processCheckOut')->name('checkout.process');
+    Route::delete('/checkout/{id}', 'ProductController@destroyItemFromCheckout')->name('checkout.destroy');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');

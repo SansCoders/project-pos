@@ -18,8 +18,8 @@ class CreateStockActivitiesTable extends Migration
             $table->integer('stocks_id');
             $table->integer('product_id');
             $table->integer('users_id');
-            $table->enum('user_type_id', ['admin', 'cashier']);
-            $table->enum('type_activity', ['in', 'out', 'add', 'destroy']);
+            $table->enum('user_type_id', ['admin', 'cashier', 'sales']);
+            $table->enum('type_activity', ['in', 'pending', 'out', 'add', 'destroy']);
             $table->integer('stock');
             $table->timestamps();
         });
