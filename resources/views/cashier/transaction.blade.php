@@ -20,11 +20,9 @@
                     </tr>
                 </thead>
                 <tbody class="list">
-                    @if ($transactions->count() == 0)
-                        <tr>
-                            <td colspan="6" class="text-center">no records</td>
-                        </tr>
-                    @endif
+                    @php
+                        $transactions_pending_count = 0;
+                    @endphp
                     @foreach ($transactions as $index => $t)
                         @if ($t->is_done == 0)   
                         <tr>
@@ -57,8 +55,18 @@
                             <a href="{{ route('cashier.check.checkout',$t->transaction_id) }}" class="btn btn-success btn-sm process">proses</a>
                             </td>
                         </tr>
+                        @php
+                            $transactions_pending_count += 1;
+                        @endphp
                         @endif
+                        
                     @endforeach
+                    
+                    @if ($transactions_pending_count == 0)
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">semua transaksi sudah diproses</td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
