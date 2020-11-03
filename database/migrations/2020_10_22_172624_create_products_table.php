@@ -19,10 +19,10 @@ class CreateProductsTable extends Migration
             $table->integer('category_id')->default(0);
             $table->string('kodebrg');
             $table->string('nama_product');
-            $table->text('description');
-            $table->integer('price')->default(0);
-            $table->string('img');
-            $table->integer('unit_id')->default(0);
+            $table->text('description')->nullable();
+            $table->integer('price')->default(0)->nullable();
+            $table->string('img')->nullable();
+            $table->integer('unit_id')->default(0)->nullable();
             $table->timestamps();
         });
     }

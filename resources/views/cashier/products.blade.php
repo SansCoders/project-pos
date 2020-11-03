@@ -15,26 +15,70 @@
 #preview_img img{
   border-radius: 20px
 }
+
+#alligator-turtle {
+  object-fit: cover;
+  object-position: 100% 0;
+
+  width: 300px;
+  height: 337px;
+}
 </style>
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="header pb-6 d-flex align-items-center" style="min-height: 100px; background-size: cover; background-position: center top;">
+    <span class="mask bg-gradient-danger opacity-8"></span>
+</div>
 
-  <button class="btn btn-success btn-icon btn-sm"  data-toggle="modal" data-target="#addProduct"><i class="fa fa-plus"></i></button>
-  <div class="form-group col-lg-2">
-    <div class="input-group input-group-merge">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
-        </div>
-          <input type="text" class="form-control" placeholder="Cari" aria-label="Cari" aria-describedby="basic-addon1">
-      </div>
-  </div>
+<div class="container-fluid mt--5">
+
   <div class="row">
+      <div class="col-xl-12">
+          <div class="card">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h5 class="h3 mb-0">Management Produk</h5>
+                </div>
+                
+                <div class="col text-right">
+                  <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+            <table class="table align-items-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th>no</th>
+                        <th>Kode Produk</th>
+                        <th>Nama Produk</th>
+                        <th>Harga Produk</th>
+                        <th>Stok Produk</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    @foreach ($products as $product)
+                      <tr>
+                        <td>{{ $product->id }}</td>
+                        <td>{{ $product->kodebrg }}</td>
+                        <td>{{ $product->nama_product }}</td>
+                        <td>{{ $product->price }}</td>
+                        <td>{{ $product->unit_id }}</td>
+                      </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+            </div>
+          </div>
+        </div>
     @foreach ($products as $product)
     <div class="col-sm-5 col-md-4 col-xs-4 ">
       <div class="card m-3 shadow-sm p-0" style="background: rgba(155, 89, 182, 0.3)">
-        <img class="card-img-top" style="align-self: center" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
+        <img class="card-img-top alligator-turtle" style="align-self: center; object-fit: cover; width: 300px; height: 300px; object-position: 50% 0;" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
         <div class="card-body">
           <h3 class="text-dark">
             {{ $product->nama_product }}
