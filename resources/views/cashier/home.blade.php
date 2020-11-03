@@ -1,10 +1,13 @@
 @extends('dashboard-layout.master')
 
 @section('content')
-<div class="container-fluid">
+    <div class="header pb-6 d-flex align-items-center" style="min-height: 150px; background-size: cover; background-position: center top;">
+        <span class="mask bg-gradient-danger opacity-8"></span>
+    </div>
+<div class="container-fluid mt--8">
     <div class="row">
         @if ($transactionPending->count() > 0)
-        <div class="col-lg-4">
+        <div class="col-lg-12 text-center">
             <div class="card shadow-none bg-default">
                 <div class="card-body">
                     <div class="mb-3">
@@ -15,7 +18,7 @@
             </div>
         </div>
         @else    
-            <div class="col-lg-4">
+            <div class="col-lg-12 text-center">
                 <div class="card shadow-none bg-success">
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <i class="fa fa-check-circle text-white mr-2"></i>

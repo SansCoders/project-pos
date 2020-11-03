@@ -10,7 +10,10 @@
     s
 </div>
 @endif
-<div class="container-fluid mt-3">
+<div class="header pb-6 d-flex align-items-center" style="min-height: 250px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <span class="mask bg-gradient-danger opacity-8"></span>
+</div>
+<div class="container-fluid mt--6">
     <div class="row">
         <div class="col">
             <div class="card shadow-sm">

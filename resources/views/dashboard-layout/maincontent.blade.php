@@ -1,7 +1,7 @@
 @section('main-content')
 <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand navbar-dark border-bottom">
+    <nav class="navbar navbar-top navbar-expand bg-gradient-danger navbar-dark border-bottom " style="min-height: 25px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
@@ -16,11 +16,13 @@
             @if(!Auth::guard('web')->check())
             <li class="nav-item d-xl-none">
               <!-- Sidenav toggler -->
-              <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
-                <div class="sidenav-toggler-inner">
-                  <i class="sidenav-toggler-line bg-dark"></i>
-                  <i class="sidenav-toggler-line bg-dark"></i>
-                  <i class="sidenav-toggler-line bg-dark"></i>
+              <div class="text-left">
+                <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
+                  <div class="sidenav-toggler-inner text-left">
+                    <i class="sidenav-toggler-line bg-dark"></i>
+                    <i class="sidenav-toggler-line bg-dark"></i>
+                    <i class="sidenav-toggler-line bg-dark"></i>
+                  </div>
                 </div>
               </div>
             </li>

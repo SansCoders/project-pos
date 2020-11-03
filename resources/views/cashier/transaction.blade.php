@@ -1,11 +1,14 @@
 @extends('dashboard-layout.master')
 
 @section('content')
+<div class="header pb-6 d-flex align-items-center" style="min-height: 150px; background-size: cover; background-position: center top;">
+    <span class="mask bg-gradient-danger opacity-8"></span>
+</div>
 
-<div class="container-fluid">
+<div class="container-fluid mt--6">
     <div class="card shadow-sm">
         <div class="card-header border-0">
-            Transactions Pending
+            <b>Transactions Pending</b>
         </div>
         <div class="table-responsive">
             <table class="table table-flush">
