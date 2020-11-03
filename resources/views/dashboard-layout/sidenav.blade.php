@@ -74,7 +74,7 @@
                         </li>
                       </ul>
                     </div>
-                  </li>
+                </li>
             </ul>
             <div class="my-3"></div>
             <ul class="navbar-nav">

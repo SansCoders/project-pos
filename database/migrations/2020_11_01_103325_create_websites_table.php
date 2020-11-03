@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKeranjangsTable extends Migration
+class CreateWebsitesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateKeranjangsTable extends Migration
      */
     public function up()
     {
-        Schema::create('keranjangs', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('product_id');
-            $table->integer('buy_value');
-            
+        Schema::create('websites', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('logo');
+            $table->timestamps();
         });
     }
 
@@ -29,6 +28,6 @@ class CreateKeranjangsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('keranjangs');
+        Schema::dropIfExists('websites');
     }
 }
