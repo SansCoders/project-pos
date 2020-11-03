@@ -70,4 +70,34 @@ class AdminController extends Controller
         $aboutUs = AboutUs::first();
         return view('admin.settings', compact('aboutUs'));
     }
+
+    public function updateInfoPage(Request $request)
+    {
+        $request->validate([
+            'info_name_company' => 'required|min:4',
+            'info_phone_company' => 'numeric|min:6',
+        ]);
+
+        $updateInfo = AboutUs::first()->update([
+            'name' => $request->info_name_company
+        ]);
+        if ($request->has('info_phone_company')) {
+            AboutUs::first()->update([
+                'phone' => $request->info_phone_company
+            ]);
+        }
+
+        if ($request->has('info_alamat_company')) {
+            AboutUs::first()->update([
+                'address' => $request->info_alamat_company
+            ]);
+        }
+
+        if ($request->has('info_aboutus_company')) {
+            AboutUs::first()->update([
+                'about' => $request->info_aboutus_company
+            ]);
+        }
+        return redirect()->back();
+    }
 }

@@ -48,7 +48,7 @@
           @endisset
           </h5>
           <div class="text-right">
-            <button class="btn btn-icon btn-white btn-sm m-1"><i class="fa fa-eye"></i></button>
+            <button class="btn btn-icon btn-white btn-sm m-1 infop" data-product_id="{{ $product->id }}" data-toggle="modal" data-target="#infoProduct"><i class="fa fa-eye"></i></button>
             <button class="btn btn-icon btn-light btn-sm m-1"><i class="fa fa-cog"></i></button>
           </div>
         </div>
@@ -56,6 +56,26 @@
     </div>
     @endforeach
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="infoProduct" tabindex="-1" role="dialog" aria-labelledby="infoProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoProductLabel">Info Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body row" id="zz">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProductLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -172,8 +192,21 @@
         .catch( error => {
             console.error( error );
         } );
-
   });
+
+  $(".infop").click(function(e){
+    e.preventDefault();
+    var dataid_p = $(this).data('product_id');
+    console.log(dataid_p);
+    $.ajax({
+      type: "GET",
+      url: '/cashier/getinfo_product/'+dataid_p,
+      success: function(result){
+        $('#zz').html(result);
+      }
+    });
+  });
+
   $(".priceProduct").each(function() {
       $(this).html('RP ' +$(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
   });

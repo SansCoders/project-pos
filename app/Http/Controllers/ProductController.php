@@ -22,6 +22,16 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
+    public function getInfoProduct($id)
+    {
+        $getProduct = Product::where('id', $id)->first();
+        if ($getProduct == null) {
+            return json_encode('error');
+        }
+
+        return json_encode($getProduct);
+    }
+
     public function getAllProducts()
     {
         $products = Product::all()->sortByDesc("created_at");

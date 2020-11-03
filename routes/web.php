@@ -40,18 +40,21 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     Route::get('/admin/units', 'ProductController@getAllUnits')->name('admin.common_units');
     Route::post('/admin/units', 'UnitsController@storeUnit')->name('admin.unit.store');
+    Route::put('/admin/units/{id}', 'UnitsController@updateUnit')->name('admin.units.update');
 
     Route::get('/admin/categorys', 'CategoryProductController@getAllCategory')->name('admin.categorys');
     Route::post('/admin/categorys', 'CategoryProductController@storeCategory')->name('admin.categorys.store');
     Route::put('/admin/categorys/{id}', 'CategoryProductController@updateCategory')->name('admin.categorys.update');
 
     Route::get('/admin/settings', 'AdminController@settingsPage')->name('admin.settings');
+    Route::post('/admin/settings', 'AdminController@updateInfoPage')->name('admin.update-settings');
 });
 
 Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier', 'CashierController@index')->name('cashier.home');
     Route::get('/cashier/products', 'ProductController@getAllProducts')->name('cashier.products');
     Route::post('/cashier/products', 'ProductController@storeProduct')->name('cashier.products.store');
+    Route::get('/cashier/getinfo_product/{id}', 'ProductController@getInfoProduct');
 
     Route::get('/cashier/transaction', 'CashierController@transactionProduct')->name('cashier.transaction');
     Route::get('/cashier/t/{orderid}', 'CashierController@processCheckout')->name('cashier.check.checkout');

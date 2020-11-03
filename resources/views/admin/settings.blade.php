@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-xl-4">
                 <div class="card card-profile">
-                    <img src="../assets/img/theme/img-1-1000x600.jpg" alt="Image placeholder" class="card-img-top bg-default">
+                    <img src="{{asset('assets/img/theme/img-1-1000x600.jpg')}}" alt="Image placeholder" class="card-img-top bg-default">
                     <div class="row justify-content-center">
                       <div class="col-lg-3 order-lg-2">
                         <div class="card-profile-image">
@@ -81,10 +81,10 @@
                     <div class="card-header">
                         <ul class="nav nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">Details</a>
+                                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Profile</a>
+                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Details</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Change Password</a>
@@ -94,46 +94,48 @@
                     <div class="card-body">
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
-                                <form action="" method="POST">
-                                    <div class="pl-lg-4">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label class="form-control-label" for="info-name-company">Nama Toko</label>
-                                                    <input id="info-name-company" class="form-control form-control-alternative" value="{{ $aboutUs->name }}" type="text" name="info_name_company" disabled>
-                                                </div>
+                              <form action="" method="post" id="formInfo">
+                                @csrf
+                                  <div class="pl-lg-4">
+                                      <div class="row">
+                                          <div class="col-md-12">
+                                              <div class="form-group">
+                                                  <label class="form-control-label" for="info-name-company">Nama Toko</label>
+                                                  <input id="info-name-company" class="form-control form-control-alternative" value="{{ $aboutUs->name }}" type="text" name="info_name_company" disabled required>
                                               </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="info-phone-company" class="form-control-label">Hp</label>
-                                                    <input class="form-control" type="number" value="62{{ $aboutUs->phone }}" id="info-phone-company" disabled>
-                                                </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="info-telp-company" class="form-control-label">Telp</label>
-                                                    <input class="form-control" type="text" value="(123) 123456" id="info-telp-company" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr class="my-4">
-                                    <div class="pl-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label">Alamat</label>
-                                            <textarea rows="4" class="form-control" disabled>{{ $aboutUs->address }}</textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-control-label">About</label>
-                                            <textarea rows="4" class="form-control" disabled>{{ $aboutUs->about }}</textarea>
+                                      </div>
+                                      <div class="row">
+                                          <div class="col-lg-6">
+                                              <div class="form-group">
+                                                  <label for="info-phone-company" class="form-control-label">Hp</label>
+                                                  <input class="form-control" type="number" name="info_phone_company" value="{{ $aboutUs->phone }}" id="info-phone-company" disabled required>
+                                              </div>
                                           </div>
-                                    </div>
-                                </form>
-                                <div class=" text-right">
-                                    <button class="btn btn-sm btn-light btn-icon">edit</button>
+                                          <div class="col-lg-6">
+                                              <div class="form-group">
+                                                  <label for="info-telp-company" class="form-control-label">Telp</label>
+                                                  <input class="form-control" type="text" value="(123) 123456" id="info-telp-company" disabled>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <hr class="my-4">
+                                  <div class="pl-lg-4">
+                                      <div class="form-group">
+                                          <label for="infoalamat" class="form-control-label">Alamat</label>
+                                          <textarea id="infoalamat" rows="4" class="form-control" name="info_alamat_company" disabled>{{ $aboutUs->address }}</textarea>
+                                      </div>
+                                      <div class="form-group">
+                                          <label for="aboutInfo" class="form-control-label">About</label>
+                                          <textarea id="aboutInfo" rows="4" class="form-control" name="info_aboutus_company" disabled>{{ $aboutUs->about }}</textarea>
+                                        </div>
+                                  </div>   
+                                <div id="btnaction" class="text-right">
+                                    <button id="editInfobtn" type="button" class="btn btn-sm btn-light btn-icon">edit</button>
+                                    <button id="simpanUpdate" type="submit" class="btn btn-sm btn-success btn-icon d-none">Update</button>
                                 </div>
+                              </form>   
                             </div>
                             <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
                                 <p class="description">Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
@@ -148,3 +150,17 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+      $('#editInfobtn').click(function(){
+        $('#info-name-company').removeAttr("disabled");
+        $('#info-phone-company').removeAttr("disabled");
+        $('#infoalamat').removeAttr("disabled");
+        $('#aboutInfo').removeAttr("disabled");
+        $('#simpanUpdate').removeClass("d-none");
+        $('#formInfo').attr('action', '{{route('admin.update-settings')}}');
+        $('#editInfobtn').addClass("d-none");
+      });
+    </script>
+@endpush
