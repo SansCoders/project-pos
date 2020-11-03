@@ -57,13 +57,11 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('imgproduct')) {
-
-            // $extension = $request->imgproduct->extension();
             $gambar = $request->file('imgproduct');
             $new_gambar = $request->pKode . '_' . time() . $gambar->getClientOriginalName();
             $lokasi_gambar = public_path('/product-img');
             $gmbr = Image::make($gambar->path());
-            $gambar->move('product-img/', $new_gambar);
+            $gmbr->resize(735, 552)->save($lokasi_gambar . '/' . $new_gambar);
         } else {
             $new_gambar = 'default-img-product.png';
         }
@@ -230,7 +228,6 @@ class ProductController extends Controller
                 }
             }
             Keranjang::where('user_id', Auth::user()->id)->delete();
-            // $changeStock = Stock::where('product_id',);
             return redirect()->back()->with('success', 'Berhasil dikirim ke kasir, silahkan menunggu untuk diproses');
         } else {
             dd($receipt);
