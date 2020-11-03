@@ -61,7 +61,7 @@ class ProductController extends Controller
             $new_gambar = $request->pKode . '_' . time() . $gambar->getClientOriginalName();
             $lokasi_gambar = public_path('/product-img');
             $gmbr = Image::make($gambar->path());
-            $gambar->move('product-img/', $new_gambar);
+            $gmbr->resize(735, 552)->save($lokasi_gambar . '/' . $new_gambar);
         } else {
             $new_gambar = 'default-img-product.png';
         }
