@@ -72,7 +72,7 @@ class ProductController extends Controller
         $request->validate([
             'pNama' => 'required|min:3|max:90',
             'pStok' => 'required|numeric',
-            'imgproduct' => 'mimes:jpeg,png|max:1014',
+            'imgproduct' => 'mimes:jpeg,png|max:1014'
         ]);
 
         if ($request->hasFile('imgproduct')) {
