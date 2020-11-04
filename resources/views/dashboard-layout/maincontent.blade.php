@@ -1,13 +1,27 @@
 @section('main-content')
+@php
+    $company_profile = App\AboutUs::first();
+    if(!Auth::guard('web')->check()){
+      $bgnavtop = "bg-gradient-danger";
+    }else{
+      $bgnavtop = "bg-primary";
+    }
+@endphp
 <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand bg-gradient-primary navbar-dark border-bottom " style="min-height: 25px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <nav class="navbar navbar-top navbar-expand {{$bgnavtop}} navbar-dark border-bottom " style="min-height: 25px; background-size: cover; background-position: center top;">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
           @if(Auth::guard('web')->check())
           <ul class="navbar-nav align-items-center mr-auto mr-md-auto ">
-            <a href="{{route('home')}}" class="nav-link font-weight-bold text-default">Nama Toko</a>
+            <a href="{{route('home')}}" class="nav-link font-weight-bold text-default">
+            @isset($company_profile->name)
+                {{$company_profile->name}}
+            @else
+            POS
+            @endisset
+            </a>
           </ul>
           @endif
           <!-- Navbar links -->
@@ -28,6 +42,11 @@
             </li>
             @endif
             @if(Auth::guard('web')->check())
+            <li class="nav-item dropdown">
+              <a class="btn d-sm-none text-dark" href="#" data-action="search-show" data-target="#navbar-search-main">
+                <i class="ni ni-zoom-split-in"></i>
+              </a>
+            </li>
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @if ($cart->count() > 0)
@@ -123,7 +142,7 @@
               </div>
             </li>
             @endif
-            <li class="nav-item dropdown">
+            {{-- <li class="nav-item dropdown">
               <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="ni ni-ungroup  text-dark"></i>
               </a>
@@ -167,7 +186,7 @@
                   </a>
                 </div>
               </div>
-            </li>
+            </li> --}}
           </ul>
           <ul class="navbar-nav align-items-center ml-1 ml-md-0 ">
             <li class="nav-item dropdown">
@@ -189,18 +208,12 @@
                   <i class="ni ni-single-02"></i>
                   <span>My profile</span>
                 </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-settings-gear-65"></i>
-                  <span>Settings</span>
-                </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-calendar-grid-58"></i>
-                  <span>Activity</span>
-                </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-support-16"></i>
-                  <span>Support</span>
-                </a>
+                @if(Auth::guard('web')->check())
+                  <a href="#!" class="dropdown-item">
+                    <i class="fa fa-receipt"></i>
+                    <span>Riwayat Pembelian</span>
+                  </a>
+                @endif
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item"  href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                   <i class="ni ni-user-run"></i>
@@ -219,7 +232,7 @@
     <!-- Page content -->
     {{-- <div class="container-fluid"> --}}
     @yield('content')
-      @yield('footer')
+    @yield('footer')
       <!-- Footer -->
       {{-- <footer class="footer pt-0">
         <div class="row align-items-center justify-content-lg-between">

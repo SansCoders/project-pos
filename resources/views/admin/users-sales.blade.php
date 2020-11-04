@@ -27,12 +27,10 @@
                             <td>{{$user->username}}</td>
                             <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
                                 <td class="table-actions">
-                                    <span data-toggle="modal" data-target="#editUser">
-                                        <a href="#!" class="table-action text-light ec" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
-                                                <i class="fas fa-user-edit"></i>
-                                        </a>
-                                    </span>
-                                    <a href="#!" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus Pengguna">
+                                    <a href="{{route('admin.users-sales.edit',$user->id)}}" class="table-action text-light ec" data-toggle="tooltip"  data-original-title="Edit Pengguna">
+                                        <i class="fas fa-user-edit"></i>
+                                    </a>
+                                    <a href="#" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus Pengguna">
                                       <i class="fas fa-trash"></i>
                                     </a>
                                 </td>

@@ -7,8 +7,7 @@
         <div class="card bg-secondary border-0 mb-0">
           <div class="card-header bg-transparent pb-5">
             <div class="text-muted text-center mt-2 mb-3"><small>Sign in</small></div>
-            <div class="btn-wrapper text-center">
-              
+            <div class="btn-wrapper text-center d-flex align-items-center justify-content-around">
             @isset($url)
               @if ($url != "admin")
               <a href="{{ url("login/admin") }}" class="btn btn-neutral btn-icon">
@@ -18,7 +17,7 @@
               @endif
               @if ($url != "cashier")
               <a href="{{ url("login/cashier") }}" class="btn btn-neutral btn-icon">
-                <span class="btn-inner--icon"><img src="../assets/img/icons/common/cashier.svg"></span>
+                <span class="btn-inner--icon"><img src="{{asset('assets/img/icons/common/cashier.svg')}}"></span>
                 <span class="btn-inner--text">Kasir</span>
               </a>
               @endif
@@ -38,11 +37,11 @@
             @endisset
             </div>
           </div>
-          <div class="card-body px-lg-5 py-lg-5">
+          <div class="card-body px-lg-5 py-lg-5 d-flex flex-column">
             @if($errors->any())
             <div class="alert alert-danger">{{$errors->first()}}</div>
             @endif
-            <b class="text-center">
+            <b class="text-center mb-3">
               Login @isset($url)
                   {{ $url }}
                 @endisset

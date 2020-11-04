@@ -37,9 +37,12 @@
                         </tr>
                     </thead>
                     <tbody class="list">
+                        @php
+                            $i = 1;
+                        @endphp
                         @foreach ($products as $index => $product)
                         <tr>
-                            <td>x</td>
+                            <td>{{$i++}}</td>
                             <th scope="row">
                                 <div class="media align-items-center">
                                     <a href="#" class="avatar rounded-circle mr-3">
@@ -102,7 +105,8 @@
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" placeholder="kode barang" aria-label="kode barang" aria-describedby="button-addon2">
                     <div class="input-group-append">
-                      <button class="btn btn-primary" type="button" id="sp" data-toggle="modal" data-target="searchProduct"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-light" type="button"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-primary" type="button" id="sp" data-toggle="modal" data-target="searchProduct"><i class="fa fa-list"></i></button>
                     </div>
                 </div>
               {{-- <form action="" method="POST">
@@ -142,9 +146,12 @@
                         </tr>
                       </thead>
                       <tbody>
+                        @php
+                            $i = 1;
+                        @endphp
                         @foreach ($products as $index => $product)
                         <tr>
-                          <th role="row">x</th>
+                        <th role="row">{{$i++}}</th>
                           <td>{{ $product->kodebrg }}</td>
                           <td>{{ $product->nama_product }}</td>
                           <td>@isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}

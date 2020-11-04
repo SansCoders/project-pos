@@ -36,4 +36,13 @@ class HomeController extends Controller
         $products = Product::where('category_id', $categories->id)->get();
         return view('home', compact(['products', 'categories', 'cart', 'cekTransactions']));
     }
+
+    public function myProfile()
+    {
+        $user = Auth::user();
+        $cekTransactions = Receipts_Transaction::where('user_id', $user->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', $user->id)->get();
+
+        return view('myprofile', compact(['user', 'cart', 'cekTransactions']));
+    }
 }

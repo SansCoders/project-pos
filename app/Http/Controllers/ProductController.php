@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use PDO;
 
 class ProductController extends Controller
@@ -31,7 +32,7 @@ class ProductController extends Controller
             return json_encode('error');
         }
 
-        return view('cashier.productDetail', compact(['getProduct', 'categories','units']));
+        return view('cashier.productDetail', compact(['getProduct', 'categories', 'units']));
     }
 
     public function getAllProducts()
@@ -53,11 +54,19 @@ class ProductController extends Controller
 
     public function searchProduct(Request $request)
     {
-        $cari = $request->cari;
-        dd($cari);
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
+        $categories = CategoryProduct::all();
+        $cari = $request->get('cari');
+        $products = Product::where('nama_product', 'LIKE', '%' . $cari . '%')->get();
+        if (count($products) > 0) {
+            return view('home', compact(['products', 'categories', 'cart', 'cekTransactions', 'cari']));
+        } else {
+            return view('home', compact(['products', 'categories', 'cart', 'cekTransactions']))->with('message', 'maaf, tidak menemukan yang dicari');
+        }
     }
 
-    public function updateProduct(Request $request, $id) 
+    public function updateProduct(Request $request, $id)
     {
         $products = Product::find($id);
         $request->validate([
@@ -109,7 +118,7 @@ class ProductController extends Controller
             $new_gambar = 'default-img-product.png';
         }
 
-        
+
 
         $product = new Product([
             'category_id' => $request->pCategory,

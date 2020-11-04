@@ -61,9 +61,12 @@
                     </tr>
                 </thead>
                 <tbody class="list">
-                    @foreach ($products as $product)
+                  @php
+                      $i = 1;
+                  @endphp
+                    @foreach ($products as $index => $product)
                       <tr>
-                        <td>{{ $product->id }}</td>
+                        <td>{{ $i++ }}</td>
                         <td>{{ $product->kodebrg }}</td>
                         <td>{{ $product->nama_product }}</td>
                         <td>{{ $product->price }}</td>
