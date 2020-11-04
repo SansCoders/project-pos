@@ -1,6 +1,7 @@
 @extends('dashboard-layout.master')
 
 @section('content')
+
     <div class="header pb-6 d-flex align-items-center" style="min-height: 150px; background-size: cover; background-position: center top;">
         <span class="mask bg-gradient-danger opacity-8"></span>
     </div>

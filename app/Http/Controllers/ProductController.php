@@ -25,11 +25,13 @@ class ProductController extends Controller
     public function getInfoProduct($id)
     {
         $getProduct = Product::where('id', $id)->first();
+        $categories = CategoryProduct::get();
+        $units = Unit::get();
         if ($getProduct == null) {
             return json_encode('error');
         }
 
-        return json_encode($getProduct);
+        return view('cashier.productDetail', compact(['getProduct', 'categories','units']));
     }
 
     public function getAllProducts()
@@ -55,6 +57,37 @@ class ProductController extends Controller
         dd($cari);
     }
 
+    public function updateProduct(Request $request, $id) 
+    {
+        $products = Product::find($id)
+        $request->validate([
+            'pNama' => 'required|min:3|max:90',
+            'pStok' => 'required|numeric',
+            'imgproduct' => 'mimes:jpeg,png|max:1014',
+        ]);
+
+        if ($request->hasFile('imgproduct')) {
+            $gambar = $request->file('imgproduct');
+            $new_gambar = $request->pKode . '_' . time() . $gambar->getClientOriginalName();
+            $lokasi_gambar = public_path('/product-img');
+            $gmbr = Image::make($gambar->path());
+            $gmbr->resize(735, 552)->save($lokasi_gambar . '/' . $new_gambar);
+        } else {
+            $new_gambar = $products->img;
+        }
+
+        DB::table('products') - > where('id', $request->id) - > update([
+            'category_id' => $request->pCategory,
+            'kodebrg' => $request->pKode,
+            'nama_product' => $request->pNama,
+            'price' => $request->pPrice,
+            'img' => 'product-img/' . $new_gambar,
+            'description' => $request->pDescription,
+            'unit_id' => $request->pUnit,
+            'slug' => Str::slug($request->pNama)
+        ]);
+    }
+
     public function storeProduct(Request $request)
     {
         $user = Auth::user();
@@ -75,6 +108,9 @@ class ProductController extends Controller
         } else {
             $new_gambar = 'default-img-product.png';
         }
+
+        
+
         $product = new Product([
             'category_id' => $request->pCategory,
             'kodebrg' => $request->pKode,

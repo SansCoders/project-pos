@@ -57,6 +57,7 @@
                         <th>Nama Produk</th>
                         <th>Harga Produk</th>
                         <th>Stok Produk</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody class="list">
@@ -67,6 +68,7 @@
                         <td>{{ $product->nama_product }}</td>
                         <td>{{ $product->price }}</td>
                         <td>{{ $product->unit_id }}</td>
+                        <td><a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a></td>
                       </tr>
                     @endforeach
                 </tbody>
@@ -75,30 +77,6 @@
             </div>
           </div>
         </div>
-    @foreach ($products as $product)
-    <div class="col-sm-5 col-md-4 col-xs-4 ">
-      <div class="card m-3 shadow-sm p-0" style="background: rgba(155, 89, 182, 0.3)">
-        <img class="card-img-top alligator-turtle" style="align-self: center; object-fit: cover; width: 300px; height: 300px; object-position: 50% 0;" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
-        <div class="card-body">
-          <h3 class="text-dark">
-            {{ $product->nama_product }}
-          </h3>
-          <h2 class="priceProduct text-gray">{{ $product->price }}</h2>
-              
-          <h5 class="text-muted">Tersedia :
-          @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
-          @else
-          <span class="text-danger">stok habis</span>
-          @endisset
-          </h5>
-          <div class="text-right">
-            <button class="btn btn-icon btn-white btn-sm m-1 infop" data-product_id="{{ $product->id }}" data-toggle="modal" data-target="#infoProduct"><i class="fa fa-eye"></i></button>
-            <button class="btn btn-icon btn-light btn-sm m-1"><i class="fa fa-cog"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-    @endforeach
   </div>
 
   <!-- Modal -->
@@ -111,7 +89,17 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body row" id="zz">
+        <div class="table-responsive">
+            <table class="table align-items-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th>no</th>
+                    </tr>
+                </thead>
+                <tbody class="list" id="tbody">
+
+                </tbody>
+            </table>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary">edit</button>
@@ -243,11 +231,23 @@
     var dataid_p = $(this).data('product_id');
     console.log(dataid_p);
     $.ajax({
+      dataType: 'json',
       type: "GET",
       url: '/cashier/getinfo_product/'+dataid_p,
       success: function(result){
-        $('#zz').html(result);
-      }
+            console.log(result);
+            var res='';
+            $.each (result, function (key, value) {
+            res +=
+            '<tr>'+
+                '<td>'+value.id+'</td>'+
+                '<td>'+value.nama_product+'</td>'+
+           '</tr>';
+
+            });
+
+            $('tbody').html(res);
+        }
     });
   });
 
