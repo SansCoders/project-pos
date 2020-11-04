@@ -22,9 +22,6 @@
                     </form>
                 </div>
                 <div class="col-lg-6 col-5 text-right">
-                    <a class="btn d-sm-none text-white" href="#" data-action="search-show" data-target="#navbar-search-main">
-                        <i class="ni ni-zoom-split-in"></i>
-                    </a>
                     <a href="{{route('checkout')}}" role="button" class="btn btn-icon btn-primary">
                         <span class="btn-inner--icon"><i class="fa fa-cash-register"></i></span>
                         @if ($cart->count() > 0)

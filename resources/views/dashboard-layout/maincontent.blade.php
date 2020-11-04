@@ -43,6 +43,11 @@
             @endif
             @if(Auth::guard('web')->check())
             <li class="nav-item dropdown">
+              <a class="btn d-sm-none text-dark" href="#" data-action="search-show" data-target="#navbar-search-main">
+                <i class="ni ni-zoom-split-in"></i>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
               <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @if ($cart->count() > 0)
                   <i class="fa fa-shopping-cart text-warning"></i>
@@ -137,7 +142,7 @@
               </div>
             </li>
             @endif
-            <li class="nav-item dropdown">
+            {{-- <li class="nav-item dropdown">
               <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="ni ni-ungroup  text-dark"></i>
               </a>
@@ -181,7 +186,7 @@
                   </a>
                 </div>
               </div>
-            </li>
+            </li> --}}
           </ul>
           <ul class="navbar-nav align-items-center ml-1 ml-md-0 ">
             <li class="nav-item dropdown">
@@ -203,18 +208,12 @@
                   <i class="ni ni-single-02"></i>
                   <span>My profile</span>
                 </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-settings-gear-65"></i>
-                  <span>Settings</span>
-                </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-calendar-grid-58"></i>
-                  <span>Activity</span>
-                </a>
-                <a href="#!" class="dropdown-item">
-                  <i class="ni ni-support-16"></i>
-                  <span>Support</span>
-                </a>
+                @if(Auth::guard('web')->check())
+                  <a href="#!" class="dropdown-item">
+                    <i class="fa fa-receipt"></i>
+                    <span>Riwayat Pembelian</span>
+                  </a>
+                @endif
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item"  href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                   <i class="ni ni-user-run"></i>
