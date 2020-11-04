@@ -51,40 +51,45 @@
                   <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
                 </div>
               </div>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-            <table class="table align-items-center">
+              
+              <div class="col text-right">
+                <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
+              </div>
+          </div>
+          <div class="card-body pl-0 pr-0">
+            <div class="table-responsive">
+              <table class="table align-items-center">
                 <thead class="thead-light">
-                    <tr>
-                        <th>no</th>
-                        <th>Kode Produk</th>
-                        <th>Nama Produk</th>
-                        <th>Harga Produk</th>
-                        <th>Stok Produk</th>
-                        <th>Action</th>
-                    </tr>
+                  <tr>
+                      <th>no</th>
+                      <th>Kode Produk</th>
+                      <th>Produk</th>
+                      <th>Harga Produk</th>
+                      <th>Action</th>
+                  </tr>
                 </thead>
                 <tbody class="list">
-                  @php
-                      $i = 1;
-                  @endphp
+                    @php
+                        $i = 1;
+                    @endphp
                     @foreach ($products as $index => $product)
                       <tr>
-                        <td>{{ $i++ }}</td>
+                        <th role="row">{{ $i++ }}</th>
                         <td>{{ $product->kodebrg }}</td>
-                        <td>{{ $product->nama_product }}</td>
-                        <td>{{ $product->price }}</td>
-                        <td>{{ $product->unit_id }}</td>
+                        <td class="d-flex align-items-center">
+                          <img src="{{ asset($product->img) }}" class="rounded-circle avatar" style="max-width: 50px" alt="">
+                          <span class="ml-2">{{ $product->nama_product }}</span>
+                        </td>
+                        <td>@currency($product->price)</td>
                         <td><a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a></td>
                       </tr>
                     @endforeach
                 </tbody>
-            </table>
-        </div>
+              </table>
             </div>
           </div>
         </div>
+    </div>
   </div>
 
   <!-- Modal -->
