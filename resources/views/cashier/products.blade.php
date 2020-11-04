@@ -15,50 +15,99 @@
 #preview_img img{
   border-radius: 20px
 }
+
+#alligator-turtle {
+  object-fit: cover;
+  object-position: 100% 0;
+
+  width: 300px;
+  height: 337px;
+}
 </style>
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="header pb-6 d-flex align-items-center" style="min-height: 100px; background-size: cover; background-position: center top;">
+    <span class="mask bg-gradient-danger opacity-8"></span>
+</div>
 
-  <button class="btn btn-success btn-icon btn-sm"  data-toggle="modal" data-target="#addProduct"><i class="fa fa-plus"></i></button>
-  <div class="form-group col-lg-2">
-    <div class="input-group input-group-merge">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
-        </div>
-          <input type="text" class="form-control" placeholder="Cari" aria-label="Cari" aria-describedby="basic-addon1">
-      </div>
-  </div>
+<div class="container-fluid mt--5">
+
   <div class="row">
-    @foreach ($products as $product)
-    <div class="col-sm-5 col-md-4 col-xs-4 ">
-      <div class="card m-3 shadow-sm p-0" style="background: rgba(155, 89, 182, 0.3)">
-        <img class="card-img-top" style="align-self: center" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
-        <div class="card-body">
-          <h3 class="text-dark">
-            {{ $product->nama_product }}
-          </h3>
-          <h2 class="priceProduct text-gray">{{ $product->price }}</h2>
-              
-          <h5 class="text-muted">Tersedia :
-          @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
-          @else
-          <span class="text-danger">stok habis</span>
-          @endisset
-          </h5>
-          {{-- <span class="badge badge-info">
-            {{ $product->category->name }}
-          </span> --}}
-          <div class="text-right">
-            <button class="btn btn-icon btn-white btn-sm m-1"><i class="fa fa-eye"></i></button>
-            <button class="btn btn-icon btn-light btn-sm m-1"><i class="fa fa-cog"></i></button>
+      <div class="col-xl-12">
+          <div class="card">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h5 class="h3 mb-0">Management Produk</h5>
+                </div>
+                
+                <div class="col text-right">
+                  <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+            <table class="table align-items-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th>no</th>
+                        <th>Kode Produk</th>
+                        <th>Nama Produk</th>
+                        <th>Harga Produk</th>
+                        <th>Stok Produk</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    @foreach ($products as $product)
+                      <tr>
+                        <td>{{ $product->id }}</td>
+                        <td>{{ $product->kodebrg }}</td>
+                        <td>{{ $product->nama_product }}</td>
+                        <td>{{ $product->price }}</td>
+                        <td>{{ $product->unit_id }}</td>
+                        <td><a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a></td>
+                      </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+            </div>
           </div>
+        </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="infoProduct" tabindex="-1" role="dialog" aria-labelledby="infoProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoProductLabel">Info Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-items-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th>no</th>
+                    </tr>
+                </thead>
+                <tbody class="list" id="tbody">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">edit</button>
         </div>
       </div>
     </div>
-    @endforeach
   </div>
+
   <div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProductLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -175,8 +224,33 @@
         .catch( error => {
             console.error( error );
         } );
-
   });
+
+  $(".infop").click(function(e){
+    e.preventDefault();
+    var dataid_p = $(this).data('product_id');
+    console.log(dataid_p);
+    $.ajax({
+      dataType: 'json',
+      type: "GET",
+      url: '/cashier/getinfo_product/'+dataid_p,
+      success: function(result){
+            console.log(result);
+            var res='';
+            $.each (result, function (key, value) {
+            res +=
+            '<tr>'+
+                '<td>'+value.id+'</td>'+
+                '<td>'+value.nama_product+'</td>'+
+           '</tr>';
+
+            });
+
+            $('tbody').html(res);
+        }
+    });
+  });
+
   $(".priceProduct").each(function() {
       $(this).html('RP ' +$(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
   });

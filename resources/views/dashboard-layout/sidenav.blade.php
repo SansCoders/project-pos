@@ -74,7 +74,7 @@
                         </li>
                       </ul>
                     </div>
-                  </li>
+                </li>
             </ul>
             <div class="my-3"></div>
             <ul class="navbar-nav">
@@ -91,6 +91,12 @@
                 <a class="nav-link {{ set_active('cashier.home') }}" href="{{route('cashier.home')}}">
                   <i class="ni ni-tv-2 text-default"></i>
                     <span class="nav-link-text">Dashboard</span>
+                  </a>
+                </li>
+              <li class="nav-item">
+                <a class="nav-link {{ set_active('cashier.transaction') }}" href="{{route('cashier.transaction')}}">
+                  <i class="ni ni-basket text-default"></i>
+                    <span class="nav-link-text">Transaction</span>
                   </a>
                 </li>
             </ul>

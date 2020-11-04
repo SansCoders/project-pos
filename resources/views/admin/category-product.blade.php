@@ -10,7 +10,10 @@
     s
 </div>
 @endif
-<div class="container-fluid mt-3">
+<div class="header pb-6 d-flex align-items-center" style="min-height: 250px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <span class="mask bg-gradient-danger opacity-8"></span>
+</div>
+<div class="container-fluid mt--6">
     <div class="row">
         <div class="col">
             <div class="card shadow-sm">
@@ -44,6 +47,7 @@
                                 @foreach ($categories as $index => $category)
                                 <tr>
                                     <td>{{ $categories->firstitem() + $index }}</td>
+                                    <td class="d-none">{{ $category->id }}</td>
                                     <td>{{ $category->name }}</td>
                                     <td>
                                         @php
@@ -141,13 +145,13 @@
             let dataC = $tr.children("td").map(function(){
                 return $(this).text();
             }).get();
-            let id = dataC[0];
-            let idC = "route('admin.categorys.update',"+dataC[0]+")";
+            let id = dataC[1];
+            let idC = "route('admin.categorys.update',"+dataC[1]+")";
             let url = '{{ route('admin.categorys.update', 'id') }}';
             console.log(url);
             $('#feCategory').attr('action',url)
-            $('#idC').val(dataC[0]);
-            $('#fcategory').val(dataC[1]);
+            $('#idC').val(dataC[1]);
+            $('#fcategory').val(dataC[2]);
         });
         function getid(id){
             var zz = '{{ route('admin.categorys.update', '+id+') }}';

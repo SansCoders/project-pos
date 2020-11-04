@@ -39,10 +39,11 @@
                                 @foreach ($units as $index => $unit)
                                 <tr>
                                     <td>{{ $units->firstitem() + $index }}</td>
+                                    <td class="d-none">{{ $unit->id }}</td>
                                     <td>{{ $unit->unit }}</td>
                                     <td class="table-actions">
                                         <span data-toggle="modal" data-target="#editUnit">
-                                            <a href="#!" class="table-action text-light ec" data-toggle="tooltip" data-original-title="Ubah">
+                                            <a href="#!" class="table-action text-light eu" data-toggle="tooltip" data-original-title="Ubah">
                                                     <i class="fas fa-edit"></i>
                                             </a>
                                         </span>
@@ -91,4 +92,52 @@
       </div>
     </div>
 </div>
+
+<div class="modal fade" id="editUnit" tabindex="-1" role="dialog" aria-labelledby="editUnitLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editUnitLabel">Edit Unit</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <form method="POST" id="feUnit">
+            @csrf
+            @method('put')
+            <input type="hidden" id="idU" name="idU">
+            <label for="fUnit">Nama Unit</label>
+            <input id="fUnit" name="name" type="text" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function(){
+        $('.eu').on('click',function(){
+            $tr = $(this).closest('tr');
+            let dataUP = $tr.children("td").map(function(){
+                return $(this).text();
+            }).get();
+            let id = dataUP[1];
+            let url = '{{ route('admin.units.update', 'id') }}';
+            console.log(url);
+            $('#feUnit').attr('action',url)
+            $('#idU').val(dataUP[1]);
+            $('#fUnit').val(dataUP[2]);
+        });
+        function getid(id){
+            var zz = '{{ route('admin.units.update', '+id+') }}';
+            return zz;
+        }
+    });
+</script>
+@endpush

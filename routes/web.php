@@ -40,30 +40,42 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     Route::get('/admin/units', 'ProductController@getAllUnits')->name('admin.common_units');
     Route::post('/admin/units', 'UnitsController@storeUnit')->name('admin.unit.store');
+    Route::put('/admin/units/{id}', 'UnitsController@updateUnit')->name('admin.units.update');
 
     Route::get('/admin/categorys', 'CategoryProductController@getAllCategory')->name('admin.categorys');
     Route::post('/admin/categorys', 'CategoryProductController@storeCategory')->name('admin.categorys.store');
     Route::put('/admin/categorys/{id}', 'CategoryProductController@updateCategory')->name('admin.categorys.update');
 
     Route::get('/admin/settings', 'AdminController@settingsPage')->name('admin.settings');
+    Route::post('/admin/settings', 'AdminController@updateInfoPage')->name('admin.update-settings');
 });
 
 Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier', 'CashierController@index')->name('cashier.home');
     Route::get('/cashier/products', 'ProductController@getAllProducts')->name('cashier.products');
     Route::post('/cashier/products', 'ProductController@storeProduct')->name('cashier.products.store');
+    Route::get('/cashier/product_info/{id}', 'ProductController@getInfoProduct');
+
+    Route::get('/cashier/transaction', 'CashierController@transactionProduct')->name('cashier.transaction');
+    Route::get('/cashier/t/{orderid}', 'CashierController@processCheckout')->name('cashier.check.checkout');
+    Route::post('/cashier/t/{orderid}/confirm', 'CashierController@confirmCheckout')->name('cashier.confirm.checkout');
 
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
 });
 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
+    Route::get('/product/search', 'ProductController@searchProduct')->name('search.product');
     Route::get('/addtocart', function () {
         return redirect()->back();
     });
     Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
 
+    Route::get('/category/{name}', 'HomeController@getProductbyCategorybyName')->name('categ.name');
+
     Route::get('/checkout', 'ProductController@checkOutProducts')->name('checkout');
+    Route::post('/checkout/process', 'ProductController@processCheckOut')->name('checkout.process');
+    Route::delete('/checkout/{id}', 'ProductController@destroyItemFromCheckout')->name('checkout.destroy');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');
