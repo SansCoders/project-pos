@@ -62,6 +62,8 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::post('/cashier/t/{orderid}/confirm', 'CashierController@confirmCheckout')->name('cashier.confirm.checkout');
 
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
+    Route::get('/cashier/add-stock/{id}', 'StockController@addStockProduct')->name('stock.add.process');
+    Route::put('/cashier/add-stock/{id}', 'StockController@stockIn_store')->name('stock.stockIn.process');
 });
 
 Route::group(['middleware' => ['auth:web']], function () {
