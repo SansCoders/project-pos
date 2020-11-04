@@ -1,126 +1,27 @@
 @extends('dashboard-layout.master')
 
-@section('add-css')
-<style>
-.modal-dialog {
-    max-width: 900px;
-}
-
-#preview_img{
-  width: 100%;
-  min-height: 150px;
-  align-self: center;
-  margin: 20px 0 20px 0;
-}
-#preview_img img{
-  border-radius: 20px
-}
-
-#alligator-turtle {
-  object-fit: cover;
-  object-position: 100% 0;
-
-  width: 300px;
-  height: 337px;
-}
-</style>
-@endsection
-
 @section('content')
 <div class="header pb-6 d-flex align-items-center" style="min-height: 100px; background-size: cover; background-position: center top;">
-    <span class="mask bg-gradient-danger opacity-8"></span>
+    <span class="mask bg-gradient-primary opacity-8"></span>
 </div>
 
 <div class="container-fluid mt--5">
-
-  <div class="row">
+<div class="row">
       <div class="col-xl-12">
           <div class="card">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
                 <div class="col">
-                  <h5 class="h3 mb-0">Management Produk</h5>
+                  <h5 class="h3 mb-0">Edit Produk</h5>
                 </div>
                 
                 <div class="col text-right">
-                  <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
+                  <a class="btn btn-primary"  href="{{url()->previous()}}">Kembali</a>
                 </div>
               </div>
             </div>
             <div class="card-body">
-              <div class="table-responsive">
-            <table class="table align-items-center">
-                <thead class="thead-light">
-                    <tr>
-                        <th>no</th>
-                        <th>Kode Produk</th>
-                        <th>Nama Produk</th>
-                        <th>Harga Produk</th>
-                        <th>Stok Produk</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody class="list">
-                  @php
-                      $i = 1;
-                  @endphp
-                    @foreach ($products as $index => $product)
-                      <tr>
-                        <td>{{ $i++ }}</td>
-                        <td>{{ $product->kodebrg }}</td>
-                        <td>{{ $product->nama_product }}</td>
-                        <td>{{ $product->price }}</td>
-                        <td>{{ $product->unit_id }}</td>
-                        <td><a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a></td>
-                      </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-            </div>
-          </div>
-        </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="infoProduct" tabindex="-1" role="dialog" aria-labelledby="infoProductLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="infoProductLabel">Info Product</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="table-responsive">
-            <table class="table align-items-center">
-                <thead class="thead-light">
-                    <tr>
-                        <th>no</th>
-                    </tr>
-                </thead>
-                <tbody class="list" id="tbody">
-
-                </tbody>
-            </table>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary">edit</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProductLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addProductLabel">Tambah Produk</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body row">
+            <div class="modal-body row">
             {{-- <div id="netframe">
               <iframe height="100%" width="100%" class="netframe" src="pullsite.php" id="main_frame"></iframe>
           </div>
@@ -148,7 +49,7 @@
                   @csrf
                   <div class="form-group">
                     <label for="pKode" class="form-control-label">Kode Produk <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
-                    <input id="pKode" name="pKode" value="{{old('pKode')}}" type="text" class="form-control" onkeyup="ppKode();" required>
+                    <input id="pKode" name="pKode" value="{{old('pKode')}}" type="text" class="form-control" onkeyup="ppKode();" required>{{$getProduct->nama_product}}
                     @error('pKode')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -206,14 +107,10 @@
                   </div>
             </div>
           </div>
-          <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
           </div>
-          </form>
         </div>
-      </div>
-  </div>
-</div>
+
 @endsection
 
 @push('scripts')
@@ -229,46 +126,13 @@
         } );
   });
 
-  $(".infop").click(function(e){
-    e.preventDefault();
-    var dataid_p = $(this).data('product_id');
-    console.log(dataid_p);
-    $.ajax({
-      dataType: 'json',
-      type: "GET",
-      url: '/cashier/getinfo_product/'+dataid_p,
-      success: function(result){
-            console.log(result);
-            var res='';
-            $.each (result, function (key, value) {
-            res +=
-            '<tr>'+
-                '<td>'+value.id+'</td>'+
-                '<td>'+value.nama_product+'</td>'+
-           '</tr>';
-
-            });
-
-            $('tbody').html(res);
-        }
-    });
-  });
-
   $(".priceProduct").each(function() {
       $(this).html('RP ' +$(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
   });
   $(document).on('keydown', '#pKode', function(e) {
     if (e.keyCode == 32) return false;
   });
-  // function ppKode()
-  // {
-  //   $("#preview_pKode").html($("#pKode").val());
-  //   $('#pKode').change(function(){
-  //     if($("#preview_pKode").text().length === 0){
-  //       $("#preview_pKode").text("Kode Produk");
-  //     }
-  //   });
-  // }
+
   function ppNama()
   {
     $("#preview_pNama").html($("#pNama").val());
