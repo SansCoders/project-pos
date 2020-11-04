@@ -35,12 +35,12 @@ class ProductController extends Controller
             return json_encode('error');
         }
 
-        return view('cashier.productDetail', compact(['getProduct','stock','categories','categors', 'unitss' , 'units']));
+        return view('cashier.productDetail', compact(['getProduct', 'stock', 'categories', 'categors', 'unitss', 'units']));
     }
 
     public function getAllProducts()
     {
-        $products = Product::all()->sortByDesc("created_at");
+        $products = Product::paginate(10);
         $categories = CategoryProduct::get();
         $units = Unit::get();
         if (Auth::guard('admin')->check()) {
@@ -79,7 +79,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('imgproduct')) {
             $gambar = $request->file('imgproduct');
-            $new_gambar = $request->pKode . '_' . time() . $gambar->getClientOriginalName();
+            $new_gambar = $products->kodebrg . '_' . time() . $gambar->getClientOriginalName();
             $lokasi_gambar = public_path('/product-img');
             $gmbr = Image::make($gambar->path());
             $gmbr->resize(735, 552)->save($lokasi_gambar . '/' . $new_gambar);
@@ -89,17 +89,15 @@ class ProductController extends Controller
 
         $slife = DB::table('products')->where('id', $request->id)->update([
             'category_id' => $request->pCategory,
-            'kodebrg' => $request->pKode,
             'nama_product' => $request->pNama,
             'price' => $request->pPrice,
             'img' => 'product-img/' . $new_gambar,
             'description' => $request->pDescription,
             'slug' => Str::slug($request->pNama)
         ]);
-        if($slife) {
-            return redirect()->back()->with('success', 'Product Telah Di Perbaharui');
+        if ($slife) {
+            return redirect()->route('cashier.products')->with('success', 'Product Telah Di Perbaharui');
         }
-        
     }
 
     public function storeProduct(Request $request)
@@ -122,9 +120,6 @@ class ProductController extends Controller
         } else {
             $new_gambar = 'default-img-product.png';
         }
-
-
-
         $product = new Product([
             'category_id' => $request->pCategory,
             'kodebrg' => $request->pKode,
@@ -235,23 +230,6 @@ class ProductController extends Controller
         } else {
             $latestOrder = $latestOrder->count();
         }
-
-        //debug
-        // $data[] = [
-        //     'transaction_id' => date('Ymd') . $buyer->id . str_pad($latestOrder + 1, 5, "0", STR_PAD_LEFT),
-        //     'user_id' => $buyer->id,
-        //     'user_fullname' => $buyer->name,
-        //     'cashier_id' => null,
-        //     'cashier_name' => null,
-        //     'products_id' => json_encode($products_id),
-        //     'products_list' => json_encode($products_list),
-        //     'products_buyvalues' => json_encode($buy_values),
-        //     'products_prices' => json_encode($products_price),
-        //     'type' => 1,
-        //     'is_done' => 0,
-        //     'done_time' => null
-        // ];
-
         $receipt = new Receipts_Transaction([
             'transaction_id' => date('Ymd') . $buyer->id . str_pad($latestOrder + 1, 5, "0", STR_PAD_LEFT),
             'user_id' => $buyer->id,

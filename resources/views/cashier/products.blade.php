@@ -51,10 +51,6 @@
                   <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
                 </div>
               </div>
-              
-              <div class="col text-right">
-                <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
-              </div>
           </div>
           <div class="card-body pl-0 pr-0">
             <div class="table-responsive">
@@ -69,12 +65,9 @@
                   </tr>
                 </thead>
                 <tbody class="list">
-                    @php
-                        $i = 1;
-                    @endphp
                     @foreach ($products as $index => $product)
                       <tr>
-                        <th role="row">{{ $i++ }}</th>
+                        <th role="row">{{ $products->firstItem() + $index }}</th>
                         <td>{{ $product->kodebrg }}</td>
                         <td class="d-flex align-items-center">
                           <img src="{{ asset($product->img) }}" class="rounded-circle avatar" style="max-width: 50px" alt="">
@@ -87,6 +80,9 @@
                 </tbody>
               </table>
             </div>
+          </div>
+          <div class="card-footer">
+            {{$products->links()}}
           </div>
         </div>
     </div>

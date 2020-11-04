@@ -21,7 +21,7 @@
                 </div>
                 
                 <div class="col text-right">
-                  <a class="btn btn-primary"  href="{{url()->previous()}}">Kembali</a>
+                  <a class="btn btn-primary"  href="{{route('cashier.products')}}">Kembali</a>
                 </div>
               </div>
             </div>
@@ -33,10 +33,7 @@
                   <div class="form-group">
                     <input type="hidden" id="id" name="id" value="{{$getProduct->id}}">
                     <label for="pKode" class="form-control-label">Kode Produk <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
-                    <input id="pKode" name="pKode" value="{{$getProduct->kodebrg}}" type="text" class="form-control" onkeyup="ppKode();" required>
-                    @error('pKode')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
+                    <input value="{{$getProduct->kodebrg}}" type="text" class="form-control" disabled required>
                   </div>
                   <div class="form-group">
                     <label for="pNama" class="form-control-label">Nama Produk <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
@@ -55,7 +52,7 @@
                     </select>
                   </div>
                   <div class="row">
-                    <div class="form-group col-6">
+                    {{-- <div class="form-group col-6">
                         <label for="pStok" class="form-control-label">Stok</label>
                         <div class="input-group input-group-merge">
                           <input type="text" value="{{$stock->stock}}" class="form-control justnumber" name="pStok" placeholder="0" disabled>
@@ -66,7 +63,7 @@
                             @endforeach
                           </select>
                         </div>
-                      </div>
+                      </div> --}}
                     <div class="form-group col-6">
                       <label for="pPrice" class="form-control-label">Harga</label>
                       <div class="input-group input-group-merge">
