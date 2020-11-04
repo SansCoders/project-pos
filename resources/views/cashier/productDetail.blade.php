@@ -22,41 +22,19 @@
             </div>
             <div class="card-body">
             <div class="modal-body row">
-            {{-- <div id="netframe">
-              <iframe height="100%" width="100%" class="netframe" src="pullsite.php" id="main_frame"></iframe>
-          </div>
-          Enter A URL:
-          <input type="text" name="url" id="url">
-          <input type="button" value="load" id="load">
-          <br><br>   --}}
-            <div class="col-lg-6 mb-4 d-flex flex-column">
-              <h1 class="h2 text-muted mb-3">Preview</h1>
-              <div class="card" style="border: 1px solid grey">
-                <div class="card-body">
-                  <div id="preview_img" class="text-center"></div>
-                  <h2 id="preview_pNama" class="mb-1 text-muted">Nama Produk</h2>
-                  {{-- <h6 class="text-muted" id="preview_pKode">Kode Produk</h6> --}}
-                  <h2 class="text-dark" id="preview_pPrice">IDR 0,00</h2>
-                  <p id="preview_description"></p>
-                  <div class="text-right">
-                    <button class="btn btn-success btn-icon"><i class="ni ni-basket"></i></button>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="col-lg-6">
                 <form method="POST" action="{{route('cashier.products.store')}}" enctype="multipart/form-data">
                   @csrf
                   <div class="form-group">
                     <label for="pKode" class="form-control-label">Kode Produk <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
-                    <input id="pKode" name="pKode" value="{{old('pKode')}}" type="text" class="form-control" onkeyup="ppKode();" required>{{$getProduct->nama_product}}
+                    <input id="pKode" name="pKode" value="{{$getProduct->kodebrg}}" type="text" class="form-control" onkeyup="ppKode();" required>
                     @error('pKode')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                   </div>
                   <div class="form-group">
                     <label for="pNama" class="form-control-label">Nama Produk <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
-                    <input id="pNama" name="pNama" value="{{old('pNama')}}" type="text" class="form-control" onkeyup="ppNama();" required>
+                    <input id="pNama" name="pNama" value="{{$getProduct->nama_product}}" type="text" class="form-control" onkeyup="ppNama();" required>
                     @error('pNama')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
@@ -97,7 +75,7 @@
                   <div class="form-group">
                     <label for="imgproduct" class="form-control-label">Gambar</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="imgproduct" name="imgproduct" lang="id" accept="image/*">
+                      <input type="file" value="{{$getProduct->img}}" class="custom-file-input" id="imgproduct" name="imgproduct" lang="id" accept="image/*">
                       <label class="custom-file-label" for="imgproduct">Select file</label>
                     </div>
                   </div>

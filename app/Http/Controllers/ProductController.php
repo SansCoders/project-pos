@@ -59,11 +59,11 @@ class ProductController extends Controller
 
     public function updateProduct(Request $request, $id) 
     {
-        $products = Product::find($id)
+        $products = Product::find($id);
         $request->validate([
             'pNama' => 'required|min:3|max:90',
             'pStok' => 'required|numeric',
-            'imgproduct' => 'mimes:jpeg,png|max:1014',
+            'imgproduct' => 'mimes:jpeg,png|max:1014'
         ]);
 
         if ($request->hasFile('imgproduct')) {
@@ -74,9 +74,9 @@ class ProductController extends Controller
             $gmbr->resize(735, 552)->save($lokasi_gambar . '/' . $new_gambar);
         } else {
             $new_gambar = $products->img;
-        }
+        };
 
-        DB::table('products') - > where('id', $request->id) - > update([
+        DB::table('products')->where('id', $request->id)->update([
             'category_id' => $request->pCategory,
             'kodebrg' => $request->pKode,
             'nama_product' => $request->pNama,
