@@ -56,6 +56,7 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier/products', 'ProductController@getAllProducts')->name('cashier.products');
     Route::post('/cashier/products', 'ProductController@storeProduct')->name('cashier.products.store');
     Route::get('/cashier/product_info/{id}', 'ProductController@getInfoProduct');
+    Route::post('/cashier/product_info/', 'ProductController@updateProduct')->name('cashier.products.update');
 
     Route::get('/cashier/transaction', 'CashierController@transactionProduct')->name('cashier.transaction');
     Route::get('/cashier/t/{orderid}', 'CashierController@processCheckout')->name('cashier.check.checkout');

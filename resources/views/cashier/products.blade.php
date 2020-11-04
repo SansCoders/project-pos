@@ -28,13 +28,18 @@
 
 @section('content')
 <div class="header pb-6 d-flex align-items-center" style="min-height: 100px; background-size: cover; background-position: center top;">
-    <span class="mask bg-gradient-danger opacity-8"></span>
+    <span class="mask bg-primary opacity-8"></span>
 </div>
 
 <div class="container-fluid mt--5">
 
   <div class="row">
       <div class="col-xl-12">
+      @if(session()->has('success'))
+        <div class="alert alert-success">
+          {{ session()->get('success') }}
+        </div>
+      @endif
           <div class="card">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
