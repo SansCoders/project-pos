@@ -26,13 +26,16 @@ class ProductController extends Controller
     public function getInfoProduct($id)
     {
         $getProduct = Product::where('id', $id)->first();
+        $categors = CategoryProduct::where('id', $getProduct->category_id)->first();
         $categories = CategoryProduct::get();
         $units = Unit::get();
+        $unitss = Unit::where('id', $getProduct->unit_id)->first();
+        $stock = Stock::where('id', $getProduct->id)->first();
         if ($getProduct == null) {
             return json_encode('error');
         }
 
-        return view('cashier.productDetail', compact(['getProduct', 'categories', 'units']));
+        return view('cashier.productDetail', compact(['getProduct','stock','categories','categors', 'unitss' , 'units']));
     }
 
     public function getAllProducts()
@@ -66,12 +69,11 @@ class ProductController extends Controller
         }
     }
 
-    public function updateProduct(Request $request, $id)
+    public function updateProduct(Request $request)
     {
-        $products = Product::find($id);
+        $products = Product::find($request->id);
         $request->validate([
             'pNama' => 'required|min:3|max:90',
-            'pStok' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014'
         ]);
 
@@ -85,16 +87,19 @@ class ProductController extends Controller
             $new_gambar = $products->img;
         };
 
-        DB::table('products')->where('id', $request->id)->update([
+        $slife = DB::table('products')->where('id', $request->id)->update([
             'category_id' => $request->pCategory,
             'kodebrg' => $request->pKode,
             'nama_product' => $request->pNama,
             'price' => $request->pPrice,
             'img' => 'product-img/' . $new_gambar,
             'description' => $request->pDescription,
-            'unit_id' => $request->pUnit,
             'slug' => Str::slug($request->pNama)
         ]);
+        if($slife) {
+            return redirect()->back()->with('success', 'Product Telah Di Perbaharui');
+        }
+        
     }
 
     public function storeProduct(Request $request)

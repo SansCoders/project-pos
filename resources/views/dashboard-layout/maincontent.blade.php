@@ -1,15 +1,7 @@
 @section('main-content')
-@php
-    $company_profile = App\AboutUs::first();
-    if(!Auth::guard('web')->check()){
-      $bgnavtop = "bg-gradient-danger";
-    }else{
-      $bgnavtop = "bg-primary";
-    }
-@endphp
 <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand {{$bgnavtop}} navbar-dark border-bottom " style="min-height: 25px; background-size: cover; background-position: center top;">
+    <nav class="navbar navbar-top navbar-expand navbar-dark border-bottom bg-primary" style="min-height: 25px; background-size: cover; background-position: center top;">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
