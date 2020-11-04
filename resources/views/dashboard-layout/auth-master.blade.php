@@ -15,10 +15,16 @@
 </head>
 
 <body class="bg-default">
+  @php
+      $company_profile = App\AboutUs::first();
+      if(!isset($bgauth_top)){
+        $bgauth_top = "bg-gradient-primary";
+      }
+  @endphp
   <!-- Main content -->
   <div class="main-content">
     <!-- Header -->
-    <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-9">
+    <div class="header {{$bgauth_top}} py-7 py-lg-8 pt-lg-9">
       <div class="container">
         <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
@@ -45,7 +51,10 @@
       <div class="row align-items-center justify-content-xl-between">
         <div class="col-xl-6">
           <div class="copyright text-center text-xl-left text-muted">
-          &copy; 2020 <a href="{{url('/')}}" class="font-weight-bold ml-1">Nama Toko</a>
+          &copy; 2020 <a href="{{url('/')}}" class="font-weight-bold ml-1">
+          @isset ($company_profile->name)
+            {{$company_profile->name}}
+          @endisset</a>
           </div>
         </div>
       </div>

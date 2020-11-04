@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin', 'AdminController@index')->name('admin.home');
     Route::get('/admin/users-sales', 'AdminController@UsersSales')->name('admin.users-sales');
     Route::post('/admin/users-sales', 'AdminController@storeUserSales')->name('admin.users-sales.store');
+    Route::get('/admin/users-sales/{id}/edit', 'AdminController@editUserSales')->name('admin.users-sales.edit');
 
     Route::get('/admin/users-cashier', 'AdminController@UsersCashier')->name('admin.users-cashier');
     Route::post('/admin/users-cashier', 'AdminController@storeUserCashier')->name('admin.users-cashier.store');
@@ -65,7 +66,7 @@ Route::group(['middleware' => ['auth:cashier']], function () {
 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
-    Route::get('/product/search', 'ProductController@searchProduct')->name('search.product');
+    Route::post('/product/search', 'ProductController@searchProduct')->name('search.product');
     Route::get('/addtocart', function () {
         return redirect()->back();
     });

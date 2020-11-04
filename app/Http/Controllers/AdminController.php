@@ -100,4 +100,14 @@ class AdminController extends Controller
         }
         return redirect()->back();
     }
+
+    public function editUserSales($id)
+    {
+        $dataUser = User::where('id', $id)->first();
+        if ($dataUser == null) {
+            abort(404);
+        }
+
+        return view('admin.edit-user-sales', compact('dataUser'));
+    }
 }

@@ -78,7 +78,7 @@
     @foreach ($products as $product)
     <div class="col-sm-5 col-md-4 col-xs-4 ">
       <div class="card m-3 shadow-sm p-0" style="background: rgba(155, 89, 182, 0.3)">
-        <img class="card-img-top alligator-turtle" style="align-self: center; object-fit: cover; width: 300px; height: 300px; object-position: 50% 0;" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
+        <img class="card-img-top alligator-turtle" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
         <div class="card-body">
           <h3 class="text-dark">
             {{ $product->nama_product }}

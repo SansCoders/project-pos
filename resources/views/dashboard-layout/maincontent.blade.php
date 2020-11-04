@@ -1,13 +1,27 @@
 @section('main-content')
+@php
+    $company_profile = App\AboutUs::first();
+    if(!Auth::guard('web')->check()){
+      $bgnavtop = "bg-gradient-danger";
+    }else{
+      $bgnavtop = "bg-primary";
+    }
+@endphp
 <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand bg-gradient-danger navbar-dark border-bottom " style="min-height: 25px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <nav class="navbar navbar-top navbar-expand {{$bgnavtop}} navbar-dark border-bottom " style="min-height: 25px; background-size: cover; background-position: center top;">
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             
           @if(Auth::guard('web')->check())
           <ul class="navbar-nav align-items-center mr-auto mr-md-auto ">
-            <a href="{{route('home')}}" class="nav-link font-weight-bold text-default">Nama Toko</a>
+            <a href="{{route('home')}}" class="nav-link font-weight-bold text-default">
+            @isset($company_profile->name)
+                {{$company_profile->name}}
+            @else
+            POS
+            @endisset
+            </a>
           </ul>
           @endif
           <!-- Navbar links -->
@@ -219,7 +233,7 @@
     <!-- Page content -->
     {{-- <div class="container-fluid"> --}}
     @yield('content')
-      @yield('footer')
+    @yield('footer')
       <!-- Footer -->
       {{-- <footer class="footer pt-0">
         <div class="row align-items-center justify-content-lg-between">

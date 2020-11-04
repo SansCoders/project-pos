@@ -1,4 +1,5 @@
 @extends('dashboard-layout.master')
+@include('dashboard-layout.footer')
 @section('add-css')
     <style>
         /* Chrome, Safari, Edge, Opera */

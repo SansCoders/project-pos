@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\AboutUs;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -55,7 +56,8 @@ class LoginController extends Controller
 
     public function showAdminLoginForm()
     {
-        return view('auth.login', ['url' => 'admin']);
+        $bgauth_top = "bg-gradient-teal";
+        return view('auth.login', ['url' => 'admin', 'bgauth_top' => $bgauth_top]);
     }
 
     public function adminLogin(Request $request)
@@ -76,7 +78,8 @@ class LoginController extends Controller
 
     public function showCashierLoginForm()
     {
-        return view('auth.login', ['url' => 'cashier']);
+        $bgauth_top = "bg-gradient-warning";
+        return view('auth.login', ['url' => 'cashier', 'bgauth_top' => $bgauth_top]);
     }
 
     public function cashierLogin(Request $request)
