@@ -50,7 +50,7 @@
                                     </a>
                                     <div class="media-body">
                                       <span class="name mb-0 text-sm">{{$product->nama_product}}</span>
-                                      <span class="badge badge-pill badge-info">d</span>
+                                      <span class="badge badge-pill badge-info">{{$product->category->name}}</span>
                                     </div>
                                 </div>
                             </th>
