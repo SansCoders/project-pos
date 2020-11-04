@@ -58,8 +58,8 @@
                     <div class="form-group col-6">
                         <label for="pStok" class="form-control-label">Stok</label>
                         <div class="input-group input-group-merge">
-                          <input type="text" value="{{$stock->stock}}" class="form-control justnumber" name="pStok" placeholder="0">
-                          <select name="pUnit" id="pUnit" class="form-control">
+                          <input type="text" value="{{$stock->stock}}" class="form-control justnumber" name="pStok" placeholder="0" disabled>
+                          <select name="pUnit" id="pUnit" class="form-control" disabled>
                               <option value="{{ $unitss->id }}">{{ $unitss->unit }}</option>
                             @foreach ($units as $u)
                               <option value="{{ $u->id }}">{{ $u->unit }}</option>

@@ -74,7 +74,6 @@ class ProductController extends Controller
         $products = Product::find($request->id);
         $request->validate([
             'pNama' => 'required|min:3|max:90',
-            'pStok' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014'
         ]);
 
@@ -95,7 +94,6 @@ class ProductController extends Controller
             'price' => $request->pPrice,
             'img' => 'product-img/' . $new_gambar,
             'description' => $request->pDescription,
-            'unit_id' => $request->pUnit,
             'slug' => Str::slug($request->pNama)
         ]);
         if($slife) {
