@@ -29,5 +29,12 @@ class UsersTableSeeder extends Seeder
             'email' => 'user1@email.com',
             'password' => bcrypt('password'),
         ]);
+        DB::table('about_us')->insert([
+            'name' => 'Toko Habibi',
+            'img_company' => 'assets/img/brand/favicon.png',
+            'phone' => null,
+            'address' => "Jl.",
+            'about' => "is",
+        ]);
     }
 }
