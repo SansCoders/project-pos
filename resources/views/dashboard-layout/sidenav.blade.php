@@ -6,7 +6,14 @@
     <div class="scrollbar-inner">
       <div class="sidenav-header d-flex  align-items-center">
         <a class="navbar-brand d-flex flex-column" href="javascript:void(0)">
-          {{-- <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="..."> --}}
+            @php
+            $constCompany = App\AboutUs::first();
+            if($constCompany == null) {
+                $constNamaCompany = "App POS";
+            }else{
+                $constNamaCompany = $constCompany->name;
+            }
+            @endphp
           <i class="ni ni-shop"></i><h2>{{$constNamaCompany}}</h2>
         </a>
         <div class=" ml-auto ">
