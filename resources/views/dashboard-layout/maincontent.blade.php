@@ -11,7 +11,15 @@
             @isset($company_profile->name)
                 {{$company_profile->name}}
             @else
-            POS
+            @php
+                $constCompany = App\AboutUs::first();
+                if($constCompany == null) {
+                    $constNamaCompany = "App POS";
+                }else{
+                    $constNamaCompany = $constCompany->name;
+                }
+            @endphp
+              {{$constNamaCompany}}
             @endisset
             </a>
           </ul>
