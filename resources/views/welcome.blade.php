@@ -44,7 +44,11 @@
                             <div class="row">
                                 <div class="col-6 collapse-brand">
                                     <a href="javascript:void(0)">
-                                        <img src="{{asset($constCompany->img_company)}}">
+                                        @if ($constCompany->img_company == null)
+                                        <img src="#">
+                                         @else
+                                         <img src="{{asset($constCompany->img_company)}}">
+                                        @endif
                                     </a>
                                 </div>
                                 <div class="col-6 collapse-close">
