@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
-    return redirect('/home');
+    return view('welcome');
 });
 
 Auth::routes(['register' => false]);
@@ -31,6 +32,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin', 'AdminController@index')->name('admin.home');
     Route::get('/admin/users-sales', 'AdminController@UsersSales')->name('admin.users-sales');
     Route::post('/admin/users-sales', 'AdminController@storeUserSales')->name('admin.users-sales.store');
+    Route::get('/admin/users-sales/{id}/edit', 'AdminController@editUserSales')->name('admin.users-sales.edit');
 
     Route::get('/admin/users-cashier', 'AdminController@UsersCashier')->name('admin.users-cashier');
     Route::post('/admin/users-cashier', 'AdminController@storeUserCashier')->name('admin.users-cashier.store');
@@ -55,17 +57,20 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier/products', 'ProductController@getAllProducts')->name('cashier.products');
     Route::post('/cashier/products', 'ProductController@storeProduct')->name('cashier.products.store');
     Route::get('/cashier/product_info/{id}', 'ProductController@getInfoProduct');
+    Route::post('/cashier/product_info/', 'ProductController@updateProduct')->name('cashier.products.update');
 
     Route::get('/cashier/transaction', 'CashierController@transactionProduct')->name('cashier.transaction');
     Route::get('/cashier/t/{orderid}', 'CashierController@processCheckout')->name('cashier.check.checkout');
     Route::post('/cashier/t/{orderid}/confirm', 'CashierController@confirmCheckout')->name('cashier.confirm.checkout');
 
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
+    Route::get('/cashier/add-stock/{id}', 'StockController@addStockProduct')->name('stock.add.process');
+    Route::put('/cashier/add-stock/{id}', 'StockController@stockIn_store')->name('stock.stockIn.process');
 });
 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/product/{slug}', 'ProductController@detailsProduct')->name('details.product');
-    Route::get('/product/search', 'ProductController@searchProduct')->name('search.product');
+    Route::post('/product/search', 'ProductController@searchProduct')->name('search.product');
     Route::get('/addtocart', function () {
         return redirect()->back();
     });
@@ -76,6 +81,8 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/checkout', 'ProductController@checkOutProducts')->name('checkout');
     Route::post('/checkout/process', 'ProductController@processCheckOut')->name('checkout.process');
     Route::delete('/checkout/{id}', 'ProductController@destroyItemFromCheckout')->name('checkout.destroy');
+
+    Route::get('/my', 'HomeController@myProfile');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');

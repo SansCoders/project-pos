@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use PDO;
 
 class ProductController extends Controller
@@ -25,18 +26,21 @@ class ProductController extends Controller
     public function getInfoProduct($id)
     {
         $getProduct = Product::where('id', $id)->first();
+        $categors = CategoryProduct::where('id', $getProduct->category_id)->first();
         $categories = CategoryProduct::get();
         $units = Unit::get();
+        $unitss = Unit::where('id', $getProduct->unit_id)->first();
+        $stock = Stock::where('id', $getProduct->id)->first();
         if ($getProduct == null) {
             return json_encode('error');
         }
 
-        return view('cashier.productDetail', compact(['getProduct', 'categories','units']));
+        return view('cashier.productDetail', compact(['getProduct', 'stock', 'categories', 'categors', 'unitss', 'units']));
     }
 
     public function getAllProducts()
     {
-        $products = Product::all()->sortByDesc("created_at");
+        $products = Product::paginate(10);
         $categories = CategoryProduct::get();
         $units = Unit::get();
         if (Auth::guard('admin')->check()) {
@@ -53,39 +57,47 @@ class ProductController extends Controller
 
     public function searchProduct(Request $request)
     {
-        $cari = $request->cari;
-        dd($cari);
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
+        $categories = CategoryProduct::all();
+        $cari = $request->get('cari');
+        $products = Product::where('nama_product', 'LIKE', '%' . $cari . '%')->get();
+        if (count($products) > 0) {
+            return view('home', compact(['products', 'categories', 'cart', 'cekTransactions', 'cari']));
+        } else {
+            return view('home', compact(['products', 'categories', 'cart', 'cekTransactions']))->with('message', 'maaf, tidak menemukan yang dicari');
+        }
     }
 
-    public function updateProduct(Request $request, $id) 
+    public function updateProduct(Request $request)
     {
-        $products = Product::find($id)
+        $products = Product::find($request->id);
         $request->validate([
             'pNama' => 'required|min:3|max:90',
-            'pStok' => 'required|numeric',
-            'imgproduct' => 'mimes:jpeg,png|max:1014',
+            'imgproduct' => 'mimes:jpeg,png|max:1014'
         ]);
 
         if ($request->hasFile('imgproduct')) {
             $gambar = $request->file('imgproduct');
-            $new_gambar = $request->pKode . '_' . time() . $gambar->getClientOriginalName();
+            $new_gambar = $products->kodebrg . '_' . time() . $gambar->getClientOriginalName();
             $lokasi_gambar = public_path('/product-img');
             $gmbr = Image::make($gambar->path());
             $gmbr->resize(735, 552)->save($lokasi_gambar . '/' . $new_gambar);
         } else {
             $new_gambar = $products->img;
-        }
+        };
 
-        DB::table('products') - > where('id', $request->id) - > update([
+        $slife = DB::table('products')->where('id', $request->id)->update([
             'category_id' => $request->pCategory,
-            'kodebrg' => $request->pKode,
             'nama_product' => $request->pNama,
             'price' => $request->pPrice,
             'img' => 'product-img/' . $new_gambar,
             'description' => $request->pDescription,
-            'unit_id' => $request->pUnit,
             'slug' => Str::slug($request->pNama)
         ]);
+        if ($slife) {
+            return redirect()->route('cashier.products')->with('success', 'Product Telah Di Perbaharui');
+        }
     }
 
     public function storeProduct(Request $request)
@@ -108,9 +120,6 @@ class ProductController extends Controller
         } else {
             $new_gambar = 'default-img-product.png';
         }
-
-        
-
         $product = new Product([
             'category_id' => $request->pCategory,
             'kodebrg' => $request->pKode,
@@ -221,23 +230,6 @@ class ProductController extends Controller
         } else {
             $latestOrder = $latestOrder->count();
         }
-
-        //debug
-        // $data[] = [
-        //     'transaction_id' => date('Ymd') . $buyer->id . str_pad($latestOrder + 1, 5, "0", STR_PAD_LEFT),
-        //     'user_id' => $buyer->id,
-        //     'user_fullname' => $buyer->name,
-        //     'cashier_id' => null,
-        //     'cashier_name' => null,
-        //     'products_id' => json_encode($products_id),
-        //     'products_list' => json_encode($products_list),
-        //     'products_buyvalues' => json_encode($buy_values),
-        //     'products_prices' => json_encode($products_price),
-        //     'type' => 1,
-        //     'is_done' => 0,
-        //     'done_time' => null
-        // ];
-
         $receipt = new Receipts_Transaction([
             'transaction_id' => date('Ymd') . $buyer->id . str_pad($latestOrder + 1, 5, "0", STR_PAD_LEFT),
             'user_id' => $buyer->id,

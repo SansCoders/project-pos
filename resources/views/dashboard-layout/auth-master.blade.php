@@ -1,12 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
     <meta name="author" content="Creative Tim">
-    <title>Argon Dashboard - Free Dashboard for Bootstrap 4</title>
+    <title>
+      Halaman Login
+      @php
+          $constCompany = App\AboutUs::first();
+          if($constCompany == null) {
+              $constNamaCompany = "App POS";
+          }else{
+              $constNamaCompany = $constCompany->name;
+          }
+      @endphp
+      {{$constNamaCompany}}</title>
     <link rel="icon" href="{{ asset('assets/img/brand/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <link rel="stylesheet" href="{{ asset('assets/vendor/nucleo/css/nucleo.css') }}" type="text/css">
@@ -15,16 +25,22 @@
 </head>
 
 <body class="bg-default">
+  @php
+      $company_profile = App\AboutUs::first();
+      if(!isset($bgauth_top)){
+        $bgauth_top = "bg-gradient-primary";
+      }
+  @endphp
   <!-- Main content -->
   <div class="main-content">
     <!-- Header -->
-    <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-9">
+    <div class="header {{$bgauth_top}} py-7 py-lg-8 pt-lg-9">
       <div class="container">
         <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
             <div class="col-xl-5 col-lg-6 col-md-8 px-5">
-              <h1>Ini logo</h1>
-              <h1 class="text-white">Project POS</h1>
+              <img src="{{ asset($constCompany->img_company) }}" alt="{{$constNamaCompany}}" style="max-width: 100px">
+              <h1 class="text-white">Selamat Datang</h1>
               <p class="text-lead text-white">Gunakan username dan password yang telah di daftarkan.</p>
             </div>
           </div>
@@ -45,7 +61,10 @@
       <div class="row align-items-center justify-content-xl-between">
         <div class="col-xl-6">
           <div class="copyright text-center text-xl-left text-muted">
-          &copy; 2020 <a href="{{url('/')}}" class="font-weight-bold ml-1">Nama Toko</a>
+          &copy; 2020 <a href="{{url('/')}}" class="font-weight-bold ml-1">
+          @isset ($company_profile->name)
+            {{$company_profile->name}}
+          @endisset</a>
           </div>
         </div>
       </div>

@@ -39,7 +39,7 @@
     </div>
 </div>
 <div class="container-fluid">
-  @if(session()->get('success'))
+   @if(session()->get('success'))
             <div class="alert alert-success">
                 asd &times;
             </div>

@@ -1,7 +1,7 @@
 @extends('dashboard-layout.master')
 @section('content')
     <div class="header pb-6 d-flex align-items-center" style="min-height: 500px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
-        <span class="mask bg-gradient-danger opacity-8"></span>
+        <span class="mask bg-gradient-primary opacity-8"></span>
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
@@ -20,16 +20,12 @@
                       <div class="col-lg-3 order-lg-2">
                         <div class="card-profile-image">
                           <a href="#">
-                            <img src="{{ $aboutUs->img_company }}" class="rounded-circle">
+                            <img src="{{ asset($aboutUs->img_company) }}" class="rounded-circle">
                           </a>
                         </div>
                       </div>
                     </div>
                     <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                      <div class="d-flex justify-content-between">
-                        <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
-                        <a href="#" class="btn btn-sm btn-default float-right">Message</a>
-                      </div>
                     </div>
                     <div class="card-body pt-0">
                       <div class="row">
@@ -59,20 +55,6 @@
                           </div>
                         </div>
                       </div>
-                      <div class="text-center">
-                        <h5 class="h3">
-                          Jessica Jones<span class="font-weight-light">, 27</span>
-                        </h5>
-                        <div class="h5 font-weight-300">
-                          <i class="ni location_pin mr-2"></i>Bucharest, Romania
-                        </div>
-                        <div class="h5 mt-4">
-                          <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
-                        </div>
-                        <div>
-                          <i class="ni education_hat mr-2"></i>University of Computer Science
-                        </div>
-                      </div>
                     </div>
                   </div>
             </div>
@@ -84,10 +66,10 @@
                                 <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Details</a>
+                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Logo</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Change Password</a>
+                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Summary</a>
                             </li>
                         </ul>
                     </div>
@@ -138,7 +120,20 @@
                               </form>   
                             </div>
                             <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
-                                <p class="description">Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+                              <div class="row">
+                                <div class="col-lg-4">
+                                  <img style="max-width: 200px" src="{{ asset($aboutUs->img_company) }}" alt="">
+                                </div>
+                                <div class="col-lg-8">
+                                  <form action="" method="POST">
+                                      <div class="form-group">
+                                        <label for="logoC" class="form-control-label">Logo</label>
+                                          <input type="file" class="form-control-file" name="" id="logoC">
+                                          <small class="text-primary"><strong>berbentuk : .jpg, .png, .jpeg</strong></small>
+                                      </div>
+                                    </form>
+                                </div>
+                              </div>  
                             </div>
                             <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
                                 <p class="description">Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>

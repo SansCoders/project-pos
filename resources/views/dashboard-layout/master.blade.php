@@ -6,8 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
-    <meta name="author" content="Creative Tim">
+    <meta name="description" content="POS APP">
     
     <title>
         @if(Auth::guard('admin')->check())
@@ -17,7 +16,16 @@
         @else 
             Sales
         @endif
-     - Nama Toko</title>
+     - 
+        @php
+            $constCompany = App\AboutUs::first();
+            if($constCompany == null) {
+                $constNamaCompany = "App POS";
+            }else{
+                $constNamaCompany = $constCompany->name;
+            }
+        @endphp
+        {{$constNamaCompany}}</title>
     <link rel="icon" href="{{ asset('assets/img/brand/favicon.png') }}" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <link rel="stylesheet" href="{{ asset('assets/vendor/nucleo/css/nucleo.css') }}" type="text/css">
@@ -34,7 +42,6 @@
 <body>
     @yield('sidenav')
     @yield('main-content')
-
     <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/js-cookie/js.cookie.js') }}"></script>

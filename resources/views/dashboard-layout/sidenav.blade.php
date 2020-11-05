@@ -7,7 +7,7 @@
       <div class="sidenav-header d-flex  align-items-center">
         <a class="navbar-brand d-flex flex-column" href="javascript:void(0)">
           {{-- <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="..."> --}}
-          <i class="ni ni-shop"></i><h2>POS</h2>
+          <i class="ni ni-shop"></i><h2>{{$constNamaCompany}}</h2>
         </a>
         <div class=" ml-auto ">
           <!-- Sidenav toggler -->
@@ -43,12 +43,12 @@
                       <span class="nav-link-text">Kategori Produk</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link {{ set_active('admin.products') }}" href="{{route('admin.products')}}">
                       <i class="ni ni-bag-17 text-default"></i>
                       <span class="nav-link-text">Produk</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link {{ set_active('admin.common_units') }}" href="{{route('admin.common_units')}}">
                       <i class="ni ni-tag text-default"></i>
@@ -75,6 +75,23 @@
                       </ul>
                     </div>
                 </li>
+            </ul>
+            <ul class="navbar-nav mb-md-3">
+              <li class="nav-item">
+                <a class="nav-link collapsed" href="#navbar-log" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
+                  <i class="fa fa-paperclip text-default"></i>
+                  <span class="nav-link-text">Aktivitas</span>
+                </a>
+                <div class="collapse" id="navbar-log">
+                  <ul class="nav nav-sm flex-column">
+                    <li class="nav-item">
+                      <a href="{{route('admin.users-sales')}}" class="nav-link ">
+                        <span class=""> Stock </span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
             </ul>
             <div class="my-3"></div>
             <ul class="navbar-nav">
