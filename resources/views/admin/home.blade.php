@@ -2,7 +2,7 @@
 @section('header-content')
 <!-- Header -->
 <div class="header pb-6 d-flex align-items-center" >
-  <span class="mask bg-gradient-danger opacity-8"></span>
+  <span class="mask bg-primary opacity-8"></span>
       <div class="container-fluid">
         <div class="header-body">
           <br/>
