@@ -105,10 +105,12 @@ class ProductController extends Controller
         $user = Auth::user();
         $request->validate([
             // 'pCategory' => 'numeric|required|min:3',
-            // 'pKode' => 'required|min:3|exists:App\Product,kodebrg',
+            'pKode' => 'required|min:3|unique:products,kodebrg',
             'pNama' => 'required|min:3|max:90',
             'pStok' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014',
+        ], [
+            'pKode.unique' => 'kode sudah digunakan, silahkan gunakan kode lain'
         ]);
 
         if ($request->hasFile('imgproduct')) {
@@ -122,7 +124,7 @@ class ProductController extends Controller
         }
         $product = new Product([
             'category_id' => $request->pCategory,
-            'kodebrg' => $request->pKode,
+            'kodebrg' => strtoupper($request->pKode),
             'nama_product' => $request->pNama,
             'price' => $request->pPrice,
             'img' => 'product-img/' . $new_gambar,
@@ -155,7 +157,6 @@ class ProductController extends Controller
         } else {
             return redirect()->back()->with('error', 'nope! ');
         }
-        // dd($product);
     }
 
     public function detailsProduct($slug)
