@@ -127,13 +127,6 @@
             </button>
           </div>
           <div class="modal-body row">
-            {{-- <div id="netframe">
-              <iframe height="100%" width="100%" class="netframe" src="pullsite.php" id="main_frame"></iframe>
-          </div>
-          Enter A URL:
-          <input type="text" name="url" id="url">
-          <input type="button" value="load" id="load">
-          <br><br>   --}}
             <div class="col-lg-6 mb-4 d-flex flex-column">
               <h1 class="h2 text-muted mb-3">Preview</h1>
               <div class="card" style="border: 1px solid grey">

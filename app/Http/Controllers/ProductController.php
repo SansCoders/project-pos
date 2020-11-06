@@ -80,18 +80,19 @@ class ProductController extends Controller
         if ($request->hasFile('imgproduct')) {
             $gambar = $request->file('imgproduct');
             $new_gambar = $products->kodebrg . '_' . time() . $gambar->getClientOriginalName();
+            $gambars = 'product-img/' . $new_gambar;
             $lokasi_gambar = public_path('/product-img');
             $gmbr = Image::make($gambar->path());
             $gmbr->resize(735, 552)->save($lokasi_gambar . '/' . $new_gambar);
         } else {
-            $new_gambar = $products->img;
+            $gambars = $products->img;
         };
 
         $slife = DB::table('products')->where('id', $request->id)->update([
             'category_id' => $request->pCategory,
             'nama_product' => $request->pNama,
             'price' => $request->pPrice,
-            'img' => 'product-img/' . $new_gambar,
+            'img' => $gambars,
             'description' => $request->pDescription,
             'slug' => Str::slug($request->pNama)
         ]);
@@ -105,10 +106,12 @@ class ProductController extends Controller
         $user = Auth::user();
         $request->validate([
             // 'pCategory' => 'numeric|required|min:3',
-            // 'pKode' => 'required|min:3|exists:App\Product,kodebrg',
+            'pKode' => 'required|min:3|unique:products,kodebrg',
             'pNama' => 'required|min:3|max:90',
             'pStok' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014',
+        ], [
+            'pKode.unique' => 'kode sudah digunakan, silahkan gunakan kode lain'
         ]);
 
         if ($request->hasFile('imgproduct')) {
@@ -122,7 +125,7 @@ class ProductController extends Controller
         }
         $product = new Product([
             'category_id' => $request->pCategory,
-            'kodebrg' => $request->pKode,
+            'kodebrg' => strtoupper($request->pKode),
             'nama_product' => $request->pNama,
             'price' => $request->pPrice,
             'img' => 'product-img/' . $new_gambar,
@@ -155,7 +158,6 @@ class ProductController extends Controller
         } else {
             return redirect()->back()->with('error', 'nope! ');
         }
-        // dd($product);
     }
 
     public function detailsProduct($slug)
