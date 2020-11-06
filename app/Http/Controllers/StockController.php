@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\Stock;
+use App\StockActivity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StockController extends Controller
 {
@@ -35,10 +37,33 @@ class StockController extends Controller
             'stock_in' => 'required|numeric'
         ], [':number' => ' :attribute harus berbentuk angka', ':numeric' => ' :attribute wajib diisi',]);
 
+        if ($request->stock_in < 1) {
+            return redirect()->back()->with('error', 'not valid');
+        }
         $product = Product::where('id', $id)->first();
         if ($product == null) {
             return redirect()->back()->with('error', 'not valid');
         }
-        dd($id);
+        $addStock = Stock::where('product_id', $product->id)->first();
+        if ($addStock == null) {
+            return redirect()->back()->with('error', 'not valid');
+        }
+
+        $tmp_stock = $addStock->stock;
+        $addStock->stock = $addStock->stock + $request->get('stock_in');
+        $save = $addStock->save();
+        if ($save) {
+            $stock_a = new StockActivity([
+                'stocks_id' => $addStock->id,
+                'product_id' => $product->id,
+                'users_id' => Auth::user()->id,
+                'user_type_id' => 2,
+                'type_activity' => 4,
+                'stock' => $request->stock_in
+            ]);
+            $stock_a->save();
+            return redirect()->back()->with('success', 'stock berhasil ditambah');
+        }
+        return redirect()->back();
     }
 }
