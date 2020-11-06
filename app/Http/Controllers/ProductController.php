@@ -80,18 +80,19 @@ class ProductController extends Controller
         if ($request->hasFile('imgproduct')) {
             $gambar = $request->file('imgproduct');
             $new_gambar = $products->kodebrg . '_' . time() . $gambar->getClientOriginalName();
+            $gambars = 'product-img/' . $new_gambar;
             $lokasi_gambar = public_path('/product-img');
             $gmbr = Image::make($gambar->path());
             $gmbr->resize(735, 552)->save($lokasi_gambar . '/' . $new_gambar);
         } else {
-            $new_gambar = $products->img;
+            $gambars = $products->img;
         };
 
         $slife = DB::table('products')->where('id', $request->id)->update([
             'category_id' => $request->pCategory,
             'nama_product' => $request->pNama,
             'price' => $request->pPrice,
-            'img' => 'product-img/' . $new_gambar,
+            'img' => $gambars,
             'description' => $request->pDescription,
             'slug' => Str::slug($request->pNama)
         ]);
