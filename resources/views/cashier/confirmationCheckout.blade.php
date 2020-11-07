@@ -106,7 +106,7 @@
                         <div class="col-lg-6">
                             <div class="card shadow-none card-body d-flex flex-column bg-white">
                                 <span class="font-weight-bold"><i class="fa fa-map-marked"></i> Alamat</span>
-                                <span class="font-weight-light">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, deserunt quo similique, eum dicta itaque quos exercitationem veniam, repellendus soluta eius iste possimus?</span>
+                                <span class="font-weight-light">{{$buyer->address}}</span>
                             </div>
                         </div>
                         </div>

@@ -25,6 +25,11 @@
                                 </tr>
                             </thead>
                             <tbody class="list">
+                                @if ($allOrders->count() < 1)
+                                    <tr>
+                                        <td colspan="6">anda belum ada transaksi</td>
+                                    </tr>
+                                @endif
                                 @foreach ($allOrders as $index => $order)
                                     <tr>
                                         <td>
@@ -57,7 +62,11 @@
                                         <td class="text-center pl-0 pr-0">
                                             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                                                 <button type="button" class="btn btn-info pl-2 pr-2 product_details" data-toggle="modal" data-idpro="{{$order->id}}" data-target="#detailsProduct">Details</button>
-                                                <button type="button" class="btn btn-success btn-icon-only pl-2 pr-2"><i class="fa fa-download"></i></button>
+                                                <form action="/invoice" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="orderId" value="{{ $order->id }}" required>
+                                                    <button type="submit" class="btn btn-success btn-icon-only pl-2 pr-2"><i class="fa fa-download"></i></button>
+                                                </form>
                                               </div>
                                         </td>
                                     </tr>

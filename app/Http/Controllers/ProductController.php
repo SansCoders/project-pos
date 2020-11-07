@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use AboutUs;
 use App\CategoryProduct;
+use App\Faktur;
 use App\Keranjang;
 use App\Product;
 use App\Receipts_Transaction;
@@ -27,6 +28,7 @@ class ProductController extends Controller
 
     public function getInfoProduct($id)
     {
+        $constCompany = DB::table('about_us')->first();
         $getProduct = Product::where('id', $id)->first();
         $categors = CategoryProduct::where('id', $getProduct->category_id)->first();
         $categories = CategoryProduct::get();
@@ -37,7 +39,7 @@ class ProductController extends Controller
             return json_encode('error');
         }
 
-        return view('cashier.productDetail', compact(['getProduct', 'stock', 'categories', 'categors', 'unitss', 'units']));
+        return view('cashier.productDetail', compact(['getProduct', 'stock', 'categories', 'categors', 'unitss', 'units', 'constCompany']));
     }
 
     public function getAllProducts()
@@ -236,6 +238,12 @@ class ProductController extends Controller
         } else {
             $latestOrder = $latestOrder->count();
         }
+        $cekFaktur = Faktur::orderBy('created_at', 'desc')->first();
+        if ($cekFaktur == null) {
+            $fakNum = 0;
+        } else {
+            $fakNum = $cekFaktur->faktur_number;
+        }
         $receipt = new Receipts_Transaction([
             'transaction_id' => date('Ymd') . $buyer->id . str_pad($latestOrder + 1, 5, "0", STR_PAD_LEFT),
             'user_id' => $buyer->id,
@@ -268,6 +276,11 @@ class ProductController extends Controller
                             'stock' => $scart['buy_value']
                         ]);
                         $a_stock->save();
+                        $faktur = new Faktur([
+                            'order_id' => $receipt->transaction_id,
+                            'faktur_number' => ($fakNum + 1),
+                        ]);
+                        $faktur->save();
                     }
                 }
             }

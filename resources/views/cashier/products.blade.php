@@ -257,6 +257,7 @@
       $(this).html('RP ' +$(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
   });
   $(document).on('keydown', '#pKode', function(e) {
+      $(this).val($(this).val().toUpperCase());
     if (e.keyCode == 32) return false;
   });
   // function ppKode()

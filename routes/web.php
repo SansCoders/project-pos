@@ -86,6 +86,11 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::post('/my-orders/details', 'HomeController@getdataReceipts');
 
     Route::get('/my', 'HomeController@myProfile');
+
+    Route::post('/invoice', 'HomeController@cetakFaktur');
+    Route::get('/invoice', function () {
+        return redirect()->back();
+    });
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');

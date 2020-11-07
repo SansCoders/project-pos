@@ -9,6 +9,7 @@ use App\Receipts_Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class HomeController extends Controller
 {
@@ -51,7 +52,7 @@ class HomeController extends Controller
     public function myOrders()
     {
         $receipts = Receipts_Transaction::where('user_id', Auth::user()->id);
-        $allOrders = $receipts->paginate(10);
+        $allOrders = $receipts->orderBy('is_done', 'ASC')->paginate(10);
         $cekTransactions = $receipts->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->get();
         return view('ordersList', compact(['cart', 'allOrders', 'cekTransactions']));
@@ -67,5 +68,25 @@ class HomeController extends Controller
         }
         $data = json_encode($getData);
         return response()->json($data);
+    }
+
+    public function cetakFaktur(Request $request)
+    {
+        // $pdf = PDF::loadView('invoice');
+        // return $pdf->download('invoice.pdf');
+        // return view('invoice');
+        $constCompany = DB::table('about_us')->first();
+        $user = Auth::user();
+        $orderId = $request->orderId;
+        $Receipt = Receipts_Transaction::where('id', $orderId)->where('user_id', $user->id)->first();
+        if ($Receipt == null) {
+            return redirect()->back()->with('error', 'tidak valid');
+        }
+        $pdf = PDF::loadView('invoice', compact(['Receipt', 'constCompany']));
+        $num_padded = sprintf("%02d", $Receipt->facktur->faktur_number);
+        $filename = "invoice-" . $Receipt->transaction_id . $num_padded . ".pdf";
+        return $pdf->download($filename);
+        // return view('invoice', compact(['Receipt', 'constCompany']));
+        // dd($orderId);
     }
 }
