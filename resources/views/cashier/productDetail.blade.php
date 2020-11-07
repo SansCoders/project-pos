@@ -1,5 +1,5 @@
 @extends('dashboard-layout.master')
-
+@include('dashboard-layout.footer')
 @section('content')
 <div class="header pb-6 d-flex align-items-center" style="min-height: 100px; background-size: cover; background-position: center top;">
     <span class="mask bg-primary opacity-8"></span>

@@ -1,5 +1,5 @@
 @extends('dashboard-layout.master')
-
+@include('dashboard-layout.footer')
 @section('content')
 <nav class="header bg-gradient-gray">
     <div class="container">
@@ -39,7 +39,7 @@
     @if ($cekTransactions->count() > 0)
         <div class="row">
             <div class="col-lg-12">
-                <a href="#">
+                <a href="{{ route('my-orders') }}">
                     <div class="alert alert-default d-flex align-items-center" role="alert">
                         <div class="alert-desc">
                             <strong>{{$cekTransactions->count()}} Pesanan</strong> menunggu diproses 

@@ -1,12 +1,14 @@
 @extends('dashboard-layout.master')
-
+@include('dashboard-layout.footer')
 @section('content')
 
 <div class="container-fluid my-4">
-        <a href="{{ url()->previous() }}" class="btn btn-neutral">back</a>
-        <h2 class="mb-4"><i class="fa fa-shopping-cart"></i> Keranjang</h2>
+        <div class="d-flex mb-4 align-items-center">
+            <a href="{{ url()->previous() }}" class="btn btn-neutral"><i class="fa fa-arrow-alt-circle-left"></i></a>
+            <h2 class="ml-2 mb-0"><i class="fa fa-shopping-cart"></i> Keranjang</h2>
+        </div>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-8 mb-n-5">
                 @if ($message = Session::get('err'))
                     <div class="alert alert-danger alert-block">
                         <button type="button" class="close" data-dismiss="alert">×</button> 

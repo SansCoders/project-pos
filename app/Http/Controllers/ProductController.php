@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use AboutUs;
 use App\CategoryProduct;
 use App\Keranjang;
 use App\Product;
@@ -15,6 +16,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use PDO;
+
 
 class ProductController extends Controller
 {
@@ -161,11 +163,12 @@ class ProductController extends Controller
 
     public function detailsProduct($slug)
     {
+        $constCompany = DB::table('about_us')->first();
         $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->get();
         $data = Product::where('slug', $slug)->get();
         if ($data->count() > 0) {
-            return view('product-overview', compact('data', 'cart', 'cekTransactions'));
+            return view('product-overview', compact('data', 'cart', 'cekTransactions', 'constCompany'));
         } else {
             return redirect()->back()->with('error', 'product not found');
         }
@@ -207,9 +210,10 @@ class ProductController extends Controller
     }
     public function checkOutProducts()
     {
+        $constCompany = DB::table('about_us')->first();
         $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->get();
-        return view('checkout', compact('cart', 'cekTransactions'));
+        return view('checkout', compact('cart', 'cekTransactions', 'constCompany'));
     }
 
     public function processCheckOut()

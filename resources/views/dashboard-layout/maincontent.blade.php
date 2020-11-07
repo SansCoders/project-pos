@@ -142,51 +142,6 @@
               </div>
             </li>
             @endif
-            {{-- <li class="nav-item dropdown">
-              <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="ni ni-ungroup  text-dark"></i>
-              </a>
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-dark bg-default  dropdown-menu-right ">
-                <div class="row shortcuts px-4">
-                  <a href="#!" class="col-4 shortcut-item">
-                    <span class="shortcut-media avatar rounded-circle bg-gradient-red">
-                      <i class="ni ni-calendar-grid-58"></i>
-                    </span>
-                    <small>Calendar</small>
-                  </a>
-                  <a href="#!" class="col-4 shortcut-item">
-                    <span class="shortcut-media avatar rounded-circle bg-gradient-orange">
-                      <i class="ni ni-email-83"></i>
-                    </span>
-                    <small>Email</small>
-                  </a>
-                  <a href="#!" class="col-4 shortcut-item">
-                    <span class="shortcut-media avatar rounded-circle bg-gradient-info">
-                      <i class="ni ni-credit-card"></i>
-                    </span>
-                    <small>Payments</small>
-                  </a>
-                  <a href="#!" class="col-4 shortcut-item">
-                    <span class="shortcut-media avatar rounded-circle bg-gradient-green">
-                      <i class="ni ni-books"></i>
-                    </span>
-                    <small>Reports</small>
-                  </a>
-                  <a href="#!" class="col-4 shortcut-item">
-                    <span class="shortcut-media avatar rounded-circle bg-gradient-purple">
-                      <i class="ni ni-pin-3"></i>
-                    </span>
-                    <small>Maps</small>
-                  </a>
-                  <a href="#!" class="col-4 shortcut-item">
-                    <span class="shortcut-media avatar rounded-circle bg-gradient-yellow">
-                      <i class="ni ni-basket"></i>
-                    </span>
-                    <small>Shop</small>
-                  </a>
-                </div>
-              </div>
-            </li> --}}
           </ul>
           <ul class="navbar-nav align-items-center ml-1 ml-md-0 ">
             <li class="nav-item dropdown">
@@ -209,7 +164,7 @@
                   <span>My profile</span>
                 </a>
                 @if(Auth::guard('web')->check())
-                  <a href="#!" class="dropdown-item">
+                  <a href="{{route('my-orders')}}" class="dropdown-item">
                     <i class="fa fa-receipt"></i>
                     <span>Riwayat Pembelian</span>
                   </a>

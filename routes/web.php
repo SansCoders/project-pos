@@ -82,6 +82,9 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::post('/checkout/process', 'ProductController@processCheckOut')->name('checkout.process');
     Route::delete('/checkout/{id}', 'ProductController@destroyItemFromCheckout')->name('checkout.destroy');
 
+    Route::get('/my-orders', 'HomeController@myOrders')->name('my-orders');
+    Route::post('/my-orders/details', 'HomeController@getdataReceipts');
+
     Route::get('/my', 'HomeController@myProfile');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
