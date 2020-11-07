@@ -77,7 +77,7 @@
                   <div class="form-group">
                     <label for="imgproduct" class="form-control-label">Gambar</label>
                     <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="imgproduct" name="imgproduct" lang="id" accept="image/*">
+                      <input type="file" class="custom-file-input" value="{{ $getProduct->description }}" id="imgproduct" name="imgproduct" lang="id" accept="image/*">
                       <label class="custom-file-label" for="imgproduct">Select file</label>
                     </div>
                   </div>
