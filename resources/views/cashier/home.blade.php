@@ -85,10 +85,103 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header border-0">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <h3 class="mb-0">Stock traffic</h3>
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-default btn-icon-only" data-container="body" data-html="true" data-toggle="popover" 
+                        data-placement="bottom" 
+                        data-content="<div>
+                                        <i class='fas fa-arrow-up text-success mr-3'></i> : Masuk (in)
+                                        </div>
+                                        <div><i class='fas fa-arrow-down text-danger mr-3'></i> : Keluar (out)</div>">
+                          <i class="fa fa-question-circle"></i>
+                        </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <!-- Projects table -->
+                  <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">time</th>
+                        <th scope="col">stock</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                             Laptop
+                            </th>
+                            <td>
+                              12:01
+                            </td>
+                            <td>
+                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                             Laptop
+                            </th>
+                            <td>
+                              12:01
+                            </td>
+                            <td>
+                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                             Laptop
+                            </th>
+                            <td>
+                              12:01
+                            </td>
+                            <td>
+                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                             Laptop
+                            </th>
+                            <td>
+                              12:01
+                            </td>
+                            <td>
+                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                             Laptop
+                            </th>
+                            <td>
+                              12:01
+                            </td>
+                            <td>
+                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-center"><a href="#!">view all</a></td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+        </div>
     </div>
 </div>
 
-<div class="modal fade" id="listproductsModal" tabindex="-1" role="dialog" aria-labelledby="listproductsModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="listproductsModal" tabindex="-1" role="dialog" aria-labelledby="listproductsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -106,7 +199,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> --}}
 @endsection
 @php
     setlocale(LC_TIME, 'id');
