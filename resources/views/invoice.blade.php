@@ -116,7 +116,7 @@
                     <td style="border-right: 1px solid">{{$item['product_list']}}</td>
                     <td style="border-right: 1px solid" class=" text-center">{{$item['buy_values']}} {{$item['product_unit']}}</td>
                     <td style="border-right: 1px solid" class="text-center">@currency($item['product_satuan'])</td>
-                    <td style="border-right: 1px solid" class=" text-center" >@currency($item['product_prices'])</td>
+                    <td style="border-right: 1px solid" class=" text-center" >@currency($item['product_prices']*$item['buy_values'])</td>
                 </tr>
                 @php
                     $i++;
