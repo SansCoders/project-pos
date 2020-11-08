@@ -1,4 +1,5 @@
 @php
+    $constCompany = DB::table('about_us')->first();
     if($constCompany == null) {
                 $constNamaCompany = "App POS";
             }else{
