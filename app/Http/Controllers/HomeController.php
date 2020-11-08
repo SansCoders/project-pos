@@ -46,8 +46,9 @@ class HomeController extends Controller
         $user = Auth::user();
         $cekTransactions = Receipts_Transaction::where('user_id', $user->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', $user->id)->get();
+        $myTransaction = Receipts_Transaction::where('user_id', $user->id);
 
-        return view('myprofile', compact(['user', 'cart', 'cekTransactions']));
+        return view('myprofile', compact(['user', 'cart', 'cekTransactions', 'myTransaction']));
     }
 
     public function myOrders()
