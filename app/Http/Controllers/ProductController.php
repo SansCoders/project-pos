@@ -61,7 +61,6 @@ class ProductController extends Controller
 
     public function searchProduct(Request $request)
     {
-        $constCompany = DB::table('about_us')->first();
         $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->get();
         $categories = CategoryProduct::all();

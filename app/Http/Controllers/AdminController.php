@@ -110,4 +110,32 @@ class AdminController extends Controller
 
         return view('admin.edit-user-sales', compact('dataUser'));
     }
+
+    public function updateDataUser(Request $request)
+    {
+        $request->validate([
+            'info_name' => 'required|min:4',
+            'info_phone' => 'numeric|min:6',
+        ]);
+
+        $id = $request->iduser;
+        if ($request->has('info_name')) {
+            User::where('id', $id)->first()->update([
+                'name' => $request->info_name
+            ]);
+        }
+        if ($request->has('info_phone')) {
+            User::where('id', $id)->first()->update([
+                'phone' => $request->info_phone
+            ]);
+        }
+
+        if ($request->has('info_alamat')) {
+            User::where('id', $id)->first()->update([
+                'address' => $request->info_alamat
+            ]);
+        }
+
+        return redirect()->back();
+    }
 }
