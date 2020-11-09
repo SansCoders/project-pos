@@ -86,8 +86,8 @@ class HomeController extends Controller
         $pdf = PDF::loadView('invoice', compact(['Receipt', 'constCompany']));
         $num_padded = sprintf("%02d", $Receipt->facktur->faktur_number);
         $filename = "invoice-" . $Receipt->transaction_id . $num_padded . ".pdf";
-        return $pdf->download($filename);
-        // return view('invoice', compact(['Receipt', 'constCompany']));
+        //return $pdf->download($filename);
+        return view('invoice', compact(['Receipt', 'constCompany']));
         // dd($orderId);
     }
 }
