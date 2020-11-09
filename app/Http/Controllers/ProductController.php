@@ -229,6 +229,7 @@ class ProductController extends Controller
             $products_id[] = $item->product_id;
             $products_list[] = $item->product->nama_product;
             $products_price[] = $item->product->price;
+            $products_totalPrice[] = $item->product->price * $item->buy_value;
             $buy_values[] = $item->buy_value;
         }
 
@@ -256,7 +257,8 @@ class ProductController extends Controller
             'products_prices' => json_encode($products_price),
             'type' => 1,
             'is_done' => 0,
-            'done_time' => null
+            'done_time' => null,
+            'total_productsprices' => json_encode($products_totalPrice)
         ]);
         $sreceipt = $receipt->save();
         if ($sreceipt) {

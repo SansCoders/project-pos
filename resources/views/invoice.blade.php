@@ -2,6 +2,7 @@
     $data = [];
     $i = 0;
     $totHarga = 0;
+    $totHargas = 0;
     foreach (json_decode($Receipt->products_id) as $item){
         $getDataProduct = App\Product::where('id',$item)->first();
         $data[$i]['product_satuan'] = $getDataProduct->price;
@@ -17,6 +18,12 @@
     foreach (json_decode($Receipt->products_prices) as $item){
         $data[$i]['product_prices'] = $item;
         $totHarga += $item;
+        $i++;
+    }
+    $i = 0;
+    foreach (json_decode($Receipt->total_productsprices) as $item){
+        $data[$i]['total_productsprices'] = $item;
+        $totHargas += $item;
         $i++;
     }
     $i = 0;
@@ -124,7 +131,7 @@
                 @endforeach
                 <tr>
                     <td style="border-top: 1px solid" colspan="4"><b>Total</b></td>
-                    <td style="border-top: 1px solid" class="text-center" >@currency($totHarga)</td>
+                    <td style="border-top: 1px solid" class="text-center" >@currency($totHargas)</td>
                 </tr>
             </tbody>
         </table>
