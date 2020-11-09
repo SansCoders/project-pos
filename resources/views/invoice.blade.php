@@ -1,4 +1,5 @@
 @php
+    setlocale(LC_TIME, 'id');
     $data = [];
     $i = 0;
     $totHarga = 0;
@@ -66,7 +67,7 @@
             </div>
             <table class="mt-4">
                 <tr>
-                    <th width="120px">No. Faktur</th>
+                    <th width="130px">No. Faktur</th>
                     <th width="30px">:</th>
                     <td>
                         @php
@@ -86,9 +87,23 @@
                     <td>{{$Receipt->user_name}}</td>
                 </tr>
                 <tr>
+                    <th>Kasir</th>
+                    <th>:</th>
+                    <td>{{$Receipt->cashier_name}}</td>
+                </tr>
+                <tr>
                     <th>Tanggal Order</th>
                     <th>:</th>
-                    <td>{{strftime('%d %B %Y',strtotime($Receipt->created_at))}}</td>
+                    <td>{{strftime('%H:%M ,%d %B %Y',strtotime($Receipt->created_at))}}</td>
+                </tr>
+                <tr>
+                    <th>Selesai Diproses</th>
+                    <th>:</th>
+                    @if ($Receipt->done_time == null)
+                    <td>-</td>
+                    @else    
+                    <td>{{strftime('%H:%M ,%d %B %Y',strtotime($Receipt->done_time))}}</td>
+                    @endif
                 </tr>
                 <tr>
                     <th>Status</th>
@@ -135,6 +150,34 @@
                 </tr>
             </tbody>
         </table>
+
+        <div class="margin-top: 60px;">
+            &nbsp;
+            <div class="text-right w-100 mb-4">
+                Cikarang Utara, {{ \Carbon\Carbon::now()->formatLocalized('%d %B %Y') }}
+            </div>
+        </div>
+        <div style="float: left">
+            <p style="margin-left: 10px">Customer</p>
+            <div style="margin-top: 5rem">
+                (<i>{{$Receipt->user_name}}</i>)
+            </div>
+        </div>
+        <div style="float: right">
+            <p style="margin-left: 12px">Cashier</p>
+            <div style="margin-top: 5rem">
+                @if ($Receipt->cashier_name == null)
+                (<i>-</i>)
+                @else    
+                (<i>{{$Receipt->cashier_name}}</i>)
+                @endif
+            </div>
+        </div>
+        {{-- <div style="margin-right: 20px;">
+        </div> --}}
+        {{-- <div style="text-align: center; display: flex; -webkit-justify-content: space-around;"> --}}
+        {{-- </div> --}}
+
         <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 </body>
