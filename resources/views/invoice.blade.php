@@ -173,10 +173,6 @@
                 @endif
             </div>
         </div>
-        {{-- <div style="margin-right: 20px;">
-        </div> --}}
-        {{-- <div style="text-align: center; display: flex; -webkit-justify-content: space-around;"> --}}
-        {{-- </div> --}}
 
         <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>

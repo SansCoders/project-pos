@@ -109,7 +109,6 @@ class ProductController extends Controller
     {
         $user = Auth::user();
         $request->validate([
-            // 'pCategory' => 'numeric|required|min:3',
             'pKode' => 'required|min:3|unique:products,kodebrg',
             'pNama' => 'required|min:3|max:90',
             'pStok' => 'required|numeric',
@@ -211,6 +210,41 @@ class ProductController extends Controller
             dd($data);
         }
     }
+
+    public function editQtyCart(Request $request)
+    {
+        $idCart = $request->idCart;
+        $cart = Keranjang::where('id', $idCart)->first();
+        if (!$cart || $cart == null) return "not valid!";
+        $checkProduct = Product::where('id', $cart->product_id)->first();
+        if (!$checkProduct || $checkProduct == null) return "not valid!";
+
+
+        return view('another.formEditCartQty', compact(['cart', 'checkProduct']));
+    }
+    public function editQtyCart_put(Request $request, $id)
+    {
+        $request->validate(['buy_value' => 'required|numeric']);
+
+        //validasi
+        $cart = Keranjang::where('id', $id)->first();
+        if (!$cart || $cart == null) return "not valid!";
+        $vStock = Stock::where('product_id', $cart->product_id)->first();
+        if (!$vStock || $vStock == null) return "not valid!";
+
+        $buy = $request->buy_value;
+        if ($buy > $vStock->stock) return redirect()->back()->with('error', 'melebihi stock yang ada');
+
+        $update = Keranjang::where('id', $id)->update([
+            'buy_value' => $buy
+        ]);
+        if ($update) {
+            return redirect()->back()->with('success', "berhasil di update");
+        } else {
+            return redirect()->back()->with('fail', "gagal di update");
+        }
+    }
+
     public function checkOutProducts()
     {
         $constCompany = DB::table('about_us')->first();
@@ -262,7 +296,6 @@ class ProductController extends Controller
         ]);
         $sreceipt = $receipt->save();
         if ($sreceipt) {
-            // dd($data);
             foreach ($products_id as $p_i) {
                 $changeStock = Stock::where('product_id', $p_i)->first();
                 if ($changeStock != null) {

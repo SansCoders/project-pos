@@ -62,14 +62,12 @@ class HomeController extends Controller
 
     public function getdataReceipts(Request $request)
     {
-
         $idReceipt = $request->idReceipts;
-        $getData = Receipts_Transaction::where('id', $idReceipt)->first();
-        if (!$getData || $getData == null) {
+        $dataReceipt = Receipts_Transaction::where('id', $idReceipt)->first();
+        if (!$dataReceipt || $dataReceipt == null) {
             $data = "kosong";
         }
-        $data = json_encode($getData);
-        return response()->json($data);
+        return view('another.showDetailsRecipts', compact('dataReceipt'));
     }
 
     public function cetakFaktur(Request $request)

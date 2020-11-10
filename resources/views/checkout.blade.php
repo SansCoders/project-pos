@@ -22,7 +22,7 @@
                 @endif
                 
                 @foreach ($cart as $item)
-                <div class="card">
+                <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-auto">
@@ -36,11 +36,11 @@
                         <b class="text-sm">@currency($item->buy_value * $item->product->price)</b><br/>
                         <small>Quantitiy : {{$item->buy_value}}</small>
                     </div>
+                    <button class="editQty" data-icp="{{$item->id}}" data-toggle="modal" data-target="#exampleModal">edit</button>
                     <form action="{{ route('checkout.destroy', $item->id)}}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            {{-- <button class="btn btn-danger" type="submit">Delete</button> --}}
-                            <button type="submit" class="btn btn-icon text-danger ml-auto"><i class="fa fa-trash"></i> Hapus</button>
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-icon text-danger ml-auto"><i class="fa fa-trash"></i> Hapus</button>
                     </form>
                 </div>
                 </div>
@@ -108,6 +108,22 @@
         </div>
     @endif
 
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="contentEditQty">
+              ...
+            </div>
+          </div>
+        </div>
+      </div>
 @endsection
 @push('scripts')
     <script>
@@ -127,6 +143,18 @@
         $('#add2cart').click((e) => {
             console.log('asdasd');
         });
+
+        $('.editQty').click(function(){
+                var idCart = $(this).data("icp");
+                $.ajax({
+                    url : "/editcartqty",
+                    method:"post",
+                    data : {"_token":"{{ csrf_token() }}","idCart" : idCart},
+                    success: function(resp){
+                        $('#contentEditQty').html(resp);
+                    }
+                });
+            });
     </script>
     
 @endpush

@@ -89,12 +89,7 @@
               </button>
             </div>
             <div class="modal-body" id="content-Receipts_d">
-              ...
             </div>
-            {{-- <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div> --}}
           </div>
         </div>
       </div>
@@ -109,8 +104,9 @@
                     method:"post",
                     data : {"_token":"{{ csrf_token() }}","idReceipts" : idproduct},
                     success: function(resp){
-                        console.log(JSON.parse(resp));
-                        $('#content-Receipts_d').html(JSON.parse(resp));
+                        // console.log(JSON.parse(resp));
+                        // $('#content-Receipts_d').html(JSON.parse(resp));
+                        $('#content-Receipts_d').html(resp);
                     }
                 });
             });

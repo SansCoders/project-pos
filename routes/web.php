@@ -76,6 +76,8 @@ Route::group(['middleware' => ['auth:web']], function () {
         return redirect()->back();
     });
     Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
+    Route::post('/editcartqty', 'ProductController@editQtyCart')->name('editQtyCart');
+    Route::put('/editcartqty/{id}', 'ProductController@editQtyCart_put')->name('editQtyCart.put');
 
     Route::get('/category/{name}', 'HomeController@getProductbyCategorybyName')->name('categ.name');
 
