@@ -67,11 +67,11 @@
                             @csrf
                             <div class="form-group d-flex">
                                 <input id="dataproduct" name="dataproduct" type="hidden" value="{{$the_product->id}}" required>
-                                <input id="valtocart" class="form-control m-2" name="valbuy" style="width: 70px" min="1" type="number" value="1" required>
-                                <a id="addvaltocart" href="#" class="btn btn-outline-success rounded-circle m-2">+</a>
-                                <a id="minvaltocart" href="#" class="btn btn-white rounded-circle m-2">-</a>
+                                <a id="minvaltocart" href="#" style="width: 30px;height:30px;" class="btn btn-sm btn-white rounded-circle m-2">-</a>
+                                <input id="valtocart" class="form-control m-2" name="valbuy" style="width: 70px;height:35px;" min="1" type="number" value="1" required>
+                                <a id="addvaltocart" href="#" style="width: 30px;height:30px;" class="btn btn-sm btn-success rounded-circle m-2">+</a>                               
                             </div>
-                            <div class="faction text-right mb-0 mt-auto">
+                            <div class="faction text-right mb-2 mt-auto">
                                 <button type="submit" id="add2cart" class="btn btn-success"><i class="fa fa-cart-plus"></i> tambah ke keranjang</button>
                             </div>
                         </form>
