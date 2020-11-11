@@ -292,7 +292,8 @@ class ProductController extends Controller
             'type' => 1,
             'is_done' => 0,
             'done_time' => null,
-            'total_productsprices' => json_encode($products_totalPrice)
+            'total_productsprices' => json_encode($products_totalPrice),
+            'order_via' => 2
         ]);
         $sreceipt = $receipt->save();
         if ($sreceipt) {
@@ -311,14 +312,15 @@ class ProductController extends Controller
                             'stock' => $scart['buy_value']
                         ]);
                         $a_stock->save();
-                        $faktur = new Faktur([
-                            'order_id' => $receipt->transaction_id,
-                            'faktur_number' => ($fakNum + 1),
-                        ]);
-                        $faktur->save();
                     }
                 }
             }
+
+            $faktur = new Faktur([
+                'order_id' => $receipt->transaction_id,
+                'faktur_number' => ($fakNum + 1),
+            ]);
+            $faktur->save();
             Keranjang::where('user_id', Auth::user()->id)->delete();
             return redirect()->back()->with('success', 'Berhasil dikirim ke kasir, silahkan menunggu untuk diproses');
         } else {

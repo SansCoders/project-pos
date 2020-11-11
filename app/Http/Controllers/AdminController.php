@@ -34,7 +34,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required|min:3',
-            'username' => 'required|min:3',
+            'username' => 'required|min:3|unique:users,username',
             'password' => 'required|min:6',
         ]);
         // $encpass = Hash::make($request->password, [
@@ -53,7 +53,7 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required|min:3',
-            'username' => 'required|min:3',
+            'username' => 'required|min:3|unique:cashiers,username',
             'password' => 'required|min:6',
         ]);
         $newUser = new Cashier([

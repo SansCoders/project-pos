@@ -2,13 +2,29 @@
 
 @section('content')
 <div class="header pb-6 d-flex align-items-center" style="min-height: 150px; background-size: cover; background-position: center top;">
-    <span class="mask bg-gradient-primary opacity-8"></span>
+    <span class="mask bg-primary opacity-8"></span>
 </div>
 
 <div class="container-fluid mt--6">
+    <a href="{{ route('cashier.newtransaction') }}" class="">
+        <div class="card shadow-sm bg-success">
+            <div class="card-body text-center">
+                <strong class="text-dark">
+                    <i class="fa fa-cart-plus"></i>
+                    ADD TRANSACTION
+                </strong>
+            </div>
+        </div>
+    </a>
     <div class="card shadow-sm">
-        <div class="card-header border-0">
+        <div class="card-header border-0 d-flex justify-content-between align-items-center">
             <b>Transactions Pending</b>
+            <div class="form-search">
+                <form action="" method="GET">
+                    @csrf
+                    <input type="text" name="search" class="form-control" placeholder="search">
+                </form>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table table-flush">

@@ -1,10 +1,23 @@
 @extends('dashboard-layout.master')
 
-@section('content')
+@section('add-css')
+    <style>
+      .newTransaction{
+        position: fixed;
+        bottom: 12px;
+        right: 12px;
+      }
+      .newTransaction button{
+        width: 4rem;
+        height: 4rem;
+      }
+    </style>
+@endsection
 
-    <div class="header pb-6 d-flex align-items-center" style="min-height: 150px; background-size: cover; background-position: center top;">
+@section('content')
+<div class="header pb-6 d-flex align-items-center" style="min-height: 150px; background-size: cover; background-position: center top;">
         <span class="mask bg-primary"></span>
-    </div>
+</div>
 <div class="container-fluid mt--8">
     <div class="row">
         <div class="col-lg-6 col-md-6 text-center">
@@ -29,14 +42,25 @@
         @endif
         </div>
         <div class="col-lg-6 col-md-6 text-center">
+          @if ($stockCount->count() > 0)
+          <a href="#">
             <div class="card shadow-none bg-warning">
                 <div class="card-body">
                     <div class="mb-3">
-                        <span class="h3 text-white mb-0">1 product stock habis</span>
+                        <span class="h3 text-white mb-0">{{$stockCount->count()}} product stock habis</span>
                     </div>
                     <strong class="text-white"><i class="fa fa-arrow-alt-circle-right text-white mr-2"></i>cek</strong>
                 </div>
             </div>
+          </a>
+          @else
+            <div class="card shadow-none bg-success">
+              <div class="card-body d-flex align-items-center justify-content-center">
+                  <i class="fa fa-check-circle text-white mr-2"></i>
+                  <span class="h3 text-white mb-0">semua stock masih ada</span>
+              </div>
+            </div>
+          @endif
         </div>
         <div class="col-lg-12">
             <div class="card bg-default">
@@ -94,8 +118,7 @@
                     </div>
                     <div class="col text-right">
                         <button type="button" class="btn btn-default btn-icon-only" data-container="body" data-html="true" data-toggle="popover" 
-                        data-placement="bottom" 
-                        data-content="<div>
+                        data-placement="bottom" data-content="<div>
                                         <i class='fas fa-arrow-up text-success mr-3'></i> : Masuk (in)
                                         </div>
                                         <div><i class='fas fa-arrow-down text-danger mr-3'></i> : Keluar (out)</div>">
@@ -180,6 +203,12 @@
         </div>
     </div>
 </div>
+
+<div class="newTransaction">
+  <a href="{{ route('cashier.newtransaction') }}">
+    <button class="btn btn-success btn-icon-only"><i class="fa fa-cart-plus"></i></button>
+  </a>
+</div>
 @endsection
 @php
     setlocale(LC_TIME, 'id');
@@ -191,6 +220,8 @@
         $countTransactionWeek[$i] = $cekData->count();
     }
     $period = \Carbon\CarbonPeriod::create($lastDayWeek,$datenow);
+
+    // $categories = \App\
 @endphp
 @push('scripts')
     <script>

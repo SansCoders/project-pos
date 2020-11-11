@@ -63,6 +63,9 @@
                     <div class="form-group">
                         <label class="form-control-label" for="new_username">Username<span class="text-danger">*</span> &nbsp;<span data-toggle="tooltip" data-placement="right" title="Username pengguna wajib diisi"><i class="fa fa-question-circle"></i></span> </label>
                         <input id="new_username" type="text" class="form-control" name="username" value="{{ old('username') }}"  required>
+                        @error('username')
+                            <span class="text-danger">{{$message}}</span>   
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="new_password">Password<span class="text-danger">*</span> &nbsp;<span data-toggle="tooltip" data-placement="right" title="kata sandi pengguna wajib diisi"><i class="fa fa-question-circle"></i></span> </label>
