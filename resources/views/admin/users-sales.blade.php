@@ -1,6 +1,9 @@
 @extends('dashboard-layout.master')
 @section('content')
-    <div class="container-fluid">
+<div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <span class="mask bg-primary opacity-8"></span>
+</div>
+<div class="container-fluid mt--6">
         <h1 class="h3 text-muted">Manajemen Pengguna Sales</h1>
         @if(session()->get('success'))
             <div class="alert alert-success">
@@ -27,11 +30,11 @@
                             <td>{{$user->username}}</td>
                             <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
                                 <td class="table-actions">
-                                    <a href="{{route('admin.users-sales.edit',$user->id)}}" class="table-action text-light ec" data-toggle="tooltip"  data-original-title="Edit Pengguna">
-                                        <i class="fas fa-user-edit"></i>
+                                    <a href="{{route('admin.users-sales.edit',$user->id)}}" class="btn btn-white btn-sm" data-toggle="tooltip"  data-original-title="Edit Pengguna">
+                                        <i class="fas fa-user-edit"></i> Edit
                                     </a>
-                                    <a href="#" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus Pengguna">
-                                      <i class="fas fa-trash"></i>
+                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="tooltip" data-original-title="Hapus Pengguna">
+                                      <i class="fas fa-trash"></i> Hapus
                                     </a>
                                 </td>
                             </tr>

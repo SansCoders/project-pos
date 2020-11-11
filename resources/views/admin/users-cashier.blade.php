@@ -1,11 +1,12 @@
 @extends('dashboard-layout.master')
 @section('content')
-<div class="header pb-2">
+<div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <span class="mask bg-primary opacity-8"></span>
     <div class="container-fluid">
       <div class="header-body">
         <!-- Card stats -->
-        <div class="row  py-4">
-          <div class="col-xl-3 col-md-6">
+        <div class="row py-4">
+          <div class="col-xl-6 col-md-6">
             <div class="card card-stats">
               <!-- Card body -->
               <div class="card-body">
@@ -38,14 +39,14 @@
       </div>
     </div>
 </div>
-<div class="container-fluid">
+<div class="container-fluid mt--6">
    @if(session()->get('success'))
             <div class="alert alert-success">
                 asd &times;
             </div>
             @endif
   <div class="card">
-                <div class="card-header">
+                <div class="card-header text-right">
                     <button class="btn btn-success" data-toggle="modal" data-target="#addCashier"><i class="fa fa-plus"></i> tambah</button>
                 </div>
                 <div class="card-body pl-0 pr-0">
@@ -63,12 +64,12 @@
                                 <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
                                     <td class="table-actions">
                                         <span data-toggle="modal" data-target="#editUser">
-                                            <a href="#!" class="table-action text-light ec" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
-                                                    <i class="fas fa-user-edit"></i>
+                                            <a href="#!" class="btn btn-white" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
+                                                    <i class="fas fa-user-edit"></i> Edit
                                             </a>
                                         </span>
-                                        <a href="#!" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus Pengguna">
-                                          <i class="fas fa-trash"></i>
+                                        <a href="#!" class="btn btn-danger" data-toggle="tooltip" data-original-title="Hapus Pengguna">
+                                          <i class="fas fa-trash"></i> Hapus
                                         </a>
                                     </td>
                                 </tr>
