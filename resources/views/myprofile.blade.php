@@ -44,9 +44,13 @@
               <div class="card-body">
                       <h5 class="card-title text-uppercase font-weight-bolder text-white mb-0">Last Transaction</h5>
                       @php
-                         $getLastTransaction = $myTransaction->where('is_done',1)->orderBy('done_time', 'DESC')->first()
+                         $getLastTransaction = $myTransaction->where('is_done',1)->orderBy('done_time', 'DESC')->first();
                       @endphp
+                      @if ($getLastTransaction == null)
+                      <span class="h2 font-weight-bold text-white mb-0">-</span>
+                      @else    
                       <span class="h2 font-weight-bold text-white mb-0">{{date('d-M-Y',strtotime($getLastTransaction->done_time))}}</span>
+                      @endif
               </div>
             </div>
           </div>
