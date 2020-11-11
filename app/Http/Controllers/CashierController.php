@@ -177,11 +177,12 @@ class CashierController extends Controller
             ]);
             $faktur->save();
             $num_padded = sprintf("%08d", $faktur->faktur_number);
-            return response()->json([
-                'status' => 'success',
-                'noorder' => $receipt->transaction_id,
-                'nofaktur' => $num_padded
-            ]);
+            return redirect()->route('cashier.transaction')->with('success', 'Berhasil melakukan transaksi dengan no. order #' . $receipt->transaction_id);
+            // return response()->json([
+            //     'status' => 'success',
+            //     'noorder' => $receipt->transaction_id,
+            //     'nofaktur' => $num_padded
+            // ]);
         }
     }
 }

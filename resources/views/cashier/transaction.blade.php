@@ -16,6 +16,11 @@
             </div>
         </div>
     </a>
+    @if(session()->get('success'))
+    <div class="alert alert-default">
+    <strong class="text-yellow">{{ session()->get('success') }}</strong>
+    </div>
+    @endif
     <div class="card shadow-sm">
         <div class="card-header border-0 d-flex justify-content-between align-items-center">
             <b>Transactions Pending</b>
