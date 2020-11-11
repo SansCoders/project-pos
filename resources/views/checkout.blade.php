@@ -36,7 +36,7 @@
                         <b class="text-sm">@currency($item->buy_value * $item->product->price)</b><br/>
                         <small>Quantitiy : {{$item->buy_value}}</small>
                     </div>
-                    <button class="editQty" data-icp="{{$item->id}}" data-toggle="modal" data-target="#exampleModal">edit</button>
+                    <button class="btn btn-primary editQty" data-icp="{{$item->id}}" data-toggle="modal" data-target="#exampleModal">edit</button>
                     <form action="{{ route('checkout.destroy', $item->id)}}" method="post">
                         @csrf
                         @method('DELETE')
@@ -113,13 +113,13 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Ubah Quantity</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body" id="contentEditQty">
-              ...
+              Mohon Tunggu
             </div>
           </div>
         </div>

@@ -1,33 +1,35 @@
 @extends('dashboard-layout.master')
 
 @section('content')
-<div class="container-fluid mt-3">
-@if(session()->get('success'))
+<div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+        <span class="mask bg-gradient-primary opacity-8"></span>
+    </div>
+    <div class="container-fluid mt--6">
+    @if(session()->get('success'))
     <div class="alert alert-success">
         s
     </div>
 @endif
     <div class="row">
         <div class="col">
-            <div class="card shadow-sm">
-                <div class="card-header  border-0">
+            <div class="card shadow">
+                <div class="card-header bg-transparent border-0">
                     <div class="row">
                         <div class="col-6" style="place-self: center">
-                            <h3 class="mb-0">Daftar Unit</h3>
+                            <h3 class="mb-0">Daftar Units</h3>
                         </div>
                         <div class="col-6 text-right">
-                            <button class="btn btn-light rounded-circle" type="button"><i class="fa fa-search"></i></button>
                             <button class="btn btn-success" data-toggle="modal" data-target="#addUnit"><i class="fa fa-plus"></i> Tambah</button>
                         </div>
                     </div>
                 </div>
                 <div class="table-responsive">
-                        <table class="table align-items-center table-flush">
+                        <table class="table align-items-center">
                             <thead class="thead-light">
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Unit</th>
-                                    <th></th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody> 
@@ -43,12 +45,12 @@
                                     <td>{{ $unit->unit }}</td>
                                     <td class="table-actions">
                                         <span data-toggle="modal" data-target="#editUnit">
-                                            <a href="#!" class="table-action text-light eu" data-toggle="tooltip" data-original-title="Ubah">
-                                                    <i class="fas fa-edit"></i>
+                                            <a href="#!" class="btn btn-white text-black btn-sm" data-toggle="tooltip" data-original-title="Ubah">
+                                                    <i class="fas fa-edit"></i> Edit
                                             </a>
                                         </span>
-                                        <a href="#!" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus">
-                                          <i class="fas fa-trash"></i>
+                                        <a href="#!" class="btn btn-danger text-light btn-sm" data-toggle="tooltip" data-original-title="Hapus">
+                                          <i class="fas fa-trash"></i> Hapus
                                         </a>
                                       </td>
                                 </tr>
@@ -56,7 +58,7 @@
                             </tbody>
                         </table>
                 </div>
-                <div class="card-footer py-4">
+                <div class="card-footer shadow py-4">
                     <nav aria-label="...">
                         <ul class="pagination justify-content-end mb-0">
                             {{ $units->links() }}

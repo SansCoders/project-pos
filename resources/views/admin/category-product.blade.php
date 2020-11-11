@@ -10,20 +10,19 @@
     s
 </div>
 @endif
-<div class="header pb-6 d-flex align-items-center" style="min-height: 250px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
-    <span class="mask bg-gradient-danger opacity-8"></span>
+<div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <span class="mask bg-primary opacity-8"></span>
 </div>
 <div class="container-fluid mt--6">
     <div class="row">
         <div class="col">
-            <div class="card shadow-sm">
-                <div class="card-header  border-0">
+            <div class="card shadow">
+                <div class="card-header bg-transparent border-0">
                     <div class="row">
                         <div class="col-6" style="place-self: center">
                             <h3 class="mb-0">Daftar Kategori Produk</h3>
                         </div>
                         <div class="col-6 text-right">
-                            <button class="btn btn-light rounded-circle" type="button"><i class="fa fa-search"></i></button>
                             <button class="btn btn-success" data-toggle="modal" data-target="#addCategory"><i class="fa fa-plus"></i> Tambah</button>
                         </div>
                     </div>
@@ -35,7 +34,7 @@
                                     <th>No</th>
                                     <th>Nama Kategori</th>
                                     <th>Total Produk</th>
-                                    <th></th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody> 
@@ -61,12 +60,12 @@
                                     </td>
                                     <td class="table-actions">
                                         <span data-toggle="modal" data-target="#editCategory">
-                                            <a href="#!" class="table-action text-light ec" data-toggle="tooltip" data-original-title="Ubah kategori">
-                                                    <i class="fas fa-edit"></i>
+                                            <a href="#!" class="btn btn-white btn-sm" data-toggle="tooltip" data-original-title="Ubah kategori">
+                                                    <i class="fas fa-edit"></i> Edit
                                             </a>
                                         </span>
-                                        <a href="#!" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus kategori">
-                                          <i class="fas fa-trash"></i>
+                                        <a href="#!" class="btn btn-danger btn-sm" data-toggle="tooltip" data-original-title="Hapus kategori">
+                                          <i class="fas fa-trash"></i> Hapus
                                         </a>
                                       </td>
                                 </tr>
@@ -74,7 +73,7 @@
                             </tbody>
                         </table>
                 </div>
-                <div class="card-footer py-4">
+                <div class="card-footer shadow py-4">
                     <nav aria-label="...">
                         <ul class="pagination justify-content-end mb-0">
                             {{ $categories->links() }}
