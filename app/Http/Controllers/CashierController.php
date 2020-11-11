@@ -185,4 +185,11 @@ class CashierController extends Controller
             // ]);
         }
     }
+
+
+    public function listTransactions()
+    {
+        $transaction = Receipts_Transaction::orderBy('id', 'DESC')->get();
+        return view('cashier.reports_listTransactions', compact('transaction'));
+    }
 }

@@ -159,13 +159,16 @@
                 </div>
               </li>
               <li class="nav-item">
-                <a class="nav-link collapsed" href="#navbar-reports" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
+                <a class="nav-link collapsed {{ set_active('cashier.listTransactions') }}" href="#navbar-reports" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
                   <i class="ni ni-chart-bar-32 text-default"></i>
                   <span class="nav-link-text">Reports</span>
                 </a>
                 <div class="collapse" id="navbar-reports">
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
+                      <a href="{{route('cashier.listTransactions')}}" class="nav-link "> 
+                        <span class=""> list transactions </span>
+                      </a>
                       <a href="#" class="nav-link "> 
                         <span class=""> summary </span>
                       </a>
