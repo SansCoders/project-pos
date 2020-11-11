@@ -22,18 +22,21 @@
                         <div class="row">
                           <div class="col">
                             <div class="card-profile-stats d-flex justify-content-center">
+                              @php
+                                  $countTotalOrder = App\Receipts_Transaction::where('user_id',$dataUser->id)->where('order_via',3)->get();
+                              @endphp
                               <div>
-                                <span class="heading">22</span>
+                                <span class="heading">{{$countTotalOrder->count()}}</span>
                                 <span class="description">Total Orders</span>
                               </div>
-                              <div>
+                              {{-- <div>
                                 <span class="heading">10</span>
                                 <span class="description">Photos</span>
                               </div>
                               <div>
                                 <span class="heading">89</span>
                                 <span class="description">Comments</span>
-                              </div>
+                              </div> --}}
                             </div>
                           </div>
                         </div>

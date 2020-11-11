@@ -5,15 +5,15 @@
 @endsection
 
 @section('content')
-@if(session()->get('success'))
-<div class="alert alert-success">
-    berhasil
-</div>
-@endif
 <div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
     <span class="mask bg-primary opacity-8"></span>
 </div>
 <div class="container-fluid mt--6">
+    {{-- @if(session()->get('success'))
+    <div class="alert alert-success">
+        berhasil
+    </div>
+    @endif --}}
     <div class="row">
         <div class="col">
             <div class="card shadow">

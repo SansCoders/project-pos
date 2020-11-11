@@ -95,6 +95,14 @@
     $('.seeProduct').click(function(e){
         e.preventDefault();
         var idp = $(this).data('idp');
+        // $.ajax({
+        //     url : "/cashier/seeproduct",
+        //     method:"post",
+        //     data : {"_token":"{{ csrf_token() }}",'idp' : idp,'c' : c},
+        //     success: function(resp){
+        //         $('#contentAddtoCart').html(resp);
+        //     }
+        // });
         $.ajax({
             url : "/cashier/seeproduct",
             method:"post",

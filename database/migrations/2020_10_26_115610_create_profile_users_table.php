@@ -20,7 +20,7 @@ class CreateProfileUsersTable extends Migration
             $table->date('birth_date')->nullable();
             $table->string('photo')->nullable();
             $table->bigInteger('user_id');
-            $table->enum('user_type', ['admin', 'cashier']);
+            $table->enum('user_type', ['admin', 'cashier', 'user'])->default('user');
         });
     }
 

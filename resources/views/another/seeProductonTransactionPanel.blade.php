@@ -62,7 +62,7 @@
         // if(arr.length == null) 
         for(i = 0; i < arr.length; i++){
             if(arr[i].id == value){
-                arr[i].buy += buy;
+                arr[i].buy = Number(arr[i].buy) + buy;
                 return true;
             }
         }

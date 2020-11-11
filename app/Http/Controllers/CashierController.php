@@ -43,12 +43,12 @@ class CashierController extends Controller
     public function getdataSeeProduct(Request $request)
     {
         $the_product = Product::where('id', $request->idp)->first();
+        if ($the_product == null) return "not valid";
         if ($request->c != null) {
             $c = $request->c;
         } else {
             $c = [];
         }
-        if ($the_product == null) return "not valid";
         return view('another.seeProductonTransactionPanel', compact(['the_product', 'c']));
     }
     public function processCheckout($orderid)
@@ -93,16 +93,25 @@ class CashierController extends Controller
     {
         $d_cashier = Auth::user();
 
-        $idproduct = $request->data['in_products'];
-        $bv_product = $request->data['buy_value'];
+        // $request->validate([
+        //     'productsId[]' => 'required|numeric',
+        //     'buyvalue[]' => 'required|numeric',
+        //     'buyer_name' => 'required|min:3'
+        // ]);
+
+        $idproduct = $request->productsId;
+        $bv_product = $request->buyvalue;
         $buyer_name = $request->buyer_name;
         for ($i = 0; $i < count($idproduct); $i++) {
             $cekProduct = Product::where('id', $idproduct[$i])->first();
             if (!$cekProduct || $cekProduct == null) return false;
-
             $cekStock = Stock::where('product_id', $cekProduct->id)->first();
-            if ($bv_product[$i] > $cekStock->stock || $bv_product[$i] == 0) return false;
 
+            if ($bv_product[$i] > $cekStock->stock || $bv_product[$i] == 0)
+                return response()->json([
+                    'status' => 'error',
+                    'msg' => "Stock yang tersedia kurang"
+                ]);
             $int_productId[] = (int)$idproduct[$i];
             $name_product[] = $cekProduct->nama_product;
             $products_prices[] = $cekProduct->price;
@@ -122,7 +131,6 @@ class CashierController extends Controller
         } else {
             $fakNum = $cekFaktur->faktur_number;
         }
-        //format => tgl + kasir id + kode kasir (2) + unique latestorder
         $r = date('Ymd') . $d_cashier->id . "2" . str_pad($latestOrder + 1, 4, "0", STR_PAD_LEFT);
         $now = Carbon::now();
         $receipt = new Receipts_Transaction([

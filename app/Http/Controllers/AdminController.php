@@ -6,6 +6,7 @@ use App\AboutUs;
 use App\Cashier;
 use App\User;
 use Illuminate\Http\Request;
+use App\ProfileUser;
 
 class AdminController extends Controller
 {
@@ -37,15 +38,23 @@ class AdminController extends Controller
             'username' => 'required|min:3|unique:users,username',
             'password' => 'required|min:6',
         ]);
-        // $encpass = Hash::make($request->password, [
-        //     'rounds' => 12,
-        // ]);
         $newUser = new User([
             'name' => $request->name,
             'username' => $request->username,
             'password' => bcrypt($request->password)
         ]);
-        $newUser->save();
+        $save = $newUser->save();
+        if ($save) {
+            $profile = new ProfileUser([
+                'fullname' => $request->name,
+                'gender' => null,
+                'birth_date' => null,
+                'photo' => 'user-img/user-img-default.png',
+                'user_id' => $newUser->id,
+                'user_type' => 3
+            ]);
+            $profile->save();
+        }
         return redirect()->back()->with('success', "success added user");
     }
 

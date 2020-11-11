@@ -10,4 +10,5 @@ class ProfileUser extends Model
     protected $fillable = [
         'fullname', 'gender', 'birth_date', 'photo', 'user_id', 'user_type'
     ];
+    public $timestamps = false;
 }
