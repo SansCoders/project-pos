@@ -14,7 +14,7 @@ class AddOrderViaToReceiptsTransactionsTable extends Migration
     public function up()
     {
         Schema::table('receipts__transactions', function (Blueprint $table) {
-            $table->enum('order_via', ['admin', 'cashier', 'user'])->default(3);
+            $table->enum('order_via', ['admin', 'cashier', 'user'])->default('user');
         });
     }
 

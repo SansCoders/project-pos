@@ -7,7 +7,7 @@
 @section('content')
 @if(session()->get('success'))
 <div class="alert alert-success">
-    s
+    berhasil
 </div>
 @endif
 <div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
