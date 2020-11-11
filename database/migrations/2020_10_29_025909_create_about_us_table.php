@@ -16,8 +16,9 @@ class CreateAboutUsTable extends Migration
         Schema::create('about_us', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('img_company')->nullable();
-            $table->integer('phone')->nullable();
+            $table->string('img_company');
+            $table->bigInteger('phone')->nullable();
+            $table->bigInteger('notelp')->nullable();
             $table->text('address')->nullable();
             $table->text('about')->nullable();
         });
