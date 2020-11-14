@@ -22,7 +22,7 @@
     <div class="container-fluid mt-4">
       <div class="container  text-center">
         <strong class="h1 font-weight-bolder mb-5">Summary</strong>
-        <div class="d-flex align-items-center justify-content-around mt-4">
+        <div class="row d-flex align-items-center justify-content-around mt-4">
           <div class="col-xl-3 col-md-6">
             <div class="card card-stats bg-translucent-warning shadow-sm--hover shadow-none text-center">
               <div class="card-body">

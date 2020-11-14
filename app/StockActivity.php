@@ -10,4 +10,9 @@ class StockActivity extends Model
     protected $fillable = [
         'stocks_id', 'product_id', 'users_id', 'user_type_id', 'type_activity', 'stock'
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
 }

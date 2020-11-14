@@ -18,14 +18,21 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $constCompany = DB::table('about_us')->first();
         $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->get();
         $categories = CategoryProduct::all();
-        $products = Product::all()->sortByDesc("created_at");
-        return view('home', compact(['products', 'categories', 'cart', 'cekTransactions', 'constCompany']));
+        $products = Product::paginate(9);
+
+        $compacts = ['products', 'categories', 'cart', 'cekTransactions', 'constCompany'];
+        if ($request->ajax()) {
+            $view = view('another.home-productslist', compact($compacts))->render();
+            return response()->json(['html' => $view]);
+            // return response()->json(['html' => "zzz"]);
+        }
+        return view('home', compact($compacts));
     }
 
     public function getProductbyCategorybyName($name)

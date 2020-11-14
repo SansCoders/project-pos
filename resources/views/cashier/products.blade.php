@@ -40,6 +40,11 @@
           {{ session()->get('success') }}
         </div>
       @endif
+      @if(session()->has('error'))
+        <div class="alert alert-danger">
+          {{ session()->get('error') }}
+        </div>
+      @endif
           <div class="card">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
@@ -169,26 +174,29 @@
                   </div>
                   <div class="row">
                     <div class="form-group col-6">
-                        <label for="pStok" class="form-control-label">Stok</label>
+                        <label for="pStok" class="form-control-label">Stok <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
                         <div class="input-group input-group-merge">
-                          <input type="text" class="form-control justnumber" name="pStok" placeholder="0">
+                          <input type="text" value="{{old('pStok')}}" class="form-control justnumber" name="pStok" placeholder="0" required>
                           <select name="pUnit" id="pUnit" class="form-control">
                             @if ($units->isEmpty())
-                            <option disabled>no record</option>
+                              <option disabled>no record</option>
                             @endif
                             @foreach ($units as $u)
                               <option value="{{ $u->id }}">{{ $u->unit }}</option>
                             @endforeach
                           </select>
                         </div>
+                        @error('pStok')
+                          <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                       </div>
                     <div class="form-group col-6">
-                      <label for="pPrice" class="form-control-label">Harga</label>
+                      <label for="pPrice" class="form-control-label">Harga <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
                       <div class="input-group input-group-merge">
                           <div class="input-group-prepend">
                               <span class="input-group-text" id="basic-addon1">IDR</span>
                           </div>
-                          <input id="pPrice" type="text" class="form-control text-right justnumber" name="pPrice" onkeyup="ppPrice()" placeholder="0" aria-label="0" aria-describedby="basic-addon1">
+                          <input id="pPrice" type="text" class="form-control text-right justnumber" name="pPrice" onkeyup="ppPrice()" placeholder="0" aria-label="0" aria-describedby="basic-addon1" required>
                       </div>
                     </div>
                   </div>
@@ -260,15 +268,6 @@
       $(this).val($(this).val().toUpperCase());
     if (e.keyCode == 32) return false;
   });
-  // function ppKode()
-  // {
-  //   $("#preview_pKode").html($("#pKode").val());
-  //   $('#pKode').change(function(){
-  //     if($("#preview_pKode").text().length === 0){
-  //       $("#preview_pKode").text("Kode Produk");
-  //     }
-  //   });
-  // }
   function ppNama()
   {
     $("#preview_pNama").html($("#pNama").val());
@@ -288,25 +287,12 @@
       }
     });
   }
-  // $('.justnumber').keyup(function(event) {
-  //    // skip for arrow keys
-  //     if(event.which >= 37 && event.which <= 40) return;
-
-  //     // format number
-  //     $(this).val(function(index, value) {
-  //       return value
-  //       .replace(/\D/g, "")
-  //       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  //       ;
-  //     });
-  // });
   function readURL(input) {
       if (input.files && input.files[0]) {
         var reader = new FileReader();
         
         reader.onload = function(e) {
           $('#preview_img').html('<img src="' +e.target.result+'" class="img-fluid" />');
-          // $('#blah').attr('src', e.target.result);
         }
         reader.readAsDataURL(input.files[0]); // convert to base64 string
       }

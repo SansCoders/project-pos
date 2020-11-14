@@ -112,6 +112,7 @@ class ProductController extends Controller
             'pKode' => 'required|min:3|unique:products,kodebrg',
             'pNama' => 'required|min:3|max:90',
             'pStok' => 'required|numeric',
+            'pPrice' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014',
         ], [
             'pKode.unique' => 'kode sudah digunakan, silahkan gunakan kode lain'
@@ -293,7 +294,7 @@ class ProductController extends Controller
             'is_done' => 0,
             'done_time' => null,
             'total_productsprices' => json_encode($products_totalPrice),
-            'order_via' => 2
+            'order_via' => 3
         ]);
         $sreceipt = $receipt->save();
         if ($sreceipt) {

@@ -35,7 +35,7 @@
         </div>
     </div>
 </nav>
-<div class="container mt-5 h-100vh">
+<div class="container mt-5">
     @if ($cekTransactions->count() > 0)
         <div class="row">
             <div class="col-lg-12">
@@ -50,40 +50,51 @@
             </div>
         </div>
     @endif
-    <div class="list-group flex-wrap flex-row align-items-center" >
+    <div id="listproducts" class="list-group flex-wrap flex-row align-items-center">
+        @include('another.home-productslist')
         {{-- @if(session()->get('notfound'))
         <div class="alert alert-warning">
             {{$notfound}}
         </div>
         @endif --}}
-        @foreach ($products as $product)
-        <a href="{{route('details.product',$product->slug)}}" class="nav-link col-lg-4 col-md-6 mb-3">
-            <div class="card shadow-none m-0">
-                <div class="card-body d-flex" style="max-height: 150px">
-                    <img class="card-img mr-3" style="max-width: 50%; min-width:5%" src="{{ asset($product->img) }}" alt="" />  
-                    <div class="product-info d-flex flex-column">
-                        @isset($product->category->name)
-                            <span class="badge badge-info mb-2" style="place-self: flex-start">
-                                {{$product->category->name}}
-                            </span>
-                        @else
-                        &nbsp;
-                        @endisset
-                        <h3 class="h4">
-                            {{$product->nama_product}}
-                        </h3>
-                        <span class="text-muted h5 mb-0 mt-auto">
-                            <b>@currency($product->price)</b>
-                            <br>
-                            stock : @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
-                            @else
-                            <b class="text-danger">habis</b> @endisset
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </a>
-        @endforeach
+    </div>
+    <div id="load-more-product" style="text-align: center; display: none">
+        <i class="fa fa-circle-notch fa-spin"></i>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function loadMoreProduct(page)
+    {
+        $.ajax({
+            url: '?page=' + page,
+            type: 'get',
+            beforeSend: function()
+            {
+                $("#load-more-product").show();
+            }
+        })
+        .done(function(product){
+            if(product.html == " "){
+                console.log('asdasd');
+                return;
+            }
+            $("#load-more-product").hide();
+            $('#listproducts').append(product.html);
+        })
+        .fail(function(jqXHR, ajaxOptions, throwError){
+            $("#load-more-product").hide();
+        });
+    }
+
+    var page = 1;
+    $(window).scroll(function(){
+        if($(window).scrollTop() + $(window).height() >= $(document).height()){
+            page++;
+            loadMoreProduct(page);
+        }
+    });
+</script>
+@endpush

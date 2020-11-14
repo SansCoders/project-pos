@@ -60,7 +60,7 @@
                                     </td>
                                     <td class="table-actions">
                                         <span data-toggle="modal" data-target="#editCategory">
-                                            <a href="#!" class="btn btn-white btn-sm" data-toggle="tooltip" data-original-title="Ubah kategori">
+                                            <a href="#!" class="btn btn-white btn-sm ec" data-toggle="tooltip" data-original-title="Ubah kategori">
                                                     <i class="fas fa-edit"></i> Edit
                                             </a>
                                         </span>

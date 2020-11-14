@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\AboutUs;
+use App\Admin;
 use App\Cashier;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\ProfileUser;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -108,6 +111,26 @@ class AdminController extends Controller
             ]);
         }
         return redirect()->back();
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $user = Admin::findOrFail(Auth::user()->id);
+
+        $request->validate([
+            'oldpassword' => 'required|min:6',
+            'newpass' => 'required_with:newpass2|min:6',
+            'newpass2' => 'required|min:6'
+        ]);
+        if (Hash::check($request->oldpassword, $user->password)) {
+            $user->fill([
+                'password' => Hash::make($request->newpass)
+            ])->save();
+
+            return redirect()->back()->with('success', 'Password changed');
+        } else {
+            return redirect()->back()->with('error', 'Password does not match');
+        }
     }
 
     public function editUserSales($id)

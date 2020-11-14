@@ -2,7 +2,7 @@
 
 @if(Auth::guard('web')->check())
 @else
-<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" style="z-index: 1" id="sidenav-main">
+<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" style="z-index: 6" id="sidenav-main">
     <div class="scrollbar-inner">
       <div class="sidenav-header d-flex  align-items-center">
         <a class="navbar-brand d-flex flex-column" href="javascript:void(0)">

@@ -1,15 +1,14 @@
 @extends('dashboard-layout.master')
 
+@section('add-css')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/animate.css/animate.min.css') }}">
+@endsection
+
 @section('content')
 <div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
         <span class="mask bg-gradient-primary opacity-8"></span>
     </div>
     <div class="container-fluid mt--6">
-    @if(session()->get('success'))
-    <div class="alert alert-success">
-        s
-    </div>
-@endif
     <div class="row">
         <div class="col">
             <div class="card shadow">
@@ -45,7 +44,7 @@
                                     <td>{{ $unit->unit }}</td>
                                     <td class="table-actions">
                                         <span data-toggle="modal" data-target="#editUnit">
-                                            <a href="#!" class="btn btn-white text-black btn-sm" data-toggle="tooltip" data-original-title="Ubah">
+                                            <a href="#!" class="btn btn-white text-black btn-sm eu" data-toggle="tooltip" data-original-title="Ubah">
                                                     <i class="fas fa-edit"></i> Edit
                                             </a>
                                         </span>
@@ -122,6 +121,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{asset('assets/vendor/bootstrap-notify/bootstrap-notify.min.js')}}"></script>  
 <script>
     $(document).ready(function(){
         $('.eu').on('click',function(){
@@ -142,4 +142,39 @@
         }
     });
 </script>
+
+@if(session()->get('success'))
+<script>
+    $.notify({
+        icon: 'fa fa-check',
+	    message: '{{ session()->get('success') }}'
+        },{
+            element: 'body',
+            position: null,
+            type: "success",
+            allow_dismiss: true,
+            newest_on_top: false,
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            z_index: 1031,
+            delay: 5000,
+            animate: {
+                enter: 'animated fadeInDown',
+                exit: 'animated fadeOutUp'
+            },
+            icon_type: 'class',
+            template: '<div data-notify="container" class="d-flex col-xs-11 col-sm-3 alert alert-{0}" role="alert" style="width:calc(100% - 30px);">' +
+                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                '<span data-notify="icon" class="mr-2" style="place-self: center;"></span> ' +
+                '<span data-notify="message">{2}</span>' +
+                '<div class="progress" data-notify="progressbar">' +
+                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                '</div>' +
+            '</div>' 
+        });
+</script>
+@endif
+
 @endpush

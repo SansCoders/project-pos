@@ -11,7 +11,13 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid mt--6">
+    <div class="container-fluid mt--6 mb-5">
+      
+      @if(session()->get('success'))
+      <div class="alert alert-success">
+          berhasil
+      </div>
+      @endif
         <div class="row">
             <div class="col-xl-4">
                 <div class="card card-profile">
@@ -136,7 +142,24 @@
                               </div>  
                             </div>
                             <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
-                                <p class="description">Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>
+                              <form action="{{ route('admin.update-settings.cp') }}" method="post">
+                                  @csrf
+                                  <div class="form-group">
+                                    <label for="oldpass" class="form-control-label">Kata sandi lama</label>
+                                    <input type="password" name="oldpassword" class="form-control" id="oldpass">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="newpass" class="form-control-label">Kata sandi baru</label>
+                                    <input type="password" name="newpass" class="form-control" id="newpass">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="newpass2" class="form-control-label">Ulangi Kata sandi baru</label>
+                                    <input type="password" name="newpass2" class="form-control" id="newpass2">
+                                  </div>
+                                  <div class="form-group">
+                                    <button class="btn btn-block btn-success">ganti password</button>
+                                  </div>
+                                </form>
                             </div>
                         </div>
                     </div>

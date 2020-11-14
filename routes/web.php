@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
     Route::get('/admin/settings', 'AdminController@settingsPage')->name('admin.settings');
     Route::post('/admin/settings', 'AdminController@updateInfoPage')->name('admin.update-settings');
+    Route::post('/admin/settings/cp', 'AdminController@updatePassword')->name('admin.update-settings.cp');
 });
 
 Route::group(['middleware' => ['auth:cashier']], function () {

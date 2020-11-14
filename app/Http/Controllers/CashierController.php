@@ -29,9 +29,14 @@ class CashierController extends Controller
         $transactions = Receipts_Transaction::orderBy('created_at')->get();
         return view('cashier.transaction', compact('transactions'));
     }
-    public function newTransaction()
+    public function newTransaction(Request $request)
     {
-        $products = Product::all()->sortByDesc("created_at");
+        $products = Product::paginate(12);
+
+        if ($request->ajax()) {
+            $view = view('another.cashier-productlist', compact('products'))->render();
+            return response()->json(['html' => $view]);
+        }
         return view('cashier.new-transaction', compact('products'));
     }
     public function getdatalistCartContent(Request $request)
@@ -93,12 +98,14 @@ class CashierController extends Controller
     {
         $d_cashier = Auth::user();
 
-        // $request->validate([
-        //     'productsId[]' => 'required|numeric',
-        //     'buyvalue[]' => 'required|numeric',
-        //     'buyer_name' => 'required|min:3'
-        // ]);
-
+        $request->validate([
+            'productsId.*' => 'required|integer',
+            'buyvalue.*' => 'required|integer',
+            'buyer_name' => 'required|min:3|string'
+        ], [
+            'buyer_name.required' => 'nama buyer wajib diisi'
+        ]);
+        dd($request);
         $idproduct = $request->productsId;
         $bv_product = $request->buyvalue;
         $buyer_name = $request->buyer_name;

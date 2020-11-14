@@ -78,7 +78,7 @@
                             <input type="checkbox" name="check_approve" class="custom-control-input" id="check_approve" required>
                             <label class="custom-control-label" for="check_approve">data sudah benar <sup class="text-danger">*</sup> </label>
                         </div>
-                        <button type="submit" class="btn btn-success btn-block btn-lg">KONFIRMASI SUDAH BAYAR</button>
+                        <button type="submit" class="btn btn-success btn-block btn-lg">KONFIRMASI</button>
                     </form>
                 </div>
             </div>

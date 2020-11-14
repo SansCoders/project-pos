@@ -18,18 +18,19 @@
 @section('content')
 
 @foreach($data as $the_product)
-    <nav class="header bg-gradient-gray mb-4">
+    <nav class="header mb-4">
         <div class="container">
             <div class="header-body">
                 <div class="row align-items-center py-4">
                     <div class="col-lg-6 col-7">
-                        <nav aria-label="breadcrumb">
+                        {{-- <nav aria-label="breadcrumb">
                             <ol class="breadcrumb breadcrumb-dark mb-0">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                                 <li class="breadcrumb-item"><a href="{{ route('categ.name',$the_product->category->name) }}">{{$the_product->category->name}}</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">{{$the_product->nama_product}}</li>
                             </ol>
-                          </nav>
+                        </nav> --}}
+                        <a href="{{ route('home') }}" class="btn btn-light"><i class="fa fa-arrow-alt-circle-left"></i></a>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
                         <a href="{{route('checkout')}}" role="button" class="btn btn-icon btn-primary">
@@ -46,6 +47,15 @@
         </div>
     </nav>
         <div class="container">
+            <div class="mb-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-dark mb-0">
+                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('categ.name',$the_product->category->name) }}">{{$the_product->category->name}}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{$the_product->nama_product}}</li>
+                    </ol>
+                </nav>
+            </div>
             <div class="card shadow-none">
                 <div class="card-body row">
                     <div class="col-lg-6 col-sm-6 mb-4">
@@ -77,7 +87,6 @@
                         </form>
                     </div>
                 </div>
-
             </div>
         </div>
     @endforeach

@@ -121,7 +121,8 @@
                         data-placement="bottom" data-content="<div>
                                         <i class='fas fa-arrow-up text-success mr-3'></i> : Masuk (in)
                                         </div>
-                                        <div><i class='fas fa-arrow-down text-danger mr-3'></i> : Keluar (out)</div>">
+                                        <div><i class='fas fa-arrow-down text-danger mr-3'></i> : Keluar (out)</div>
+                                        <div><i class='fas fa-clock text-warning mr-3'></i> : Pending (out)</div>">
                           <i class="fa fa-question-circle"></i>
                         </button>
                     </div>
@@ -138,64 +139,27 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">
-                             Laptop
-                            </th>
-                            <td>
-                              12:01
-                            </td>
-                            <td>
-                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                             Laptop
-                            </th>
-                            <td>
-                              12:01
-                            </td>
-                            <td>
-                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                             Laptop
-                            </th>
-                            <td>
-                              12:01
-                            </td>
-                            <td>
-                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                             Laptop
-                            </th>
-                            <td>
-                              12:01
-                            </td>
-                            <td>
-                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                             Laptop
-                            </th>
-                            <td>
-                              12:01
-                            </td>
-                            <td>
-                              <i class="fas fa-arrow-up text-success mr-3"></i> 23
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" class="text-center"><a href="#!">view all</a></td>
-                        </tr>
+                      @php
+                          $activitiesStock = App\StockActivity::orderBy('created_at', 'desc')->take(5)->get();
+                      @endphp
+                        @foreach ($activitiesStock as $a_stock)
+                            <tr>
+                              <th scope="row">{{$a_stock->product->nama_product}}</th>
+                              <td>{{Carbon\Carbon::parse($a_stock->created_at)->diffForHumans()}}</td>
+                              <td>
+                                @if ($a_stock->type_activity == "in" || $a_stock->type_activity == "add")
+                                  <i class="fas fa-arrow-up text-success mr-3"></i>
+                                  @elseif($a_stock->type_activity == "out")
+                                  <i class="fas fa-arrow-down text-danger mr-3"></i>
+                                  @elseif($a_stock->type_activity == "pending")
+                                  <i class="fas fa-clock text-warning mr-3"></i>
+                                  @elseif($a_stock->type_activity == "destroy")
+                                  <i class="fas fa-trash text-warning mr-3"></i>
+                                @endif
+                                {{$a_stock->stock}}
+                              </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                   </table>
                 </div>
@@ -221,7 +185,14 @@
     }
     $period = \Carbon\CarbonPeriod::create($lastDayWeek,$datenow);
 
-    // $categories = \App\
+    $categories = App\CategoryProduct::all();
+    if(count($categories) < 1){
+      
+    }
+    foreach ($categories as $key => $categ) {
+      $categLabels[$key] = $categ->name;
+      $categProductCount[$key] = DB::table('products')->where('category_id', $categ->id)->count();
+    }
 @endphp
 @push('scripts')
     <script>
@@ -263,12 +234,12 @@
             type: 'doughnut',
             data: {
                 datasets: [{
-                    data: [10, 20, 30]
+                    data: [
+                      '@foreach ($categProductCount as $ct) {{$ct}} ','@endforeach'
+                    ]
                 }],
                 labels: [
-                    'Red',
-                    'Yellow',
-                    'Blue'
+                  '@foreach ($categLabels as $lc) {{$lc}} ','@endforeach'
                 ]
             },
         });
