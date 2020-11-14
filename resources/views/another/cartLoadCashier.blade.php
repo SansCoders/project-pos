@@ -19,21 +19,19 @@
                     </tr>
                 </thead>
                 <tbody> 
-                @for ($i = 0; $i < count($data); $i++)
+                    @foreach ($data as $item)
                     @php
-                        $idp = $data[$i]['id'];
-                        $bv = $data[$i]['buy'];
-                        $product = App\Product::where('id',$idp)->first();
-                        $totalharga += $product->price * $bv;
+                        $product = App\Product::where('id',$item->product_id)->first();
+                        $totalharga += $product->price * $item->buy_value ;
                     @endphp
-                    <tr id="p-{{$idp}}">
-                        <input type="number" hidden name="productsId[]" value="{{ (int)$idp }}" id="">
-                        <input type="number" hidden name="buyvalue[]" value="{{ (int)$bv }}" id="">
+                    <input type="number" name="productsId[]" value="{{ $product->id }}" hidden>
+                    <input type="number" name="buyvalue[]" value="{{  $item->buy_value }}" hidden>
+                    <tr id="p-{{$item->id}}">
                         <td>{{$product->nama_product}}</td>
-                        <td>{{ $bv }} {{ $product->unit->unit }}</td>
-                        <td class="d-flex">@currency($product->price * $bv) <a href="#" data-itm="{{$product->id}}" class="ml-auto rmitem"><i class="fa fa-minus-square text-danger"></i></a> </td>
+                        <td>{{ $item->buy_value }} {{ $product->unit->unit }}</td>
+                        <td class="d-flex">@currency($product->price * $item->buy_value) <a href="#" data-itm="{{$item->id}}" class="ml-auto rmitem"><i class="fa fa-minus-square text-danger"></i></a> </td>
                     </tr>
-                @endfor
+                    @endforeach
                     <tr class="bg-translucent-light">
                         <td colspan="2"><strong>Total</strong></td>
                         <td>@currency($totalharga)</td>
@@ -44,7 +42,7 @@
                         <td>Nama Buyer</td>
                         <td colspan="2"><input type="text" class="form-control" name="buyer_name" id="buyername_i" required></td>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <td>Diskon</td>
                         <td colspan="2">
                             <div class="form-group">
@@ -58,7 +56,7 @@
                                 </div>
                             </div>
                         </td>
-                    </tr>
+                    </tr> --}}
                     <tr>
                         <td colspan="3"><button type="button" class="btn btn-block btn-neutral mm">konfirmasi</button></td>
                     </tr>
@@ -68,9 +66,19 @@
 </div>
 
 <script>
-    $('.rmitem').click(function(){
-        // var a = $(this).data('itm');
-        // $('#p-'+a).remove();
+    $('.rmitem').click(function(e){
+        e.preventDefault();
+        var id = $(this).data('itm');
+        $('#p-'+id).remove();
+        // $('#delete-item-'+id).submit();
+        $.ajax({
+            url : "/cashier/cart/delete-"+id,
+            method:"post",
+            data : {"_token":"{{ csrf_token() }}",'id' : id},
+            success: function(resp){
+                console.log(resp);
+            }
+        });
     });
     $('.mm').click(function(){ 
         if($('#buyername_i').val().length < 3)

@@ -38,34 +38,36 @@
                             $i = 1;
                         @endphp
                         @foreach ($products as $index => $product)
-                        <tr>
-                            <td>{{$products->firstItem() + $index}}</td>
-                            <th scope="row">
-                                <div class="media align-items-center">
-                                    <a href="#" class="avatar rounded-circle mr-3">
-                                      <img alt="Image placeholder" style="height: inherit" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
-                                    </a>
-                                    <div class="media-body">
-                                      <span class="name mb-0 text-sm">{{$product->nama_product}}</span>
-                                      <span class="badge badge-pill badge-info">{{$product->category->name}}</span>
+                          @if ($product->product_status != 'hide')
+                            <tr>
+                                <td>{{$i++}}</td>
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <a href="#" class="avatar rounded-circle mr-3">
+                                          <img alt="Image placeholder" style="height: inherit" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
+                                        </a>
+                                        <div class="media-body">
+                                          <span class="name mb-0 text-sm">{{$product->nama_product}}</span>
+                                          <span class="badge badge-pill badge-info">{{$product->category->name}}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </th>
-                            <td>@isset($product->stocks)
-                                  @if ($product->stocks->stock < 1)
-                                  <span class="text-danger">{{ $product->stocks->stock }} {{ $product->unit->unit }}</span>
-                                  @else    
-                                  <span>{{ $product->stocks->stock }} {{ $product->unit->unit }}</span>
-                                  @endif
-                                @else
-                                    <span class="text-danger">stok habis</span>
-                                @endisset</td>
-                            <td class="table-actions">
-                            <a href="{{ route('stock.add.process',$product->id) }}" class="btn btn-sm btn-primary text-white" data-toggle="tooltip" data-original-title="tambah stock">
-                                    <i class="fas fa-plus-square"></i>
-                                </a>
-                            </td>
-                        </tr>
+                                </th>
+                                <td>@isset($product->stocks)
+                                      @if ($product->stocks->stock < 1)
+                                      <span class="text-danger">{{ $product->stocks->stock }} {{ $product->unit->unit }}</span>
+                                      @else    
+                                      <span>{{ $product->stocks->stock }} {{ $product->unit->unit }}</span>
+                                      @endif
+                                    @else
+                                        <span class="text-danger">stok habis</span>
+                                    @endisset</td>
+                                <td class="table-actions">
+                                <a href="{{ route('stock.add.process',$product->id) }}" class="btn btn-sm btn-primary text-white" data-toggle="tooltip" data-original-title="tambah stock">
+                                        <i class="fas fa-plus-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                          @endif
                         @endforeach
                     </tbody>
                 </table>

@@ -14,8 +14,8 @@ class Add3ColumnTableToReceiptsTransactionsTable extends Migration
     public function up()
     {
         Schema::table('receipts__transactions', function (Blueprint $table) {
-            $table->integer('diskon')->default(0)->nullable();
-            $table->integer('custom_prices')->default(0)->nullable();
+            $table->text('diskon')->nullable();
+            $table->text('custom_prices')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'canceled'])->default('pending');
         });
     }

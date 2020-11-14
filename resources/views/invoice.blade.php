@@ -24,12 +24,16 @@
     $i = 0;
     foreach (json_decode($Receipt->total_productsprices) as $item){
         $data[$i]['total_productsprices'] = $item;
-        $totHargas += $item;
         $i++;
     }
     $i = 0;
     foreach (json_decode($Receipt->products_buyvalues) as $item){
         $data[$i]['buy_values'] = $item;
+        $i++;
+    }
+    $i = 0;
+    foreach (json_decode($Receipt->custom_prices) as $item){
+        $data[$i]['custom_prices'] = $item;
         $i++;
     }
     $x = sprintf("%02d", $Receipt->facktur->faktur_number);
@@ -51,6 +55,9 @@
         </style>
 </head>
 <body>
+    @isset($preview)
+        <div class="container">
+    @endisset
         <div class="text-center" style="margin-bottom: 2rem">
             <h3 class="font-weight-bolder">FAKTUR PENJUALAN</h3>
         </div>
@@ -109,10 +116,14 @@
                     <th>Status</th>
                     <th>:</th>
                     <td>
-                        @if ($Receipt->is_done == 0)
+                        @if ($Receipt->status == 'pending')
                             Pending
-                        @else    
+                        @elseif ($Receipt->status == 'confirmed')
                             Selesai
+                        @elseif ($Receipt->status == 'canceled')
+                            Canceled
+                        @else    
+                            -
                         @endif
                     </td>
                 </tr>
@@ -133,16 +144,26 @@
                     $i = 0;
                 @endphp
                 @foreach ($data as $item)
-                <tr style="border-bottom: 0px">
-                    <td style="border-right: 1px solid">{{ $i+1}}</td>
-                    <td style="border-right: 1px solid">{{$item['product_list']}}</td>
-                    <td style="border-right: 1px solid" class=" text-center">{{$item['buy_values']}} {{$item['product_unit']}}</td>
-                    <td style="border-right: 1px solid" class="text-center">@currency($item['product_satuan'])</td>
-                    <td style="border-right: 1px solid" class=" text-center" >@currency($item['product_prices']*$item['buy_values'])</td>
-                </tr>
-                @php
-                    $i++;
-                @endphp
+                    <tr style="border-bottom: 0px">
+                        <td style="border-right: 1px solid">{{ $i+1}}</td>
+                        <td style="border-right: 1px solid">{{$item['product_list']}}</td>
+                        <td style="border-right: 1px solid" class=" text-center">{{$item['buy_values']}} {{$item['product_unit']}}</td>
+                        @if ($item['custom_prices'] != $item['product_satuan'])
+                            <td style="border-right: 1px solid" class="text-center">@currency($item['custom_prices'])</td>
+                            <td style="border-right: 1px solid" class=" text-center" >@currency($item['custom_prices']*$item['buy_values'])</td>
+                        @else    
+                            <td style="border-right: 1px solid" class="text-center">@currency($item['product_satuan'])</td>
+                            <td style="border-right: 1px solid" class=" text-center" >@currency($item['product_prices']*$item['buy_values'])</td>
+                        @endif
+                    </tr>
+                    @php
+                        if ($item['custom_prices'] != $item['product_satuan']){
+                            $totHargas += $item['custom_prices'] * $item['buy_values'];
+                        }else{
+                            $totHargas += $item['product_prices'] * $item['buy_values'];
+                        }
+                        $i++;
+                    @endphp
                 @endforeach
                 <tr>
                     <td style="border-top: 1px solid" colspan="4"><b>Total</b></td>
@@ -174,6 +195,9 @@
             </div>
         </div>
 
+    @isset($preview)
+        </div>
+    @endisset
         <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 </body>

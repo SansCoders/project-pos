@@ -33,7 +33,13 @@
                         <h4 class="mb-1">
                             <a href="{{route('details.product',$item->product->slug)}}" class="font-weight-bold text-dark">{{$item->product->nama_product}}</a>
                         </h4>
-                        <b class="text-sm">@currency($item->buy_value * $item->product->price)</b><br/>
+                        @if ($item->custom_price != $item->product->price)
+                           <s><b class="text-sm">@currency($item->buy_value * $item->product->price)</b></s>
+                           <b class="text-sm text-danger">@currency($item->buy_value * $item->custom_price)</b>
+                           <br/>
+                        @else    
+                            <b class="text-sm">@currency($item->buy_value * $item->product->price)</b><br/>
+                        @endif
                         <small>Quantitiy : {{$item->buy_value}}</small>
                     </div>
                     <button class="btn btn-primary editQty" data-icp="{{$item->id}}" data-toggle="modal" data-target="#exampleModal">edit</button>
@@ -63,7 +69,12 @@
                                 @endphp
                                 @foreach ($cart as $item)
                                     @php
-                                        $priceTotal += ($item->buy_value * $item->product->price);
+                                        if($item->custom_price != $item->product->price)
+                                        {
+                                            $priceTotal += ($item->buy_value * $item->custom_price);
+                                        }else{
+                                            $priceTotal += ($item->buy_value * $item->product->price);
+                                        }
                                     @endphp
                                 @endforeach
                                     @currency($priceTotal)

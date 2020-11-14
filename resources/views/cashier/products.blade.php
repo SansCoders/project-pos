@@ -1,6 +1,7 @@
 @extends('dashboard-layout.master')
 
 @section('add-css')
+<link rel="stylesheet" href="{{asset('assets/vendor/sweetalert2/dist/sweetalert2.min.css')}}">
 <style>
 .modal-dialog {
     max-width: 900px;
@@ -70,17 +71,32 @@
                   </tr>
                 </thead>
                 <tbody class="list">
+                    @php
+                        $i = 1;
+                    @endphp
                     @foreach ($products as $index => $product)
-                      <tr>
-                        <th role="row">{{ $products->firstItem() + $index }}</th>
-                        <td>{{ $product->kodebrg }}</td>
-                        <td class="d-flex align-items-center">
-                          <img src="{{ asset($product->img) }}" class="rounded-circle avatar" style="max-width: 50px" alt="">
-                          <span class="ml-2">{{ $product->nama_product }}</span>
-                        </td>
-                        <td>@currency($product->price)</td>
-                        <td><a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a></td>
-                      </tr>
+                      @if ($product->product_status == "show")
+                        <tr>
+                          <th role="row">{{ $i++ }}</th>
+                          <td>{{ $product->kodebrg }}</td>
+                          <td class="d-flex align-items-center">
+                            <img src="{{ asset($product->img) }}" class="rounded-circle avatar" style="max-width: 50px" alt="">
+                            <span class="ml-2">{{ $product->nama_product }}</span>
+                          </td>
+                          <td>@currency($product->price)</td>
+                          <td>
+                            <a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a>
+                            <form action="{{ route('cashier.products.destroyTemp',$product->id) }}" id="fdelet" method="POST" style="display: contents">
+                              @csrf
+                              @method('PUT')
+                              <button class="btn btn-icon btn-danger hpsbtn" type="button">
+                                  <span class="btn-inner--icon"><i class="fa fa-trash"></i></span>
+                                  <span class="btn-inner--text">Hapus</span>
+                              </button>
+                            </form>
+                          </td>
+                        </tr>
+                      @endif
                     @endforeach
                 </tbody>
               </table>
@@ -224,6 +240,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('assets/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
 <script>
   $(document).ready(function(){
@@ -234,6 +251,26 @@
         .catch( error => {
             console.error( error );
         } );
+  });
+  $('.hpsbtn').click(function(){
+    Swal.fire({
+      title: 'Yakin ingin menghapus product tersebut?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: `Hapus`,
+      denyButtonText: `Batal`,
+    }).then((result) => {
+      $('#fdelet').submit();
+      Swal.fire({
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+        title: 'berhasil dihapus'
+      });
+      setTimeout(function(){
+           location.reload(); 
+      }, 1800);
+    });
   });
 
   $(".infop").click(function(e){

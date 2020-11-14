@@ -17,9 +17,22 @@
         </div>
     </a>
     @if(session()->get('success'))
-    <div class="alert alert-default">
-    <strong class="text-yellow">{{ session()->get('success') }}</strong>
+    <div class="alert alert-default d-flex align-items-center">
+        <strong class="text-yellow">{{ session()->get('success') }}</strong>
+        <div class="ml-auto">
+            @if (session()->get('id_t'))
+                <small>
+                    <a href="{{route('cashier.previewFaktur',session()->get('id_t'))}}" target="_blank" class="btn btn-success text-white">lihat faktur</a>
+                </small>
+            @endif
+        </div>
     </div>
+    @endif
+    
+    @if (session()->get('error'))
+        <div class="alert alert-danger d-flex align-items-center">
+            <strong class="text-white">{{ session()->get('error') }}</strong>
+        </div>
     @endif
     <div class="card shadow-sm">
         <div class="card-header border-0 d-flex justify-content-between align-items-center">
@@ -48,7 +61,7 @@
                         $transactions_pending_count = 0;
                     @endphp
                     @foreach ($transactions as $index => $t)
-                        @if ($t->is_done == 0)   
+                        @if ($t->is_done == 0 && $t->status == 'pending')   
                         <tr>
                             <td>#</td>
                             <td class="d-none">{{ $t->id }}</td>

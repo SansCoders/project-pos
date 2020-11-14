@@ -42,12 +42,12 @@
         @endif
         </div>
         <div class="col-lg-6 col-md-6 text-center">
-          @if ($stockCount->count() > 0)
+          @if ($stockCount > 0)
           <a href="#">
             <div class="card shadow-none bg-warning">
                 <div class="card-body">
                     <div class="mb-3">
-                        <span class="h3 text-white mb-0">{{$stockCount->count()}} product stock habis</span>
+                        <span class="h3 text-white mb-0">{{$stockCount}} product stock habis</span>
                     </div>
                     <strong class="text-white"><i class="fa fa-arrow-alt-circle-right text-white mr-2"></i>cek</strong>
                 </div>
@@ -187,7 +187,8 @@
 
     $categories = App\CategoryProduct::all();
     if(count($categories) < 1){
-      
+      $categProductCount  = [];
+      $categLabels   = [];
     }
     foreach ($categories as $key => $categ) {
       $categLabels[$key] = $categ->name;

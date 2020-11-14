@@ -1,5 +1,5 @@
 @foreach ($products as $item)
-    @if ($item->stocks->stock > 0)
+    @if ($item->stocks->stock > 0 && $item->product_status == "show")
         <div class="col-lg-4 col-md-6">
             <a href="#Modaladdtocart" data-idp="{{$item->id}}" class="seeProduct" data-toggle="modal">
                 <div class="card shadow-none shadow-lg--hover">

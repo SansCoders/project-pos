@@ -58,23 +58,36 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier', 'CashierController@index')->name('cashier.home');
     Route::get('/cashier/products', 'ProductController@getAllProducts')->name('cashier.products');
     Route::post('/cashier/products', 'ProductController@storeProduct')->name('cashier.products.store');
+    Route::put('/cashier/products/{id}', 'ProductController@destroyTemp')->name('cashier.products.destroyTemp');
     Route::get('/cashier/product_info/{id}', 'ProductController@getInfoProduct');
     Route::post('/cashier/product_info/', 'ProductController@updateProduct')->name('cashier.products.update');
 
     Route::get('/cashier/transaction', 'CashierController@transactionProduct')->name('cashier.transaction');
     Route::get('/cashier/transaction/new', 'CashierController@newTransaction')->name('cashier.newtransaction');
+    // Route::get('/cashier/transaction/registred-user', 'CashierController@newTransactionUserRegisterd')->name('cashier.transaction.registereduser');
+    Route::get('/cashier/transaction/search', 'CashierController@SearchinnewTransaction')->name('cashier.newtransaction.search');
+
     Route::post('/cashier/clt', 'CashierController@getdatalistCartContent')->name('cashier.listCart');
+    // Route::post('/cashier/sendtocart', 'CashierController@sendDataSeeProduct')->name('cashier.sendtocart');
+    Route::post('/cashier/sendtocart', 'ProductController@addToCart')->name('cashier.sendtocart');
     Route::post('/cashier/seeproduct', 'CashierController@getdataSeeProduct')->name('cashier.SeeProduct');
     Route::get('/cashier/t/{orderid}', 'CashierController@processCheckout')->name('cashier.check.checkout');
     Route::post('/cashier/t/{orderid}/confirm', 'CashierController@confirmCheckout')->name('cashier.confirm.checkout');
+    Route::put('/cashier/t/{orderid}/cancel', 'CashierController@canceledCheckout')->name('cashier.confirm.checkout-canceled');
 
     Route::post('/cashier/t/confirm', 'CashierController@confirmCheckoutviaCashier')->name('cashier.confirm.viacashier');
+    Route::post('/cashier/cart/delete-{id}', 'CashierController@deleteItemCart')->name('cashier.cart.deleteItem');
 
     Route::get('/cashier/reports/transactions', 'CashierController@listTransactions')->name('cashier.listTransactions');
 
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
     Route::get('/cashier/add-stock/{id}', 'StockController@addStockProduct')->name('stock.add.process');
     Route::put('/cashier/add-stock/{id}', 'StockController@stockIn_store')->name('stock.stockIn.process');
+
+
+    Route::post('/list-orders/details', 'CashierController@getdataReceipts');
+    Route::get('/invoice/view-{id}', 'CashierController@previewFaktur')->name('cashier.previewFaktur');
+    Route::post('/invoice/download', 'CashierController@cetakFaktur')->name('cashier.downloadFaktur');
 });
 
 Route::group(['middleware' => ['auth:web']], function () {

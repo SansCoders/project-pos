@@ -11,14 +11,14 @@
             @isset($company_profile->name)
                 {{$company_profile->name}}
             @else
-            @php
-                $constCompany = App\AboutUs::first();
-                if($constCompany == null) {
-                    $constNamaCompany = "App POS";
-                }else{
-                    $constNamaCompany = $constCompany->name;
-                }
-            @endphp
+              @php
+                  $constCompany = App\AboutUs::first();
+                  if($constCompany == null) {
+                      $constNamaCompany = "App POS";
+                  }else{
+                      $constNamaCompany = $constCompany->name;
+                  }
+              @endphp
               {{$constNamaCompany}}
             @endisset
             </a>
@@ -79,7 +79,12 @@
                               <small>{{$item->buy_value}} {{$item->product->unit->unit}}</small>
                             </div>
                           </div>
+                          
+                          @if ($item->custom_price != $item->product->price)
+                          <p class="text-sm mb-0">@currency($item->buy_value * $item->custom_price) ({{$item->buy_value}} x @currency($item->custom_price))</p>
+                          @else
                           <p class="text-sm mb-0">@currency($item->buy_value * $item->product->price ) ({{$item->buy_value}} x @currency($item->product->price))</p>
+                          @endif
                         </div>
                       </div>
                     </a>

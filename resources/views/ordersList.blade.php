@@ -41,23 +41,31 @@
                                         <td>
                                             {{strftime('%H:%M:%S ,%d %B %Y',strtotime($order->created_at))}}
                                         </td>
-                                        @if ($order->is_done == 1)
-                                        <td>
-                                            {{strftime('%H:%M:%S ,%d %B %Y',strtotime($order->done_time))}}
-                                        </td>
-                                        <td>
-                                            <span class="badge badge-dot">
-                                                <i class="bg-success"></i>
-                                                <span class="status">done</span>
-                                            </span>
-                                        </td>
-                                        @else
-                                        <td class="text-center" colspan="2">
-                                            <span class="badge badge-dot">
-                                                <i class="bg-warning"></i>
-                                                <span class="status">pending</span>
-                                            </span>
-                                        </td>
+                                        
+                                        @if ($order->status == 'pending')
+                                            <td class="text-center" colspan="2">
+                                                <span class="badge badge-dot">
+                                                    <i class="bg-warning"></i>
+                                                    <span class="status">pending</span>
+                                                </span>
+                                            </td>
+                                        @elseif ($order->status == 'confirmed')
+                                            <td>
+                                                {{strftime('%H:%M:%S ,%d %B %Y',strtotime($order->done_time))}}
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-dot">
+                                                    <i class="bg-success"></i>
+                                                    <span class="status">done</span>
+                                                </span>
+                                            </td>
+                                        @else    
+                                            <td class="text-center" colspan="2">
+                                                <span class="badge badge-dot">
+                                                    <i class="bg-dark"></i>
+                                                    <span class="status">canceled</span>
+                                                </span>
+                                            </td>
                                         @endif
                                         <td class="text-center pl-0 pr-0">
                                             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -92,7 +100,7 @@
             </div>
           </div>
         </div>
-      </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -104,8 +112,6 @@
                     method:"post",
                     data : {"_token":"{{ csrf_token() }}","idReceipts" : idproduct},
                     success: function(resp){
-                        // console.log(JSON.parse(resp));
-                        // $('#content-Receipts_d').html(JSON.parse(resp));
                         $('#content-Receipts_d').html(resp);
                     }
                 });

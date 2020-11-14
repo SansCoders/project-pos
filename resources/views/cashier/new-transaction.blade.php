@@ -35,10 +35,10 @@
             <strong>Transaksi Barang</strong> 
         </div>
         <div class="search-form mb-3 position-sticky" style="max-width: 200px; top:20px; z-index: 1">
-            <form action="" method="POST">
-                <div class="form-group">
+            <form action="{{ route('cashier.newtransaction.search') }}" method="get">
+                <div class="form-group d-flex align-items-center">
                     <input type="text" name="search" placeholder="search" class="form-control">
-                    <button type="button" class="btn btn-default btn-icon-only"><i class="fa fa-search"></i></button>
+                    <button type="submit" class="btn btn-default btn-icon-only"><i class="fa fa-search"></i></button>
                 </div>
             </form>
         </div>
@@ -83,14 +83,13 @@
 @push('scripts')
 <script src="{{ asset('assets/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 <script>
-    var c = [];
     $('.seeProduct').click(function(e){
         e.preventDefault();
         var idp = $(this).data('idp');
         $.ajax({
             url : "/cashier/seeproduct",
             method:"post",
-            data : {"_token":"{{ csrf_token() }}",'idp' : idp,'c' : c},
+            data : {"_token":"{{ csrf_token() }}",'idp' : idp},
             success: function(resp){
                 $('#contentAddtoCart').html(resp);
             }
@@ -108,7 +107,7 @@
         $.ajax({
             url : "/cashier/clt",
             method:"post",
-            data : {_token:"{{ csrf_token() }}", data : c},
+            data : {_token:"{{ csrf_token() }}"},
             success: function(resp){
                 $('.content-popup').html(resp);
             }

@@ -21,8 +21,8 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $constCompany = DB::table('about_us')->first();
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
-        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('order_via', 3)->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         $categories = CategoryProduct::all();
         $products = Product::paginate(9);
 
@@ -30,7 +30,6 @@ class HomeController extends Controller
         if ($request->ajax()) {
             $view = view('another.home-productslist', compact($compacts))->render();
             return response()->json(['html' => $view]);
-            // return response()->json(['html' => "zzz"]);
         }
         return view('home', compact($compacts));
     }
@@ -38,8 +37,8 @@ class HomeController extends Controller
     public function getProductbyCategorybyName($name)
     {
         $constCompany = DB::table('about_us')->first();
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
-        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('order_via', 3)->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         $categories = CategoryProduct::where('name', $name)->first();
         if ($categories == null) {
             return abort(404);
@@ -52,25 +51,25 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $cekTransactions = Receipts_Transaction::where('user_id', $user->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
-        $cart = Keranjang::where('user_id', $user->id)->get();
-        $myTransaction = Receipts_Transaction::where('user_id', $user->id);
+        $cart = Keranjang::where('user_id', $user->id)->where('user_type', 3)->get();
+        $myTransaction = Receipts_Transaction::where('user_id', $user->id)->where('order_via', 3);
 
         return view('myprofile', compact(['user', 'cart', 'cekTransactions', 'myTransaction']));
     }
 
     public function myOrders()
     {
-        $receipts = Receipts_Transaction::where('user_id', Auth::user()->id);
-        $allOrders = $receipts->orderBy('is_done', 'ASC')->paginate(10);
+        $receipts = Receipts_Transaction::where('user_id', Auth::user()->id)->where('order_via', 3);
+        $allOrders = $receipts->orderByRaw('status, "pending", "confirmed", "canceled"')->paginate(10);
         $cekTransactions = $receipts->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
-        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         return view('ordersList', compact(['cart', 'allOrders', 'cekTransactions']));
     }
 
     public function getdataReceipts(Request $request)
     {
         $idReceipt = $request->idReceipts;
-        $dataReceipt = Receipts_Transaction::where('id', $idReceipt)->first();
+        $dataReceipt = Receipts_Transaction::where('id', $idReceipt)->where('order_via', 3)->first();
         if (!$dataReceipt || $dataReceipt == null) {
             $data = "kosong";
         }
@@ -85,7 +84,7 @@ class HomeController extends Controller
         $constCompany = DB::table('about_us')->first();
         $user = Auth::user();
         $orderId = $request->orderId;
-        $Receipt = Receipts_Transaction::where('id', $orderId)->where('user_id', $user->id)->first();
+        $Receipt = Receipts_Transaction::where('id', $orderId)->where('user_id', $user->id)->where('order_via', 3)->first();
         if ($Receipt == null) {
             return redirect()->back()->with('error', 'tidak valid');
         }
@@ -93,7 +92,7 @@ class HomeController extends Controller
         $num_padded = sprintf("%02d", $Receipt->facktur->faktur_number);
         $filename = "invoice-" . $Receipt->transaction_id . $num_padded . ".pdf";
         return $pdf->download($filename);
-        return view('invoice', compact(['Receipt', 'constCompany']));
+        // return view('invoice', compact(['Receipt', 'constCompany']));
         // dd($orderId);
     }
 }

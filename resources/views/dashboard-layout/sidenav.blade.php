@@ -51,12 +51,6 @@
                       <span class="nav-link-text">Kategori Produk</span>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link {{ set_active('admin.products') }}" href="{{route('admin.products')}}">
-                      <i class="ni ni-bag-17 text-default"></i>
-                      <span class="nav-link-text">Produk</span>
-                    </a>
-                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link {{ set_active('admin.common_units') }}" href="{{route('admin.common_units')}}">
                       <i class="ni ni-tag text-default"></i>
@@ -175,6 +169,16 @@
                     </li>
                   </ul>
                 </div>
+              </li>
+            </ul>
+            
+            <div class="my-3"></div>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link " href="#">
+                  <i class="fa fa-money-bill text-default"></i>
+                  <span class="nav-link-text">Custom Prices</span>
+                </a>
               </li>
             </ul>
             @else

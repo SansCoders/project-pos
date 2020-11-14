@@ -32,6 +32,11 @@
         $i++;
     }
     $i = 0;
+    foreach (json_decode($dataReceipt->custom_prices) as $item){
+        $data[$i]['custom_prices'] = $item;
+        $i++;
+    }
+    $i = 0;
 @endphp
 
 <div id="loading">
@@ -41,10 +46,14 @@
     Order Id : <strong>#{{$dataReceipt->transaction_id}}</strong><br>
     Waktu Order : <strong>{{strftime('%H:%M ,%d %B %Y',strtotime($dataReceipt->created_at))}}</strong>
     Status :
-    @if ($dataReceipt->is_done == 0)
+    @if ($dataReceipt->status == 'pending')
     Pending
-    @else    
+    @elseif ($dataReceipt->status == 'confirmed')   
     Selesai
+    @elseif ($dataReceipt->status == 'canceled')   
+    Canceled
+    @else
+    -
     @endif
     <div class="table-responsive">
         <table class="table table-flush table-borderless table-hover">
@@ -62,7 +71,11 @@
                         <td>{{$item['product_list']}}</td>
                         <td>{{$item['buy_values']}} {{$item['product_unit']}}</td>
                         <td>@currency($item['product_satuan'])</td>
+                        @if ($item['custom_prices'] != $item['product_prices'])
+                        <td>@currency($item['custom_prices']*$item['buy_values'])</td>
+                        @else
                         <td>@currency($item['product_prices']*$item['buy_values'])</td>
+                        @endif
                     </tr>
                     @php
                         $i++;

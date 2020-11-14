@@ -7,6 +7,8 @@
         $p_l = json_decode($transaction->products_list);
         $p_bv = json_decode($transaction->products_buyvalues);
         $p_prices = json_decode($transaction->products_prices);
+        $tp_prices = json_decode($transaction->total_productsprices);
+        $cp_prices = json_decode($transaction->custom_prices);
         
         $i = 0;
         foreach ($p_l as $item) {
@@ -21,6 +23,22 @@
         $i = 0;
         foreach ($p_bv as $item) {
             $data['buy_value'][$i] = $item;
+            $i++;
+        }
+        $i = 0;
+        foreach ($tp_prices as $item) {
+            $data['tp_prices'][$i] = $item;
+            $i++;
+        }
+        $i = 0;
+        // for ($i=0; $i < count($cp_prices); $i++) { 
+        //     $data['cp_prices'][$i] = $item;
+        //     $data['tcp_prices'][$i] = $item * $data['buy_value'][$i];
+        // }
+        // $i = 0;
+        foreach ($cp_prices as $index => $item) {
+            $data['cp_prices'][$i] = $item;
+            $data['tcp_prices'][$i] = $item * $p_bv[$index];
             $i++;
         }
     @endphp
@@ -52,12 +70,17 @@
                                     </div>
                                     <div class="col-lg-6 d-flex justify-content-between">
                                         <h4 class="font-weight-300">{{$data['buy_value'][$i]}}</h4>
-                                        <h5>@currency($data['price'][$i])</h5>
+                                        <h5>
+                                        @if ($data['tcp_prices'][$i] != ($data['price'][$i] * $data['buy_value'][$i]))
+                                            @currency($data['tcp_prices'][$i])
+                                        @else
+                                            @currency($data['price'][$i] * $data['buy_value'][$i])
+                                        @endif</h5>
                                     </div>
                                 </div>
                                 
                                 @php
-                                    $priceTotal += $data['price'][$i];
+                                    $priceTotal += $data['tcp_prices'][$i];
                                 @endphp
                             @endfor
                             <hr class="my-3">
@@ -79,6 +102,12 @@
                             <label class="custom-control-label" for="check_approve">data sudah benar <sup class="text-danger">*</sup> </label>
                         </div>
                         <button type="submit" class="btn btn-success btn-block btn-lg">KONFIRMASI</button>
+                    </form>
+                    <form action="{{ route('cashier.confirm.checkout-canceled',$transaction->id) }}" method="POST" class="mt-4">
+                        @csrf
+                        @method('PUT')
+                        {{-- <input type="hidden" name="_orderid" value="{{$transaction->transaction_id}}"> --}}
+                        <button type="submit" class="btn btn-danger btn-block btn-lg">HAPUS RECEIPT, DATA TIDAK SESUAI</button>
                     </form>
                 </div>
             </div>
@@ -128,7 +157,28 @@
                                     <h4 class="text-muted">{{$product->kodebrg}}</h4>
                                     <h4>{{$product->nama_product}}</h4>
                                 </div>
-                                <span class="badge badge-primary badge-pill ml-auto">{{$data['buy_value'][$i]}} {{$product->unit->unit}}</span>
+                                <div class="ml-auto text-right">
+                                    <h4 class="text-muted">(
+                                        @if ($product->price != $data['cp_prices'][$i])
+                                        <s>@currency($product->price)</s> <span class="text-danger">@currency($data['cp_prices'][$i])</span> 
+                                        @else
+                                        @currency($product->price)    
+                                        @endif
+                                         x {{$data['buy_value'][$i]}} ) 
+
+                                         @if ($data['tcp_prices'][$i] != ($product->price * $data['buy_value'][$i]))
+                                            <s>@currency($product->price * $data['buy_value'][$i])</s>
+                                            <span class="text-danger">
+                                                @currency($data['tcp_prices'][$i])
+                                            </span>
+                                         @else
+                                            @currency($product->price * $data['buy_value'][$i])
+                                         @endif
+                                    </h4>
+                                    {{-- <span class="badge badge-primary badge-pill">{{$data['buy_value'][$i]}} {{$product->unit->unit}}</span> --}}
+                                    <button class="btn ml-2 btn-neutral btn-sm">beri harga khusus</button>
+                                    <button class="btn ml-2 btn-neutral btn-sm">beri diskon</button>
+                                </div>
                             </li>
                             @php
                                 $i += 1;

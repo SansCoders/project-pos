@@ -75,7 +75,7 @@
                                 <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Logo</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Summary</a>
+                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Change Password</a>
                             </li>
                         </ul>
                     </div>
@@ -103,7 +103,7 @@
                                           <div class="col-lg-6">
                                               <div class="form-group">
                                                   <label for="info-telp-company" class="form-control-label">Telp</label>
-                                                  <input class="form-control" type="text" value="(123) 123456" id="info-telp-company" disabled>
+                                                  <input class="form-control" type="text" value="" id="info-telp-company" disabled>
                                               </div>
                                           </div>
                                       </div>

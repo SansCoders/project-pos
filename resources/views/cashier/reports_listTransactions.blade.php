@@ -29,6 +29,8 @@
                     @php
                         $transaction_count = 0;
                     @endphp
+                    {{-- fakturs --}}
+                    {{-- transaction --}}
                     @foreach ($transaction as $index => $t)
                         <tr>
                             <td>{{$transaction_count+1}}</td>
@@ -55,22 +57,25 @@
                             </td>
                             <td>
                                 <span class="badge badge-dot mr-4">
-                                @if ($t->is_done == 0)
+                                @if ($t->status == 'pending')
                                     <i class="bg-warning"></i>
                                     <span class="status">pending</span>
-                                @else    
+                                @elseif ($t->status == 'confirmed')
                                     <i class="bg-success"></i>
                                     <span class="status">done</span>
+                                @else    
+                                    <i class="bg-dark"></i>
+                                    <span class="status">canceled</span>
                                 @endif
                                 </span>
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm" role="group" aria-label="group btn">
                                     <button type="button" class="btn btn-info pl-2 pr-2 product_details" data-toggle="modal" data-idpro="{{$t->id}}" data-target="#detailsProduct">Details</button>
-                                    <form action="" method="POST">
+                                    <form action="{{ route('cashier.downloadFaktur') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="orderId" value="{{ $t->id }}" required>
-                                        <button type="button" class="btn btn-success btn-icon-only pl-2 pr-2"><i class="fa fa-download"></i></button>
+                                        <button type="submit" class="btn btn-success btn-icon-only pl-2 pr-2"><i class="fa fa-download"></i></button>
                                     </form>
                                 </div>
                             </td>
@@ -91,4 +96,35 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="detailsProduct" tabindex="-1" role="dialog" aria-labelledby="detailsProductLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detailsProductLabel">Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="content-Receipts_d">
+        </div>
+      </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+    <script>
+            $('.product_details').click(function(){
+                var idproduct = $(this).data("idpro");
+                $.ajax({
+                    url : "/list-orders/details",
+                    method:"post",
+                    data : {"_token":"{{ csrf_token() }}","idReceipts" : idproduct},
+                    success: function(resp){
+                        $('#content-Receipts_d').html(resp);
+                    }
+                });
+            });
+    </script>
+@endpush

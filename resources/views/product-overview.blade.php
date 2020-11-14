@@ -18,6 +18,9 @@
 @section('content')
 
 @foreach($data as $the_product)
+    @php
+        $custom_price = DB::table('prices__customs')->where('product_id',$the_product->id)->where('user_id',Auth::user()->id)->where('user_type','user')->first();
+    @endphp
     <nav class="header mb-4">
         <div class="container">
             <div class="header-body">
@@ -66,7 +69,14 @@
                             {{$the_product->nama_product}}
                         </h2>
                         <span class="badge badge-white text-left mt-2">{{$the_product->category->name}}</span>
-                        <h3 class="h2 font-weight-900">@currency($the_product->price)</h3>
+                        <h3 class="h2 font-weight-900">
+                            @if ($custom_price != null) 
+                                <s>@currency($the_product->price)</s> <span class="text-danger">@currency($custom_price->prices_c)</span>
+                                <span class="badge badge-info">Harga Khusus</span>
+                            @else
+                                @currency($the_product->price)
+                            @endif
+                        </h3>
                         <span class="my-4">
                             {!! $the_product->description !!}
                         </span>
