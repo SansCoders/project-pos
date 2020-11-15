@@ -17,6 +17,14 @@ class UsersTableSeeder extends Seeder
             'email' => 'user1@email.com',
             'password' => bcrypt('password'),
         ]);
+        DB::table('profile_users')->insert([
+            'fullname' => null,
+            'gender' => null,
+            'birth_date' => null,
+            'photo' => "user-img/user-img-default.png",
+            'user_id' => 1,
+            'user_type' => 3,
+        ]);
         DB::table('admins')->insert([
             'name' => 'Developer User',
             'username' => 'admin',

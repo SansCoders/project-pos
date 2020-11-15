@@ -11,6 +11,7 @@ use App\Faktur;
 use App\Keranjang;
 use Illuminate\Http\Request;
 use App\StockActivity;
+use App\User;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Illuminate\Support\Facades\Auth;
@@ -283,5 +284,17 @@ class CashierController extends Controller
             $data = "kosong";
         }
         return view('another.showDetailsRecipts', compact('dataReceipt'));
+    }
+
+    public function customPrice()
+    {
+        $sales = User::all();
+        return view('cashier.customPricePage', compact('sales'));
+    }
+    public function setCustomPrice($user)
+    {
+        $sales = User::find($user);
+        if ($sales == null) return redirect()->back();
+        return view('cashier.setCustomPrice', compact('sales'));
     }
 }

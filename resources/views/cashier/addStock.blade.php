@@ -12,14 +12,18 @@
                 <div class="d-flex justify-content-between">
                     <h3 class="mb-0">Manajeman Stock</h3>
                     <div class="">
-                        <a data-toggle="modal" href="#addStock" role="button" class="btn btn-sm btn-success btn-round btn-icon" >
+                        <form action="" method="GET" class="form-inline">
+                          <input type="text" name="cari" class="form-control" placeholder="cari" id="">
+                          <button type="submit" class="btn btn-info btn-icon-only"><i class="fa fa-search"></i></button>
+                        </form>
+                        {{-- <a data-toggle="modal" href="#addStock" role="button" class="btn btn-sm btn-success btn-round btn-icon" >
                             <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
                             <span class="btn-inner--text">Tambah</span>
                         </a>
                         <a href="#" role="button" class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Filter product">
                             <span class="btn-inner--icon"><i class="fas fa-sliders-h"></i></span>
                             <span class="btn-inner--text">Filter</span>
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
             </div>

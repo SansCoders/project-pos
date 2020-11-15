@@ -84,6 +84,8 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier/add-stock/{id}', 'StockController@addStockProduct')->name('stock.add.process');
     Route::put('/cashier/add-stock/{id}', 'StockController@stockIn_store')->name('stock.stockIn.process');
 
+    Route::get('/cashier/custom-prices', 'CashierController@customPrice')->name('cashier.customprice');
+    Route::get('/cashier/custom-prices/{user}', 'CashierController@setCustomPrice')->name('cashier.customprice.set');
 
     Route::post('/list-orders/details', 'CashierController@getdataReceipts');
     Route::get('/invoice/view-{id}', 'CashierController@previewFaktur')->name('cashier.previewFaktur');
