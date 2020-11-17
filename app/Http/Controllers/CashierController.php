@@ -9,6 +9,7 @@ use App\Stock;
 use Carbon\Carbon;
 use App\Faktur;
 use App\Keranjang;
+use App\Prices_Custom;
 use Illuminate\Http\Request;
 use App\StockActivity;
 use App\User;
@@ -90,7 +91,7 @@ class CashierController extends Controller
     {
         $transaction = Receipts_Transaction::where('transaction_id', $orderid)->where('is_done', 0)->where('status', 1)->first();
         if ($transaction == null) {
-            return abort(404);
+            return redirect()->route('cashier.transaction');
         }
 
         return view('cashier.confirmationCheckout', compact('transaction'));
@@ -122,8 +123,23 @@ class CashierController extends Controller
         if (!$confirm) {
             return redirect()->back()->with('error', 'gagal konfirmasi, cek kembali datanya!');
         }
-
-        return redirect()->route('cashier.transaction')->with('success', 'berhasil diproses');
+        $retur['products_id'] = json_decode($receipt->products_id);
+        $retur['buy_value'] = json_decode($receipt->products_buyvalues);
+        foreach ($retur['products_id'] as $index => $a) {
+            $data = Stock::where('product_id', $a)->first();
+            if ($data != null) {
+                $a_stock = new StockActivity([
+                    'stocks_id' => $data->id,
+                    'product_id' => $a,
+                    'users_id' => Auth::user()->id,
+                    'user_type_id' => 2,
+                    'type_activity' => 3,
+                    'stock' => $retur['buy_value'][$index]
+                ]);
+                $a_stock->save();
+            }
+        }
+        return redirect()->route('cashier.transaction')->with('success', 'order id #' . $orderid . ' berhasil diproses')->with('id_t', $receipt->transaction_id);
     }
     public function confirmCheckoutviaCashier(Request $request)
     {
@@ -266,9 +282,30 @@ class CashierController extends Controller
     public function canceledCheckout($id)
     {
         $Receipt = Receipts_Transaction::find($id);
+        if ($Receipt == null) return redirect()->back();
+        $retur['products_id'] = json_decode($Receipt->products_id);
+        $retur['buy_value'] = json_decode($Receipt->products_buyvalues);
+
+        foreach ($retur['products_id'] as $index => $a) {
+            $data = Stock::where('product_id', $a)->first();
+            if ($data != null) {
+                // dd($retur['buy_value'][$index]);
+                Stock::where('product_id', $a)->update(['stock' => ($data->stock + $retur['buy_value'][$index])]);
+                $a_stock = new StockActivity([
+                    'stocks_id' => $data->id,
+                    'product_id' => $a,
+                    'users_id' => Auth::user()->id,
+                    'user_type_id' => 2,
+                    'type_activity' => 1,
+                    'stock' => $retur['buy_value'][$index]
+                ]);
+                $a_stock->save();
+            }
+        }
+        // dd($Receipt, $retur);
         $Receipt->status = 3;
         $Receipt->save();
-        return redirect()->back()->with('canceled', 'Transaksi #' . $Receipt->transaction_id . ' di batalkan');
+        return redirect()->route('cashier.transaction')->with('canceled', 'Transaksi #' . $Receipt->transaction_id . ' di batalkan');
     }
     public function deleteItemCart(Request $request)
     {
@@ -296,5 +333,65 @@ class CashierController extends Controller
         $sales = User::find($user);
         if ($sales == null) return redirect()->back();
         return view('cashier.setCustomPrice', compact('sales'));
+    }
+    public function confirmCustomPrice(Request $request, $user)
+    {
+        $sales = User::find($user);
+        if ($sales == null) return redirect()->back();
+
+        $request->validate([
+            'usHargaKhusus' => 'required|numeric',
+            'productid' => 'required|numeric'
+        ]);
+        $salesId = $sales->id;
+        $pid = $request->productid;
+        $price_custom = $request->usHargaKhusus;
+
+        $cekData = Prices_Custom::where('user_id', $salesId)->where('user_type', 'user')->where('product_id', $pid)->first();
+        if ($cekData == null) {
+            $newData = new Prices_Custom([
+                'user_id' => $salesId,
+                'user_type' => 3,
+                'product_id' => $pid,
+                'prices_c' => $price_custom
+            ]);
+            $save = $newData->save();
+            if ($save) return redirect()->back()->with('message', 'berhasil');
+            return redirect()->back()->with('error', 'gagal');
+        }
+        return redirect()->back();
+    }
+    public function editCustomPrice(Request $request, $user)
+    {
+        $sales = User::find($user);
+        if ($sales == null) return redirect()->back();
+        $validastionpcid = Prices_Custom::find($request->e_pcid);
+        if ($validastionpcid == null) return redirect()->back();
+
+        $request->validate([
+            'usHargaKhususEdit' => 'required|numeric',
+            'productid' => 'required|numeric',
+            'e_pcid' => 'required|numeric'
+        ]);
+
+        $salesId = $sales->id;
+        $pid = $request->productid;
+        $e_pcid = $request->e_pcid;
+        $price_custom = $request->usHargaKhususEdit;
+
+        $cekData = Prices_Custom::where('user_id', $salesId)->where('user_type', 'user')->where('product_id', $pid)->first();
+        if ($cekData != null) {
+            $editData = Prices_Custom::where('id', $e_pcid)->update(['prices_c' => $price_custom]);
+            if ($editData) return redirect()->back()->with('message', 'berhasil');
+            return redirect()->back()->with('error', 'gagal');
+        }
+        return redirect()->back();
+    }
+    public function deleteCustomPrice(Request $request)
+    {
+        $data = Prices_Custom::find($request->customPid);
+        $hapus = $data->delete();
+        if ($hapus) return redirect()->back()->with('message', 'harga kembali normal');
+        return redirect()->back();
     }
 }

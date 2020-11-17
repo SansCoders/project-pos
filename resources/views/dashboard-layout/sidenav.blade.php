@@ -139,7 +139,7 @@
                         <span class=""> Stock In </span>
                       </a>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                       <a href="#" class="nav-link "> 
                         <span class=""> Stock Out </span>
                       </a>
@@ -148,7 +148,7 @@
                       <a href="#" class="nav-link">
                         <span class=""> Stock Retur </span>
                       </a>
-                    </li>
+                    </li> --}}
                   </ul>
                 </div>
               </li>

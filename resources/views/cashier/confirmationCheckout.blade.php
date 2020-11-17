@@ -176,8 +176,8 @@
                                          @endif
                                     </h4>
                                     {{-- <span class="badge badge-primary badge-pill">{{$data['buy_value'][$i]}} {{$product->unit->unit}}</span> --}}
-                                    <button class="btn ml-2 btn-neutral btn-sm">beri harga khusus</button>
-                                    <button class="btn ml-2 btn-neutral btn-sm">beri diskon</button>
+                                    {{-- <button class="btn ml-2 btn-neutral btn-sm">beri harga khusus</button> --}}
+                                    {{-- <button class="btn ml-2 btn-neutral btn-sm">beri diskon</button> --}}
                                 </div>
                             </li>
                             @php

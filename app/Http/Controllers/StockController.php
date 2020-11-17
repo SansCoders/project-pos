@@ -17,7 +17,7 @@ class StockController extends Controller
     public function addStock()
     {
         $order = "asc";
-        $products = Product::join('stocks', 'products.id', '=', 'stocks.product_id')->orderBy('stock')->paginate(10);
+        $products = Product::join('stocks', 'products.id', '=', 'stocks.product_id')->where('product_status', 'show')->orderBy('stock')->paginate(10);
         return view('cashier.addStock', compact('products'));
     }
 
@@ -62,7 +62,7 @@ class StockController extends Controller
                 'stock' => $request->stock_in
             ]);
             $stock_a->save();
-            return redirect()->back()->with('success', 'stock berhasil ditambah');
+            return redirect()->back()->with('message', 'stock berhasil ditambah');
         }
         return redirect()->back();
     }

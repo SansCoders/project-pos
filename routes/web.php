@@ -86,6 +86,9 @@ Route::group(['middleware' => ['auth:cashier']], function () {
 
     Route::get('/cashier/custom-prices', 'CashierController@customPrice')->name('cashier.customprice');
     Route::get('/cashier/custom-prices/{user}', 'CashierController@setCustomPrice')->name('cashier.customprice.set');
+    Route::post('/cashier/custom-prices/{user}', 'CashierController@confirmCustomPrice')->name('cashier.customprice.confirm');
+    Route::put('/cashier/custom-prices/{user}', 'CashierController@editCustomPrice')->name('cashier.customprice.edit');
+    Route::delete('/cashier/custom-prices/{user}', 'CashierController@deleteCustomPrice')->name('cashier.customprice.delete');
 
     Route::post('/list-orders/details', 'CashierController@getdataReceipts');
     Route::get('/invoice/view-{id}', 'CashierController@previewFaktur')->name('cashier.previewFaktur');

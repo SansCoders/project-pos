@@ -1,5 +1,9 @@
 @extends('dashboard-layout.master')
 
+@section('add-css')
+<link rel="stylesheet" href="{{ asset('assets/vendor/animate.css/animate.min.css') }}">
+@endsection
+
 @section('header-content')
 <div class="bg-primary p-3" style="width: 100%;z-index:1">
     <a href="{{route('cashier.customprice')}}" class="btn btn-info ml-2"><i class="fa fa-arrow-alt-circle-left"></i> kembali</a>
@@ -54,7 +58,17 @@
                                         @currency($priceCustom->prices_c)
                                    @endif
                                 </td>
-                            <td><a href="#setHarga" data-cp="{{$item->id}}" data-toggle="modal" ><span class="badge badge-lg badge-primary">set harga</span></a></td>
+                                <td>
+                                  @if($priceCustom != null)
+                                    <a href="#editHarga" class="editPrice" data-pcid="{{$priceCustom->id}}" data-toggle="modal" >
+                                      <span class="badge badge-lg badge-warning">ubah harga</span>
+                                    </a>
+                                  @else
+                                    <a href="#setHarga" class="setPrice" data-cp="{{$item->id}}" data-toggle="modal" >
+                                      <span class="badge badge-lg badge-primary">set harga</span>
+                                    </a>
+                                  @endif
+                                </td>
                             </tr>
                         @endforeach
                         {{$products->links()}}
@@ -73,14 +87,134 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
-                
+            <div class="modal-body text-center" id="formSP">
+                <h1 id="nproduct"></h1>
+
+                <div class="mt-2 text-left d-flex flex-column">
+                  <span class="text-muted">harga normal  : <strong id="pnormal"></strong></span>
+                  <form action="{{ route('cashier.customprice.confirm',$sales->id) }}" class="py-3" method="post">
+                    @csrf
+                    <input type="hidden" name="productid" id="pid">
+                    <span class="text-muted">harga khusus  : <input type="number" min="1" class="form-control" name="usHargaKhusus" id=""></span>
+                  
+                </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="submit" class="btn btn-success">Simpan</button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal fade" id="editHarga" tabindex="-1" role="dialog" aria-labelledby="editHargaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editHargaLabel">Edit Harga Khusus</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-center" id="formSP">
+                <h1 id="nproduct2"></h1>
+                <div class="mt-2 text-left d-flex flex-column">
+                  <span class="text-muted">harga normal  : <strong id="pnormal2"></strong></span>
+                  <form action="{{ route('cashier.customprice.edit',$sales->id) }}" class="py-3" method="post">
+                    @csrf
+                    @method('put')
+                    <input type="hidden" name="productid" id="pid2">
+                    <input type="hidden" name="e_pcid" id="pcid">
+                    <span class="text-muted">harga khusus  : <input type="number" min="1" class="form-control" name="usHargaKhususEdit" id="editHargaKhusus"></span>
+                  
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between flex-row-reverse">
+              <button type="submit" class="btn btn-success">Simpan</button>
+            </form>
+          <form action="{{ route('cashier.customprice.delete',$sales->id) }}" method="POST">
+              @csrf
+              @method('delete')
+              <input type="hidden" name="customPid" id="customPid">
+              <button type="submit" class="btn btn-secondary">Jadikan Harga Normal</button>
+            </form>
             </div>
           </div>
         </div>
       </div>
 @endsection
+
+@push('scripts')
+<script src="{{asset('assets/vendor/bootstrap-notify/bootstrap-notify.min.js')}}"></script>  
+<script>
+  $('.setPrice').click(function(e){
+    e.preventDefault();
+    var idproduct = $(this).data('cp');
+    $.ajax({
+      url : "/api/p/find",
+      method:"post",
+      data : {"_token":"{{ csrf_token() }}","idproduct" : idproduct},
+      success: function(resp){
+        $('#nproduct').text(resp.nama_product);
+        $('#pid').val(resp.id);
+        var hn = parseFloat(Number(resp.price));
+        $('#pnormal').text(resp.price);
+      }
+    });
+  });
+
+  $('.editPrice').click(function(e){
+    e.preventDefault();
+    var pcid = $(this).data('pcid');
+    $.ajax({
+      url : "/api/p/cfind",
+      method:"post",
+      data : {"_token":"{{ csrf_token() }}","pcid" : pcid},
+      success: function(resp){
+        $('#nproduct2').text(resp[1].nama_product);
+        $('#pcid').val(resp[0].id);
+        $('#customPid').val(resp[0].id);
+        $('#pid2').val(resp[1].id);
+        var hn2 = parseFloat(Number(resp[1].price));
+        var cproduct = parseFloat(Number(resp[0].prices_c));
+        $('#pnormal2').text(hn2);
+        $('#editHargaKhusus').val(cproduct);
+      }
+    });
+  });
+</script>   
+
+@if(session()->get('message'))
+<script>
+    $.notify({
+        icon: 'fa fa-check',
+	    message: '{{ session()->get('message') }}'
+        },{
+            element: 'body',
+            position: null,
+            type: "success",
+            allow_dismiss: true,
+            newest_on_top: false,
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            z_index: 1031,
+            delay: 5000,
+            animate: {
+                enter: 'animated fadeInDown',
+                exit: 'animated fadeOutUp'
+            },
+            icon_type: 'class',
+            template: '<div data-notify="container" class="d-flex col-xs-11 col-sm-3 alert alert-{0}" role="alert" style="width:calc(100% - 30px);">' +
+                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                '<span data-notify="icon" class="mr-2" style="place-self: center;"></span> ' +
+                '<span data-notify="message">{2}</span>' +
+                '<div class="progress" data-notify="progressbar">' +
+                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                '</div>' +
+            '</div>' 
+        });
+</script>
+@endif
+@endpush

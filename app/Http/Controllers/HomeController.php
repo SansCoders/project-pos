@@ -21,10 +21,10 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $constCompany = DB::table('about_us')->first();
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('order_via', 3)->orderBy('created_at', 'DESC')->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('order_via', 3)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         $categories = CategoryProduct::all();
-        $products = Product::paginate(9);
+        $products = Product::where('product_status', 'show')->paginate(9);
 
         $compacts = ['products', 'categories', 'cart', 'cekTransactions', 'constCompany'];
         if ($request->ajax()) {
@@ -37,20 +37,20 @@ class HomeController extends Controller
     public function getProductbyCategorybyName($name)
     {
         $constCompany = DB::table('about_us')->first();
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('order_via', 3)->orderBy('created_at', 'DESC')->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('order_via', 3)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         $categories = CategoryProduct::where('name', $name)->first();
         if ($categories == null) {
             return abort(404);
         }
-        $products = Product::where('category_id', $categories->id)->get();
+        $products = Product::where('category_id', $categories->id)->where('product_status', 'show')->get();
         return view('home', compact(['products', 'categories', 'cart', 'cekTransactions', 'constCompany']));
     }
 
     public function myProfile()
     {
         $user = Auth::user();
-        $cekTransactions = Receipts_Transaction::where('user_id', $user->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', $user->id)->where('is_done', 0)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', $user->id)->where('user_type', 3)->get();
         $myTransaction = Receipts_Transaction::where('user_id', $user->id)->where('order_via', 3);
 
@@ -60,7 +60,7 @@ class HomeController extends Controller
     public function myOrders()
     {
         $receipts = Receipts_Transaction::where('user_id', Auth::user()->id)->where('order_via', 3);
-        $allOrders = $receipts->orderByRaw('status, "pending", "confirmed", "canceled"')->paginate(10);
+        $allOrders = $receipts->orderByRaw('status, "pending", "confirmed", "canceled", transaction_id desc')->paginate(10);
         $cekTransactions = $receipts->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         return view('ordersList', compact(['cart', 'allOrders', 'cekTransactions']));

@@ -260,16 +260,18 @@
       confirmButtonText: `Hapus`,
       denyButtonText: `Batal`,
     }).then((result) => {
-      $('#fdelet').submit();
-      Swal.fire({
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 1500,
-        title: 'berhasil dihapus'
-      });
-      setTimeout(function(){
-           location.reload(); 
-      }, 1800);
+      if(result.isConfirmed){
+        $('#fdelet').submit();
+        Swal.fire({
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+          title: 'berhasil dihapus'
+        });
+        setTimeout(function(){
+            location.reload(); 
+        }, 1800);
+      }
     });
   });
 

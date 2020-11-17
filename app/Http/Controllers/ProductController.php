@@ -30,14 +30,14 @@ class ProductController extends Controller
     public function getInfoProduct($id)
     {
         $constCompany = DB::table('about_us')->first();
-        $getProduct = Product::where('id', $id)->first();
+        $getProduct = Product::where('id', $id)->where('product_status', 'show')->first();
         $categors = CategoryProduct::where('id', $getProduct->category_id)->first();
         $categories = CategoryProduct::get();
         $units = Unit::get();
         $unitss = Unit::where('id', $getProduct->unit_id)->first();
         $stock = Stock::where('id', $getProduct->id)->first();
         if ($getProduct == null) {
-            return json_encode('error');
+            return redirect()->back();
         }
 
         return view('cashier.productDetail', compact(['getProduct', 'stock', 'categories', 'categors', 'unitss', 'units', 'constCompany']));
@@ -45,7 +45,7 @@ class ProductController extends Controller
 
     public function getAllProducts()
     {
-        $products = Product::paginate(10);
+        $products = Product::where('product_status', 'show')->paginate(10);
         $categories = CategoryProduct::get();
         $units = Unit::get();
         if (Auth::guard('admin')->check()) {
@@ -62,11 +62,11 @@ class ProductController extends Controller
 
     public function searchProduct(Request $request)
     {
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         $categories = CategoryProduct::all();
         $cari = $request->get('cari');
-        $products = Product::where('nama_product', 'LIKE', '%' . $cari . '%')->get();
+        $products = Product::where('nama_product', 'LIKE', '%' . $cari . '%')->where('product_status', 'show')->get();
         if (count($products) > 0) {
             return view('home', compact(['products', 'categories', 'cart', 'cekTransactions', 'cari']));
         } else {
@@ -168,16 +168,15 @@ class ProductController extends Controller
     public function detailsProduct($slug)
     {
         $constCompany = DB::table('about_us')->first();
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
-        $data = Product::where('slug', $slug)->get();
+        $data = Product::where('slug', $slug)->where('product_status', 'show')->get();
         if ($data->count() > 0) {
             return view('product-overview', compact('data', 'cart', 'cekTransactions', 'constCompany'));
         } else {
             return redirect()->back()->with('error', 'product not found');
         }
     }
-
     public function addToCart(Request $request)
     {
         $user = Auth::user();
@@ -267,7 +266,7 @@ class ProductController extends Controller
     public function checkOutProducts()
     {
         $constCompany = DB::table('about_us')->first();
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         return view('checkout', compact('cart', 'cekTransactions', 'constCompany'));
     }

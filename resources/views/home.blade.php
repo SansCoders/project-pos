@@ -86,6 +86,8 @@
         })
         .fail(function(jqXHR, ajaxOptions, throwError){
             $("#load-more-product").hide();
+            // break;
+            return false;
         });
     }
 

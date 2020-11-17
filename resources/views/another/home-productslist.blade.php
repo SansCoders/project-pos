@@ -26,7 +26,12 @@
                                     <b>@currency($product->price)</b>
                                 @endif
                                 <br>
-                                stock : @isset($product->stocks) {{ $product->stocks->stock }} {{ $product->unit->unit }}
+                                stock : @isset($product->stocks) 
+                                @if ($product->stocks->stock < 1)
+                                <b class="text-danger">habis</b>
+                                @else
+                                {{ $product->stocks->stock }} {{ $product->unit->unit }}
+                                @endif
                                 @else
                                 <b class="text-danger">habis</b> @endisset
                             </span>

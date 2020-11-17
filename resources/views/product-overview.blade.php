@@ -80,7 +80,12 @@
                         <span class="my-4">
                             {!! $the_product->description !!}
                         </span>
-                        <h4 class="text-muted">Tersedia : @isset($the_product->stocks) {{ $the_product->stocks->stock }} {{ $the_product->unit->unit }}
+                        <h4 class="text-muted">Tersedia : @isset($the_product->stocks)
+                            @if ($the_product->stocks->stock < 1)
+                            <b class="text-danger">habis</b>
+                            @else
+                            {{ $the_product->stocks->stock }} {{ $the_product->unit->unit }}
+                            @endif
                             @else
                             <b class="text-danger">habis</b> @endisset</h4>
                         <form action="{{ route('addtocart') }}" method="POST">

@@ -1,5 +1,8 @@
 @extends('dashboard-layout.master')
 
+@section('add-css')
+<link rel="stylesheet" href="{{ asset('assets/vendor/animate.css/animate.min.css') }}">
+@endsection
 @section('content')
     <div class="container-fluid mt-5 mb-5">
         <div class="row">
@@ -61,10 +64,45 @@
 @endsection
 
 @push('scripts')
+<script src="{{asset('assets/vendor/bootstrap-notify/bootstrap-notify.min.js')}}"></script>  
     
 <script>
     $('#submitAddstock').click(function(){
         $('#formStockIn').submit();
     });
 </script>
+
+@if(session()->get('message'))
+<script>
+    $.notify({
+        icon: 'fa fa-check',
+	    message: '{{ session()->get('message') }}'
+        },{
+            element: 'body',
+            position: null,
+            type: "success",
+            allow_dismiss: true,
+            newest_on_top: false,
+            placement: {
+                from: "top",
+                align: "right"
+            },
+            z_index: 1031,
+            delay: 5000,
+            animate: {
+                enter: 'animated fadeInDown',
+                exit: 'animated fadeOutUp'
+            },
+            icon_type: 'class',
+            template: '<div data-notify="container" class="d-flex col-xs-11 col-sm-3 alert alert-{0}" role="alert" style="width:calc(100% - 30px);">' +
+                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                '<span data-notify="icon" class="mr-2" style="place-self: center;"></span> ' +
+                '<span data-notify="message">{2}</span>' +
+                '<div class="progress" data-notify="progressbar">' +
+                    '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                '</div>' +
+            '</div>' 
+        });
+</script>
+@endif
 @endpush

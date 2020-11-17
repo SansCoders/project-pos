@@ -22,7 +22,7 @@
         <div class="ml-auto">
             @if (session()->get('id_t'))
                 <small>
-                    <a href="{{route('cashier.previewFaktur',session()->get('id_t'))}}" target="_blank" class="btn btn-success text-white">lihat faktur</a>
+                    <a href="{{route('cashier.previewFaktur',session()->get('id_t'))}}" target="_blank" class="btn btn-success text-light">lihat faktur</a>
                 </small>
             @endif
         </div>
