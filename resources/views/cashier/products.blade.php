@@ -194,7 +194,7 @@
                         <div class="input-group input-group-merge">
                           <input type="text" value="{{old('pStok')}}" class="form-control justnumber" name="pStok" placeholder="0" required>
                           <select name="pUnit" id="pUnit" class="form-control">
-                            @if ($units->isEmpty())
+                            @if (count($units) < 1)
                               <option disabled>no record</option>
                             @endif
                             @foreach ($units as $u)

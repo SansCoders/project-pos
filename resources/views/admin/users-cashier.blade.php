@@ -38,43 +38,53 @@
     </div>
 </div>
 <div class="container-fluid mt--6">
-   @if(session()->get('success'))
+        @if(session()->get('success'))
             <div class="alert alert-success">
-                {{-- {{$message}} --}}
+               {{session()->get('success')}}
             </div>
-            @endif
-  <div class="card">
-                <div class="card-header text-right">
+        @endif
+          <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                   <strong>Kasir</strong>
                     <button class="btn btn-success" data-toggle="modal" data-target="#addCashier"><i class="fa fa-plus"></i> tambah</button>
                 </div>
-                <div class="card-body pl-0 pr-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover ">
-                            <thead>
-                                <th>no</th>
-                                <th>nama</th>
-                                <th>action</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($cashier as $index => $user)
-                                <tr class="data-row">
-                                <td>{{ $cashier->firstitem() + $index }}</td>
-                                <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
-                                    <td class="table-actions">
-                                        <span data-toggle="modal" data-target="#editUser">
-                                            <a href="#!" class="btn btn-white" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
-                                                    <i class="fas fa-user-edit"></i> Edit
-                                            </a>
-                                        </span>
-                                        <a href="#!" class="btn btn-danger" data-toggle="tooltip" data-original-title="Hapus Pengguna">
-                                          <i class="fas fa-trash"></i> Hapus
+                <div class="table-responsive">
+                    <table class="table table-hover ">
+                        <thead>
+                            <th>no</th>
+                            <th>nama</th>
+                            <th style="width: 10%">action</th>
+                        </thead>
+                        <tbody>
+                            @foreach ($cashier as $index => $user)
+                            <tr class="data-row">
+                            <td>{{ $cashier->firstitem() + $index }}</td>
+                            <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
+                                <td class="table-actions d-flex">
+                                    <span data-toggle="modal" data-target="#editUser" class="mr-2">
+                                        <a href="#!" class="btn btn-white btn-sm" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
+                                                <i class="fas fa-user-edit"></i> Edit
                                         </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                    </span>
+                                    <form action="{{ route('admin.changestatususer') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="type" value="cashier">
+                                        <input type="hidden" name="iduser" value="{{$user->id}}">
+                                        <button class="btn btn-danger btn-sm" type="submit">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                    {{-- <a href="#!" class="btn btn-danger" data-toggle="tooltip" data-original-title="Hapus Pengguna">
+                                      <i class="fas fa-trash"></i> Hapus
+                                    </a> --}}
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                  {{$cashier->links()}}
                 </div>
   </div>
 </div>

@@ -163,9 +163,9 @@
                       <a href="{{route('cashier.listTransactions')}}" class="nav-link "> 
                         <span class=""> list transactions </span>
                       </a>
-                      <a href="#" class="nav-link "> 
+                      {{-- <a href="#" class="nav-link "> 
                         <span class=""> summary </span>
-                      </a>
+                      </a> --}}
                     </li>
                   </ul>
                 </div>

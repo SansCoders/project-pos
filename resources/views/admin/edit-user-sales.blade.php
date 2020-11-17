@@ -29,14 +29,6 @@
                                 <span class="heading">{{$countTotalOrder->count()}}</span>
                                 <span class="description">Total Orders</span>
                               </div>
-                              {{-- <div>
-                                <span class="heading">10</span>
-                                <span class="description">Photos</span>
-                              </div>
-                              <div>
-                                <span class="heading">89</span>
-                                <span class="description">Comments</span>
-                              </div> --}}
                             </div>
                           </div>
                         </div>
@@ -59,11 +51,11 @@
                     {{-- <div class="card-header h3">Edit User Info</div> --}}
                     <div class="card-header">
                       <ul class="nav nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">Profile</a>
+                        </li>
                           <li class="nav-item">
-                              <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">Summary</a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Profile</a>
+                              <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Summary</a>
                           </li>
                           <li class="nav-item">
                               <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Change Password</a>
@@ -73,10 +65,16 @@
                     <div class="card-body">
                       <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
-                        asdasd
-                        </div>
-                        <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
-                          <form action="" method="post" id="formData">
+                          @if ($errors->any())
+                              <div class="alert alert-danger">
+                                  <ul>
+                                      @foreach ($errors->all() as $error)
+                                          <li>{{ $error }}</li>
+                                      @endforeach
+                                  </ul>
+                              </div>
+                          @endif
+                          <form action="{{ route('admin.users-sales.edit-put') }}" method="post" id="formData">
                             @csrf
                             @method('PUT')
                               <input type="hidden" name="iduser" value="{{ $dataUser->id }}">
@@ -111,8 +109,11 @@
                             </div>
                           </form>   
                         </div>
+                        <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+                        ...
+                        </div>
                         <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
-                          <form action="" method="POST">
+                          <form action="{{route('admin.changepass')}}" method="POST">
                             @csrf
                             @method("PUT")
                             <div class="form-group">
@@ -127,7 +128,9 @@
                                 <label for="repassnew">Ulangi Kata Sandi Baru</label>
                                 <input id="repassnew" type="password" name="" class="form-control" required>
                             </div>
-                            {{-- <span class="text-danger"><strong>*minimal 6 digit</strong></span> --}}
+                            <div class="form-group">
+                               <button type="submit" class="btn btn-block btn-default">Ganti Kata Sandi</button>
+                            </div>
                           </form>
                         </div>
                       </div>

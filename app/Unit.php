@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Unit extends Model
 {
     protected $fillable = [
-        'unit'
+        'unit', 'status',
     ];
     public $timestamps = false;
 

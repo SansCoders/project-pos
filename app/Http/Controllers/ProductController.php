@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use AboutUs;
 use App\CategoryProduct;
 use App\Faktur;
 use App\Keranjang;
@@ -17,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use PDO;
 
 
 class ProductController extends Controller
@@ -30,17 +28,12 @@ class ProductController extends Controller
     public function getInfoProduct($id)
     {
         $constCompany = DB::table('about_us')->first();
-        $getProduct = Product::where('id', $id)->where('product_status', 'show')->first();
-        $categors = CategoryProduct::where('id', $getProduct->category_id)->first();
-        $categories = CategoryProduct::get();
-        $units = Unit::get();
-        $unitss = Unit::where('id', $getProduct->unit_id)->first();
-        $stock = Stock::where('id', $getProduct->id)->first();
-        if ($getProduct == null) {
-            return redirect()->back();
-        }
+        if ($constCompany == null) return redirect()->back();
 
-        return view('cashier.productDetail', compact(['getProduct', 'stock', 'categories', 'categors', 'unitss', 'units', 'constCompany']));
+        $product = Product::where('id', $id)->where('product_status', 'show')->first();
+        if ($product == null) return redirect()->back();
+        $categories = CategoryProduct::get();
+        return view('cashier.productDetail', compact(['product', 'categories']));
     }
 
     public function getAllProducts()
@@ -56,7 +49,7 @@ class ProductController extends Controller
     }
     public function getAllUnits()
     {
-        $units = Unit::paginate(10);
+        $units = Unit::where('status', 1)->paginate(10);
         return view('admin.units', compact('units'));
     }
 
@@ -79,6 +72,7 @@ class ProductController extends Controller
         $products = Product::find($request->id);
         $request->validate([
             'pNama' => 'required|min:3|max:90',
+            'pPrice' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014'
         ]);
 
@@ -104,6 +98,8 @@ class ProductController extends Controller
         if ($slife) {
             return redirect()->route('cashier.products')->with('success', 'Product Telah Di Perbaharui');
         }
+        dd($request);
+        return redirect()->back()->with('error', 'kesalahan');
     }
 
     public function storeProduct(Request $request)

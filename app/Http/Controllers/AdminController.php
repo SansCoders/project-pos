@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\AboutUs;
 use App\Admin;
 use App\Cashier;
+use App\CategoryProduct;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\ProfileUser;
+use App\Unit;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -24,13 +26,13 @@ class AdminController extends Controller
 
     public function UsersSales()
     {
-        $sales = User::paginate(10);
+        $sales = User::where('status', 1)->paginate(10);
         return view('admin.users-sales', compact('sales'));
     }
 
     public function UsersCashier()
     {
-        $cashier = Cashier::paginate(10);
+        $cashier = Cashier::where('status', 1)->paginate(10);
         return view('admin.users-cashier', compact('cashier'));
     }
 
@@ -146,28 +148,54 @@ class AdminController extends Controller
     public function updateDataUser(Request $request)
     {
         $request->validate([
-            'info_name' => 'required|min:4',
+            'info_name' => 'required|min:3',
             'info_phone' => 'numeric|min:6',
+        ], [
+            'info_name.min' => 'nama minimal :min huruf'
         ]);
 
         $id = $request->iduser;
-        if ($request->has('info_name')) {
-            User::where('id', $id)->first()->update([
-                'name' => $request->info_name
-            ]);
+        $update = User::where('id', $id)->update([
+            'name' => $request->info_name,
+            'phone' => $request->info_phone,
+            'address' => $request->info_alamat
+        ]);
+        if ($update) {
+            return redirect()->back()->with('success', 'Data sales berhasil di update');
         }
-        if ($request->has('info_phone')) {
-            User::where('id', $id)->first()->update([
-                'phone' => $request->info_phone
-            ]);
-        }
+        return redirect()->back()->with('error', 'gagal di update');
+    }
 
-        if ($request->has('info_alamat')) {
-            User::where('id', $id)->first()->update([
-                'address' => $request->info_alamat
-            ]);
-        }
+    public function changeStatusUser(Request $request)
+    {
+        $userType = $request->type;
 
+        if ($userType == "cashier") {
+            // dd($request);
+            $cek = Cashier::where('id', $request->iduser)->first();
+            if ($cek != null) $cek->update(['status' => 0]);
+        } elseif ($userType == "sales") {
+            $cek = User::where('id', $request->iduser)->first();
+            if ($cek != null) $cek->update(['status' => 0]);
+        }
         return redirect()->back();
+    }
+    public function changeStatus(Request $request)
+    {
+        $itemType = $request->type;
+
+        if ($itemType == "unit") {
+            $cek = Unit::where('id', $request->id)->first();
+            if ($cek != null) $cek->update(['status' => 0]);
+        } elseif ($itemType == "category") {
+            $cek = CategoryProduct::where('id', $request->id)->first();
+            if ($cek != null) $cek->update(['status' => 0]);
+        }
+        return redirect()->back();
+    }
+
+    public function changePass(Request $request)
+    {
+        dd($request);
     }
 }

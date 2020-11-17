@@ -34,9 +34,12 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('/admin/users-sales', 'AdminController@storeUserSales')->name('admin.users-sales.store');
     Route::get('/admin/users-sales/{id}/edit', 'AdminController@editUserSales')->name('admin.users-sales.edit');
     Route::put('/admin/users-sales/process', 'AdminController@updateDataUser')->name('admin.users-sales.edit-put');
+    Route::put('/admin/user-changepassword', 'AdminController@changePass')->name('admin.changepass');
 
     Route::get('/admin/users-cashier', 'AdminController@UsersCashier')->name('admin.users-cashier');
     Route::post('/admin/users-cashier', 'AdminController@storeUserCashier')->name('admin.users-cashier.store');
+    Route::post('/admin/change-status', 'AdminController@changeStatusUser')->name('admin.changestatususer');
+    Route::post('/admin/change', 'AdminController@changeStatus')->name('admin.changestatus');
 
     Route::get('/admin/products', 'ProductController@getAllProducts')->name('admin.products');
     Route::post('/admin/products', 'ProductController@storeProduct')->name('admin.products.store');

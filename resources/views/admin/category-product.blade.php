@@ -58,7 +58,7 @@
                                             }
                                         @endphp
                                     </td>
-                                    <td class="table-actions">
+                                    <td class="table-actions d-flex">
                                         <span data-toggle="modal" data-target="#editCategory">
                                             <a href="#!" class="btn btn-white btn-sm ec" data-toggle="tooltip" data-original-title="Ubah kategori">
                                                     <i class="fas fa-edit"></i> Edit

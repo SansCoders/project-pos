@@ -7,41 +7,51 @@
         <h1 class="h3 text-muted">Manajemen Pengguna Sales</h1>
         @if(session()->get('success'))
             <div class="alert alert-success">
-                asd &times;
+                {{session()->get('success')}}
             </div>
         @endif
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center border-0">
+                <strong>Sales</strong>
                 <button class="btn btn-success" data-toggle="modal" data-target="#addSales"><i class="fa fa-plus"></i> tambah</button>
             </div>
-            <div class="card-body pl-0 pr-0">
-                <div class="table-responsive">
-                    <table class="table table-hover ">
-                        <thead>
-                            <th>no</th>
-                            <th>username</th>
-                            <th>nama</th>
-                            <th>action</th>
-                        </thead>
-                        <tbody>
-                            @foreach ($sales as $index => $user)
-                            <tr class="data-row">
-                            <td>{{ $sales->firstitem() + $index }}</td>
-                            <td>{{$user->username}}</td>
-                            <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
-                                <td class="table-actions">
-                                    <a href="{{route('admin.users-sales.edit',$user->id)}}" class="btn btn-white btn-sm" data-toggle="tooltip"  data-original-title="Edit Pengguna">
-                                        <i class="fas fa-user-edit"></i> Edit
-                                    </a>
-                                    <a href="#" class="btn btn-danger btn-sm" data-toggle="tooltip" data-original-title="Hapus Pengguna">
-                                      <i class="fas fa-trash"></i> Hapus
-                                    </a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-hover ">
+                    <thead>
+                        <th>no</th>
+                        <th>username</th>
+                        <th>nama</th>
+                        <th>action</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($sales as $index => $user)
+                        <tr class="data-row">
+                        <td>{{ $sales->firstitem() + $index }}</td>
+                        <td>{{$user->username}}</td>
+                        <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
+                            <td class="table-actions d-flex">
+                                <a href="{{route('admin.users-sales.edit',$user->id)}}" class="btn btn-white btn-sm" data-toggle="tooltip"  data-original-title="Edit Pengguna">
+                                    <i class="fas fa-user-edit"></i> Edit
+                                </a>
+                                <form action="{{ route('admin.changestatususer') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="type" value="sales">
+                                    <input type="hidden" name="iduser" value="{{$user->id}}">
+                                    <button class="btn btn-danger btn-sm" type="submit">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </form>
+                                {{-- <a href="#" class="btn btn-danger btn-sm" data-toggle="tooltip" data-original-title="Hapus Pengguna">
+                                  <i class="fas fa-trash"></i> Hapus
+                                </a> --}}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                {{$sales->links()}}
             </div>
         </div>
     </div>

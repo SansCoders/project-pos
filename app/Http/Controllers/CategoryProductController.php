@@ -15,7 +15,7 @@ class CategoryProductController extends Controller
 
     public function getAllCategory()
     {
-        $categories = CategoryProduct::paginate(10);
+        $categories = CategoryProduct::where('status', 1)->paginate(10);
         return view('admin.category-product', compact('categories'));
     }
     public function storeCategory(Request $request)

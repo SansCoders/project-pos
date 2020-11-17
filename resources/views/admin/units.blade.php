@@ -42,22 +42,27 @@
                                     <td>{{ $units->firstitem() + $index }}</td>
                                     <td class="d-none">{{ $unit->id }}</td>
                                     <td>{{ $unit->unit }}</td>
-                                    <td class="table-actions">
+                                    <td class="table-actions d-flex">
                                         <span data-toggle="modal" data-target="#editUnit">
                                             <a href="#!" class="btn btn-white text-black btn-sm eu" data-toggle="tooltip" data-original-title="Ubah">
                                                     <i class="fas fa-edit"></i> Edit
                                             </a>
                                         </span>
-                                        <a href="#!" class="btn btn-danger text-light btn-sm" data-toggle="tooltip" data-original-title="Hapus">
-                                          <i class="fas fa-trash"></i> Hapus
-                                        </a>
+                                        <form action="{{ route('admin.changestatus') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="type" value="unit">
+                                            <input type="hidden" name="id" value="{{$unit->id}}">
+                                            <button class="btn btn-danger text-white btn-sm" type="submit">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
+                                        </form>
                                       </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                 </div>
-                <div class="card-footer shadow py-4">
+                <div class="card-footer py-4">
                     <nav aria-label="...">
                         <ul class="pagination justify-content-end mb-0">
                             {{ $units->links() }}
