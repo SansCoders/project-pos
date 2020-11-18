@@ -54,10 +54,24 @@
                 </div>
                 
                 <div class="col text-right">
+                  @isset($cari)
+                  @else    
                   <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
+                  @endisset
                 </div>
               </div>
           </div>
+          <form action="{{route('cashier.products.search')}}" class="mt-2" method="post">
+            @csrf
+            <div class="d-flex justify-content-center">
+              <div class="input-group " style="max-width: 300px">
+                <input type="text" class="form-control" name="search" placeholder="Cari Product" aria-label="Cari Product" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i class="fa fa-search"></i></button>
+                </div>
+              </div>
+            </div>
+          </form>
           <div class="card-body pl-0 pr-0">
             <div class="table-responsive">
               <table class="table align-items-center">
@@ -138,6 +152,8 @@
     </div>
   </div>
 
+  @isset($cari)
+  @else    
   <div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProductLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -154,7 +170,6 @@
                 <div class="card-body">
                   <div id="preview_img" class="text-center"></div>
                   <h2 id="preview_pNama" class="mb-1 text-muted">Nama Produk</h2>
-                  {{-- <h6 class="text-muted" id="preview_pKode">Kode Produk</h6> --}}
                   <h2 class="text-dark" id="preview_pPrice">IDR 0,00</h2>
                   <p id="preview_description"></p>
                   <div class="text-right">
@@ -236,6 +251,7 @@
         </div>
       </div>
   </div>
+  @endisset
 </div>
 @endsection
 
@@ -258,6 +274,7 @@
       showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: `Hapus`,
+      icon: 'warning',
       denyButtonText: `Batal`,
     }).then((result) => {
       if(result.isConfirmed){

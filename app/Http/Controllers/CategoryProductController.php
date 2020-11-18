@@ -28,7 +28,7 @@ class CategoryProductController extends Controller
             'name.unique' => 'nama tersebut sudah ada',
         ];
         $request->validate([
-            'name' => 'required|min:3|max:90|unique:category_products',
+            'name' => 'required|min:3|max:90',
         ], $messages);
 
         $category = new CategoryProduct([
@@ -47,7 +47,7 @@ class CategoryProductController extends Controller
     public function updateCategory(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|min:3|max:90|unique:category_products',
+            'name' => 'required|min:3|max:90',
         ]);
 
         $eCP = CategoryProduct::find($request->get('idC'));

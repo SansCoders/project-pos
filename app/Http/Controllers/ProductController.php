@@ -39,8 +39,8 @@ class ProductController extends Controller
     public function getAllProducts()
     {
         $products = Product::where('product_status', 'show')->paginate(10);
-        $categories = CategoryProduct::get();
-        $units = Unit::get();
+        $categories = CategoryProduct::where('status', 1)->get();
+        $units = Unit::where('status', 1)->get();
         if (Auth::guard('admin')->check()) {
             return view('admin.products', compact('products', 'units'));
         } elseif (Auth::guard('cashier')->check()) {
@@ -51,6 +51,16 @@ class ProductController extends Controller
     {
         $units = Unit::where('status', 1)->paginate(10);
         return view('admin.units', compact('units'));
+    }
+
+    public function searchProducts(Request $request)
+    {
+        $cari = $request->search;
+        $products = Product::where('product_status', 'show')->where('kodebrg', 'LIKE', "%$cari%")->orWhere('nama_product', 'LIKE', "%{$cari}%")
+            ->paginate(10);
+        $categories = CategoryProduct::where('status', 1)->get();
+        $units = Unit::where('status', 1)->get();
+        return view('cashier.products', compact(['products', 'categories', 'units', 'cari']));
     }
 
     public function searchProduct(Request $request)

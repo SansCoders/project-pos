@@ -22,8 +22,11 @@
         <div class="ml-auto">
             @if (session()->get('id_t'))
                 <small>
-                    <a href="{{route('cashier.previewFaktur',session()->get('id_t'))}}" target="_blank" class="btn btn-success text-light">lihat faktur</a>
+                    <a href="{{route('cashier.previewFaktur',session()->get('id_t'))}}" target="_blank" class="btn btn-success text-white">lihat faktur</a>
                 </small>
+                <script>
+                    window.open("{{route('cashier.previewFaktur',session()->get('id_t'))}}");
+                </script>
             @endif
         </div>
     </div>
@@ -38,10 +41,15 @@
         <div class="card-header border-0 d-flex justify-content-between align-items-center">
             <b>Transactions Pending</b>
             <div class="form-search">
-                <form action="" method="GET">
+                {{-- <form action="{{ route() }}" class="form-inline" method="GET">
                     @csrf
-                    <input type="text" name="search" class="form-control" placeholder="search">
-                </form>
+                    <div class="input-group mb-3">
+                        <input type="text" name="search" class="form-control" placeholder="search">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form> --}}
             </div>
         </div>
         <div class="table-responsive">

@@ -6,12 +6,20 @@
         <div class="card-header border-0 d-flex justify-content-between align-items-center">
             <b>Transactions</b>
             <div class="form-search">
-                <form action="" method="GET">
+                <form action="{{route('cashier.searchTransactions')}}" method="POST">
                     @csrf
-                    <input type="text" name="search" class="form-control" placeholder="search">
+                <input type="text" name="search" class="form-control" value="{{ old('search') }}" placeholder="search">
                 </form>
             </div>
         </div>
+        @isset($cari)
+        <div class="card-body">
+            Hasil Pencarian <strong>"{{ $cari }}"</strong> terdapat {{count($transaction)}} hasil
+        </div>
+        @php
+            $i = 1;
+        @endphp
+        @endisset
         <div class="table-responsive">
             <table class="table table-flush">
                 <thead class="thead-light">
@@ -26,14 +34,14 @@
                     </tr>
                 </thead>
                 <tbody class="list">
-                    @php
-                        $transaction_count = 0;
-                    @endphp
-                    {{-- fakturs --}}
-                    {{-- transaction --}}
                     @foreach ($transaction as $index => $t)
                         <tr>
-                            <td>{{$transaction_count+1}}</td>
+                            @isset($cari)
+
+                            <td>{{$i++}}</td>
+                            @else
+                            <td>{{ $transaction->firstitem() + $index }}</td>
+                            @endisset
                             <td class="d-none">{{ $t->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
@@ -80,19 +88,22 @@
                                 </div>
                             </td>
                         </tr>
-                        @php
-                            $transaction_count += 1;
-                        @endphp
                         
                     @endforeach
                     
-                    @if ($transaction_count == 0)
+                    @if (count($transaction) == 0)
                         <tr>
                             <td colspan="6" class="text-center text-muted">belum ada aktivitas</td>
                         </tr>
                     @endif
                 </tbody>
             </table>
+        </div>
+        <div class="card-footer d-flex justify-content-center">
+            @isset($cari)
+            @else                
+            {{$transaction->links()}}
+            @endisset
         </div>
     </div>
 </div>

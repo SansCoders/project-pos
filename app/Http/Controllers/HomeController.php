@@ -59,8 +59,8 @@ class HomeController extends Controller
 
     public function myOrders()
     {
-        $receipts = Receipts_Transaction::where('user_id', Auth::user()->id)->where('order_via', 3);
-        $allOrders = $receipts->orderByRaw('status, "pending", "confirmed", "canceled", transaction_id desc')->paginate(10);
+        $receipts = Receipts_Transaction::where('user_id', Auth::user()->id)->where('order_via', 3)->where('status', 1);
+        $allOrders = Receipts_Transaction::where('user_id', Auth::user()->id)->where('order_via', 3)->orderByRaw('status, "pending", "confirmed", "canceled", transaction_id desc')->paginate(10);
         $cekTransactions = $receipts->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         return view('ordersList', compact(['cart', 'allOrders', 'cekTransactions']));

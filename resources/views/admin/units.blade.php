@@ -2,6 +2,7 @@
 
 @section('add-css')
     <link rel="stylesheet" href="{{ asset('assets/vendor/animate.css/animate.min.css') }}">
+    <link rel="stylesheet" href="{{asset('assets/vendor/sweetalert2/dist/sweetalert2.min.css')}}">
 @endsection
 
 @section('content')
@@ -48,11 +49,11 @@
                                                     <i class="fas fa-edit"></i> Edit
                                             </a>
                                         </span>
-                                        <form action="{{ route('admin.changestatus') }}" method="POST">
+                                        <form action="{{ route('admin.changestatus') }}" id="formHpsUnit" method="POST">
                                             @csrf
                                             <input type="hidden" name="type" value="unit">
                                             <input type="hidden" name="id" value="{{$unit->id}}">
-                                            <button class="btn btn-danger text-white btn-sm" type="submit">
+                                            <button class="btn btn-danger text-white btn-sm hpsbtn" type="button" data-unitname="{{ $unit->unit }}">
                                                 <i class="fas fa-trash"></i> Hapus
                                             </button>
                                         </form>
@@ -126,6 +127,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('assets/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 <script src="{{asset('assets/vendor/bootstrap-notify/bootstrap-notify.min.js')}}"></script>  
 <script>
     $(document).ready(function(){
@@ -146,6 +148,29 @@
             return zz;
         }
     });
+
+    $('.hpsbtn').click(function(){
+        var unitName = $(this).data('unitname');
+        Swal.fire({
+            title: 'Konfirmasi Penghapusan Unit ?',
+            html: "unit <strong>"+unitName+"</strong> akan dihapus, dan tidak dapat kembali",
+            icon: 'warning',
+            
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                    'Deleted.',
+                    'success'
+                    );
+                    $('#formHpsUnit').submit();
+                }
+            });
+    });
+
 </script>
 
 @if(session()->get('success'))

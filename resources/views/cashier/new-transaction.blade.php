@@ -135,7 +135,7 @@
         })
         .done(function(product){
             if(product.html == " "){
-                // console.log('asdasd');
+                console.log('asdasd');
                 return;
             }
             // $("#load-more-product").hide();

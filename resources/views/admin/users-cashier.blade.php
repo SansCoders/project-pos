@@ -59,13 +59,11 @@
                             @foreach ($cashier as $index => $user)
                             <tr class="data-row">
                             <td>{{ $cashier->firstitem() + $index }}</td>
-                            <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
+                            <td>{{$user->name}}</td>
                                 <td class="table-actions d-flex">
-                                    <span data-toggle="modal" data-target="#editUser" class="mr-2">
-                                        <a href="#!" class="btn btn-white btn-sm" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
+                                    <a href="{{route('admin.users-cashier.edit',$user->id)}}" class="btn btn-white btn-sm" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
                                                 <i class="fas fa-user-edit"></i> Edit
-                                        </a>
-                                    </span>
+                                    </a>
                                     <form action="{{ route('admin.changestatususer') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="type" value="cashier">

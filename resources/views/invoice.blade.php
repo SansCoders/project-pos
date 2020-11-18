@@ -56,7 +56,7 @@
         }
         </style>
 </head>
-<body>
+<body onload="window.print();">
     @isset($preview)
         <div class="container">
     @endisset

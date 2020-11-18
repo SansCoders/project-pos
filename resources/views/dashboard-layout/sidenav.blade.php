@@ -80,14 +80,14 @@
             </ul>
             <ul class="navbar-nav mb-md-3">
               <li class="nav-item">
-                <a class="nav-link collapsed" href="#navbar-log" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
+                <a class="nav-link collapsed {{ set_active('admin.stock-activity') }}" href="#navbar-log" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
                   <i class="fa fa-paperclip text-default"></i>
                   <span class="nav-link-text">Aktivitas</span>
                 </a>
                 <div class="collapse" id="navbar-log">
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
-                      <a href="{{route('admin.users-sales')}}" class="nav-link ">
+                      <a href="{{route('admin.stock-activity')}}" class="nav-link ">
                         <span class=""> Stock </span>
                       </a>
                     </li>
@@ -139,16 +139,6 @@
                         <span class=""> Stock In </span>
                       </a>
                     </li>
-                    {{-- <li class="nav-item">
-                      <a href="#" class="nav-link "> 
-                        <span class=""> Stock Out </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="#" class="nav-link">
-                        <span class=""> Stock Retur </span>
-                      </a>
-                    </li> --}}
                   </ul>
                 </div>
               </li>
@@ -163,9 +153,6 @@
                       <a href="{{route('cashier.listTransactions')}}" class="nav-link "> 
                         <span class=""> list transactions </span>
                       </a>
-                      {{-- <a href="#" class="nav-link "> 
-                        <span class=""> summary </span>
-                      </a> --}}
                     </li>
                   </ul>
                 </div>

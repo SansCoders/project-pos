@@ -153,7 +153,7 @@
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
-                  <img alt="Image placeholder" src="{{ asset('assets/img/theme/team-4.jpg') }}">
+                  <img alt="Image placeholder" src="{{ asset('user-img/user-img-default.png') }}">
                   </span>
                   <div class="media-body  ml-2  d-none d-lg-block">
                   <span class="mb-0 text-sm  text-dark font-weight-bold">{{ Auth::user()->name }}</span>
@@ -164,11 +164,11 @@
                 <div class="dropdown-header noti-title">
                   <h6 class="text-overflow m-0">Welcome!</h6>
                 </div>
-                <a href="/my" class="dropdown-item">
-                  <i class="ni ni-single-02"></i>
-                  <span>My profile</span>
-                </a>
                 @if(Auth::guard('web')->check())
+                  <a href="/my" class="dropdown-item">
+                    <i class="ni ni-single-02"></i>
+                    <span>My profile</span>
+                  </a>
                   <a href="{{route('my-orders')}}" class="dropdown-item">
                     <i class="fa fa-receipt"></i>
                     <span>Riwayat Pembelian</span>

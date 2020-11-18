@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\ProfileUser;
+use App\StockActivity;
 use App\Unit;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,7 +22,8 @@ class AdminController extends Controller
     }
     public function index()
     {
-        return view('admin.home');
+        $sales = User::all();
+        return view('admin.home', compact('sales'));
     }
 
     public function UsersSales()
@@ -77,6 +79,12 @@ class AdminController extends Controller
         ]);
         $newUser->save();
         return redirect()->back()->with('success', "success added user");
+    }
+
+    public function indexStockActivities()
+    {
+        $stockActivity = StockActivity::orderBy('created_at', 'desc')->paginate(10);
+        return view('admin.a_stock', compact('stockActivity'));
     }
 
     public function settingsPage()
@@ -144,6 +152,15 @@ class AdminController extends Controller
 
         return view('admin.edit-user-sales', compact('dataUser'));
     }
+    public function editUserCashier($id)
+    {
+        $dataUser = Cashier::where('id', $id)->first();
+        if ($dataUser == null) {
+            abort(404);
+        }
+
+        return view('admin.edit-user-cashier', compact('dataUser'));
+    }
 
     public function updateDataUser(Request $request)
     {
@@ -165,33 +182,59 @@ class AdminController extends Controller
         }
         return redirect()->back()->with('error', 'gagal di update');
     }
+    public function updateDataCashier(Request $request)
+    {
+        $request->validate([
+            'info_name' => 'required|min:3',
+        ], [
+            'info_name.min' => 'nama minimal :min huruf'
+        ]);
+
+        $id = $request->iduser;
+        $update = Cashier::where('id', $id)->update([
+            'name' => $request->info_name,
+        ]);
+        if ($update) {
+            return redirect()->back()->with('success', 'Data berhasil di update');
+        }
+        return redirect()->back()->with('error', 'gagal di update');
+    }
 
     public function changeStatusUser(Request $request)
     {
         $userType = $request->type;
-
+        $sukses = false;
         if ($userType == "cashier") {
-            // dd($request);
             $cek = Cashier::where('id', $request->iduser)->first();
             if ($cek != null) $cek->update(['status' => 0]);
+            $sukses = 1;
         } elseif ($userType == "sales") {
             $cek = User::where('id', $request->iduser)->first();
             if ($cek != null) $cek->update(['status' => 0]);
+            $sukses = 1;
         }
-        return redirect()->back();
+        if ($sukses) {
+            return redirect()->back()->with('success', 'berhasil dihapus');
+        }
+        return redirect()->back()->with('error', 'gagal dihapus');
     }
     public function changeStatus(Request $request)
     {
         $itemType = $request->type;
-
+        $sukses = false;
         if ($itemType == "unit") {
             $cek = Unit::where('id', $request->id)->first();
             if ($cek != null) $cek->update(['status' => 0]);
+            $sukses = 1;
         } elseif ($itemType == "category") {
             $cek = CategoryProduct::where('id', $request->id)->first();
             if ($cek != null) $cek->update(['status' => 0]);
+            $sukses = 1;
         }
-        return redirect()->back();
+        if ($sukses) {
+            return redirect()->back()->with('success', 'berhasil dihapus');
+        }
+        return redirect()->back()->with('error', 'gagal dihapus');
     }
 
     public function changePass(Request $request)

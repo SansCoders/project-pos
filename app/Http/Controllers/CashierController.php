@@ -55,7 +55,7 @@ class CashierController extends Controller
     public function SearchinnewTransaction(Request $request)
     {
         $cari = $request->search;
-        $products = Product::where('nama_product', 'LIKE', '%' . $cari . '%')->get();
+        $products = Product::where('nama_product', 'LIKE', '%' . $cari . '%')->paginate(10);
         if ($request->ajax()) {
             $view = view('another.cashier-productlist', compact('products'))->render();
             return response()->json(['html' => $view]);
@@ -245,17 +245,28 @@ class CashierController extends Controller
 
     public function listTransactions()
     {
-        $fakturs = Faktur::orderBy('id')->get();
-        $transaction = Receipts_Transaction::orderBy('id', 'DESC')->get();
-        return view('cashier.reports_listTransactions', compact(['fakturs', 'transaction']));
+        // $fakturs = Faktur::orderBy('id')->get();
+        $transaction = Receipts_Transaction::orderBy('id', 'DESC')->paginate(10);
+        return view('cashier.reports_listTransactions', compact(['transaction']));
+    }
+    public function searchTransactions(Request $request)
+    {
+        $cari = $request->search;
+
+        $firstCharacter = substr($cari, 0, 1);
+        if ($firstCharacter == '#') {
+            $cari = str_replace('#', '', $cari);
+        }
+        // $fakturs = Faktur::orderBy('id')->get();
+        $transaction = Receipts_Transaction::orderBy('id', 'DESC')->where('transaction_id', 'LIKE', "%$cari%")->get();
+        return view('cashier.reports_listTransactions', compact(['transaction', 'cari']));
     }
 
     public function previewFaktur($id)
     {
         $constCompany = DB::table('about_us')->first();
         $orderId = $id;
-        $Receipt = Receipts_Transaction::where('transaction_id', $orderId)->where('order_via', 2)->first();
-        // dd($Receipt);
+        $Receipt = Receipts_Transaction::where('transaction_id', $orderId)->first();
         if ($Receipt == null) {
             return redirect()->back()->with('error', 'tidak valid');
         }
@@ -325,7 +336,12 @@ class CashierController extends Controller
 
     public function customPrice()
     {
-        $sales = User::all();
+        $sales = User::where('status', 1)->get();
+        return view('cashier.customPricePage', compact('sales'));
+    }
+    public function customPriceSearch(Request $request)
+    {
+        $sales = User::where('status', 1)->where('name', 'LIKE', "%$request->cari%")->get();
         return view('cashier.customPricePage', compact('sales'));
     }
     public function setCustomPrice($user)

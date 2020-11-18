@@ -33,7 +33,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin/users-sales', 'AdminController@UsersSales')->name('admin.users-sales');
     Route::post('/admin/users-sales', 'AdminController@storeUserSales')->name('admin.users-sales.store');
     Route::get('/admin/users-sales/{id}/edit', 'AdminController@editUserSales')->name('admin.users-sales.edit');
+    Route::get('/admin/users-cashier/{id}/edit', 'AdminController@editUserCashier')->name('admin.users-cashier.edit');
     Route::put('/admin/users-sales/process', 'AdminController@updateDataUser')->name('admin.users-sales.edit-put');
+    Route::put('/admin/users-cashier/process', 'AdminController@updateDataCashier')->name('admin.users-cashier.edit-put');
     Route::put('/admin/user-changepassword', 'AdminController@changePass')->name('admin.changepass');
 
     Route::get('/admin/users-cashier', 'AdminController@UsersCashier')->name('admin.users-cashier');
@@ -52,6 +54,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('/admin/categorys', 'CategoryProductController@storeCategory')->name('admin.categorys.store');
     Route::put('/admin/categorys/{id}', 'CategoryProductController@updateCategory')->name('admin.categorys.update');
 
+    Route::get('/admin/stock-activity', 'AdminController@indexStockActivities')->name('admin.stock-activity');
+
     Route::get('/admin/settings', 'AdminController@settingsPage')->name('admin.settings');
     Route::post('/admin/settings', 'AdminController@updateInfoPage')->name('admin.update-settings');
     Route::post('/admin/settings/cp', 'AdminController@updatePassword')->name('admin.update-settings.cp');
@@ -60,6 +64,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier', 'CashierController@index')->name('cashier.home');
     Route::get('/cashier/products', 'ProductController@getAllProducts')->name('cashier.products');
+    Route::post('/cashier/products/cari', 'ProductController@searchProducts')->name('cashier.products.search');
     Route::post('/cashier/products', 'ProductController@storeProduct')->name('cashier.products.store');
     Route::put('/cashier/products/{id}', 'ProductController@destroyTemp')->name('cashier.products.destroyTemp');
     Route::get('/cashier/product_info/{id}', 'ProductController@getInfoProduct');
@@ -68,7 +73,7 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier/transaction', 'CashierController@transactionProduct')->name('cashier.transaction');
     Route::get('/cashier/transaction/new', 'CashierController@newTransaction')->name('cashier.newtransaction');
     // Route::get('/cashier/transaction/registred-user', 'CashierController@newTransactionUserRegisterd')->name('cashier.transaction.registereduser');
-    Route::get('/cashier/transaction/search', 'CashierController@SearchinnewTransaction')->name('cashier.newtransaction.search');
+    Route::get('/cashier/transaction/search-product', 'CashierController@SearchinnewTransaction')->name('cashier.newtransaction.search');
 
     Route::post('/cashier/clt', 'CashierController@getdatalistCartContent')->name('cashier.listCart');
     // Route::post('/cashier/sendtocart', 'CashierController@sendDataSeeProduct')->name('cashier.sendtocart');
@@ -82,12 +87,14 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::post('/cashier/cart/delete-{id}', 'CashierController@deleteItemCart')->name('cashier.cart.deleteItem');
 
     Route::get('/cashier/reports/transactions', 'CashierController@listTransactions')->name('cashier.listTransactions');
+    Route::post('/cashier/reports/transactions/search', 'CashierController@searchTransactions')->name('cashier.searchTransactions');
 
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
     Route::get('/cashier/add-stock/{id}', 'StockController@addStockProduct')->name('stock.add.process');
     Route::put('/cashier/add-stock/{id}', 'StockController@stockIn_store')->name('stock.stockIn.process');
 
     Route::get('/cashier/custom-prices', 'CashierController@customPrice')->name('cashier.customprice');
+    Route::post('/cashier/custom-prices/cari', 'CashierController@customPriceSearch')->name('cashier.customprice.search');
     Route::get('/cashier/custom-prices/{user}', 'CashierController@setCustomPrice')->name('cashier.customprice.set');
     Route::post('/cashier/custom-prices/{user}', 'CashierController@confirmCustomPrice')->name('cashier.customprice.confirm');
     Route::put('/cashier/custom-prices/{user}', 'CashierController@editCustomPrice')->name('cashier.customprice.edit');

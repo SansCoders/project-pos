@@ -3,8 +3,9 @@
 @section('content')
     <div class="container-fluid mt-4 p-3">
         <h1>Pilih sales</h1>
-        <form action="" method="POST" class="form-inline">
-            <input type="text" class="form-control form-control-alternative" placeholder="cari">
+        <form action="{{route('cashier.customprice.search')}}" method="post" class="form-inline">
+            @csrf
+            <input type="text" class="form-control form-control-alternative" name="cari" placeholder="cari">
             <button class="btn btn-icon-only btn-info"><i class="fa fa-search"></i></button>
         </form>
         <div class="row mt-3 py-3">
