@@ -47,6 +47,16 @@
                 </div>
             </div>
             <div class="col-xl-8">
+                @if(session()->get('success'))
+                <div class="alert alert-success">
+                    {{session()->get('success')}}
+                </div>
+                @endif
+                @if(session()->get('error'))
+                <div class="alert alert-danger">
+                  {{session()->get('error')}}
+                </div>
+                @endif
                 <div class="card shadow-none">
                     {{-- <div class="card-header h3">Edit User Info</div> --}}
                     <div class="card-header">
@@ -54,9 +64,9 @@
                         <li class="nav-item">
                             <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">Profile</a>
                         </li>
-                          <li class="nav-item">
+                          {{-- <li class="nav-item">
                               <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Summary</a>
-                          </li>
+                          </li> --}}
                           <li class="nav-item">
                               <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Change Password</a>
                           </li>
@@ -109,24 +119,26 @@
                             </div>
                           </form>   
                         </div>
-                        <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+                        {{-- <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
                         ...
-                        </div>
+                        </div> --}}
                         <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
                           <form action="{{route('admin.changepass')}}" method="POST">
                             @csrf
                             @method("PUT")
+                            <input id="iduser" type="hidden" name="iduser" value="{{$dataUser->id}}" required>
+                            <input id="typeuser" type="hidden" name="typeUser" value="sales" required>
                             <div class="form-group">
                                 <label for="passold">Kata Sandi Lama</label>
-                                <input id="passold" type="password" name="" class="form-control" required>
+                                <input id="passold" type="password" name="oldpassword" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="passnew">Kata Sandi Baru</label>
-                                <input id="passnew" type="password" name="" class="form-control" required>
+                                <input id="passnew" type="password" name="newpass" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="repassnew">Ulangi Kata Sandi Baru</label>
-                                <input id="repassnew" type="password" name="" class="form-control" required>
+                                <input id="repassnew" type="password" name="newpass2" class="form-control" required>
                             </div>
                             <div class="form-group">
                                <button type="submit" class="btn btn-block btn-default">Ganti Kata Sandi</button>

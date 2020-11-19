@@ -1,4 +1,8 @@
 @extends('dashboard-layout.master')
+@section('add-css')
+<link rel="stylesheet" href="{{asset('assets/vendor/sweetalert2/dist/sweetalert2.min.css')}}">
+@endsection
+
 @section('content')
 <div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
     <span class="mask bg-primary opacity-8"></span>
@@ -64,17 +68,14 @@
                                     <a href="{{route('admin.users-cashier.edit',$user->id)}}" class="btn btn-white btn-sm" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
                                                 <i class="fas fa-user-edit"></i> Edit
                                     </a>
-                                    <form action="{{ route('admin.changestatususer') }}" method="POST">
+                                    <form action="{{ route('admin.changestatususer') }}" method="POST" class="formHpsUser-{{$user->id}}">
                                         @csrf
                                         <input type="hidden" name="type" value="cashier">
                                         <input type="hidden" name="iduser" value="{{$user->id}}">
-                                        <button class="btn btn-danger btn-sm" type="submit">
+                                        <button class="btn btn-danger btn-sm hpsbtn" data-userid="{{$user->id}}" data-name_user="{{$user->name}}" type="button">
                                             <i class="fas fa-trash"></i> Hapus
                                         </button>
                                     </form>
-                                    {{-- <a href="#!" class="btn btn-danger" data-toggle="tooltip" data-original-title="Hapus Pengguna">
-                                      <i class="fas fa-trash"></i> Hapus
-                                    </a> --}}
                                 </td>
                             </tr>
                             @endforeach
@@ -124,3 +125,32 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('assets/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
+
+<script>
+  $('.hpsbtn').click(function(){
+        var user = $(this).data('name_user');
+        var userid = $(this).data('userid');
+        Swal.fire({
+            title: 'Konfirmasi Penghapusan ?',
+            html: "Pengguna <strong>"+user+"</strong> akan dihapus, dan tidak dapat kembali",
+            icon: 'warning',
+            
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                    'Deleted.',
+                    'success'
+                    );
+                    $('.formHpsUser-'+userid).submit();
+                }
+            });
+    });
+</script>
+@endpush

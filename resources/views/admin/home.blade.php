@@ -153,7 +153,6 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col">Nama</th>
-                    <th scope="col">Unique users</th>
                     <th scope="col">Last Transaction</th>
                     <th scope="col"class="text-center">Total Transaction</th>
                   </tr>
@@ -161,7 +160,7 @@
                 <tbody>
                   @if (count($sales) < 1)
                       <tr>
-                        <td colspan="4" class="text-center">no records</td>
+                        <td colspan="3" class="text-center">no records</td>
                       </tr>
                   @endif
                   @foreach ($sales as $user)
@@ -173,9 +172,6 @@
                       <th scope="row">
                         {{$user->name}}
                       </th>
-                      <td>
-                        4,569
-                      </td>
                       <td>
                         @isset($getLastTransaction->done_time)
                         {{$getLastTransaction->done_time}}

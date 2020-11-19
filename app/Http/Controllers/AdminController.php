@@ -22,7 +22,7 @@ class AdminController extends Controller
     }
     public function index()
     {
-        $sales = User::all();
+        $sales = User::where('status', 1)->get();
         return view('admin.home', compact('sales'));
     }
 
@@ -128,7 +128,6 @@ class AdminController extends Controller
     public function updatePassword(Request $request)
     {
         $user = Admin::findOrFail(Auth::user()->id);
-
         $request->validate([
             'oldpassword' => 'required|min:6',
             'newpass' => 'required_with:newpass2|min:6',
@@ -241,6 +240,34 @@ class AdminController extends Controller
 
     public function changePass(Request $request)
     {
-        dd($request);
+        $request->validate([
+            'oldpassword' => 'required|min:6',
+            'newpass' => 'required_with:newpass2|min:6',
+            'newpass2' => 'required|min:6',
+            'iduser' => 'required',
+            'typeUser' => 'required',
+        ]);
+
+        $typeUser = $request->typeUser;
+        if ($request->newpass != $request->newpass2) {
+            return redirect()->back()->with('error', 'Kata sandi tidak sama');
+        }
+        $iduser = $request->iduser;
+        if ($typeUser == "sales") {
+            $user = User::findOrFail($iduser);
+        } elseif ($typeUser == "cashier") {
+            $user = Cashier::findOrFail($iduser);
+        } else {
+            return redirect()->back();
+        }
+
+        if (Hash::check($request->oldpassword, $user->password)) {
+            $user->fill([
+                'password' => Hash::make($request->newpass)
+            ])->save();
+            return redirect()->back()->with('success', 'Berhasil mengubah kata sandi');
+        } else {
+            return redirect()->back()->with('error', 'Kata sandi lama salah');
+        }
     }
 }

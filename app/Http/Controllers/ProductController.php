@@ -213,7 +213,7 @@ class ProductController extends Controller
         if ($exist_cart != null) {
             Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->where('user_type', $user_type)
                 ->update(['buy_value' => ($exist_cart->buy_value + $request->valbuy)]);
-            return redirect()->back()->with('success_added', 'Berhasil ditambah ke keranjang');
+            return redirect()->back()->with('success', 'Berhasil ditambah ke keranjang');
         }
 
         $customPrice = Prices_Custom::where('product_id', $request->dataproduct)->where('user_id', $user->id)->where('user_type', 'user')->first();

@@ -7,7 +7,7 @@
             
           @if(Auth::guard('web')->check())
           <ul class="navbar-nav align-items-center mr-auto mr-md-auto ">
-            <a href="{{route('home')}}" class="nav-link font-weight-bold text-default">
+            <a href="{{route('home')}}" class="nav-link font-weight-bolder text-white">
             @isset($company_profile->name)
                 {{$company_profile->name}}
             @else
@@ -41,7 +41,7 @@
             @endif
             @if(Auth::guard('web')->check())
             <li class="nav-item dropdown">
-              <a class="btn d-sm-none text-dark" href="#" data-action="search-show" data-target="#navbar-search-main">
+              <a class="btn d-sm-none text-white" href="#" data-action="search-show" data-target="#navbar-search-main">
                 <i class="ni ni-zoom-split-in"></i>
               </a>
             </li>
@@ -51,7 +51,7 @@
                   <i class="fa fa-shopping-cart text-warning"></i>
                   <span class="position-absolute badge badge-default">{{ $cart->count() }}</span>
                   @else
-                  <i class="fa fa-shopping-cart text-dark"></i>
+                  <i class="fa fa-shopping-cart text-white"></i>
                 @endif
               </a>
               <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden">
@@ -99,7 +99,7 @@
                   <i class="ni ni-bell-55 text-danger"></i>
                   <span class="position-absolute badge badge-default">{{$cekTransactions->count()}}</span>
                 @else  
-                  <i class="ni ni-bell-55 text-dark"></i>
+                  <i class="ni ni-bell-55 text-white"></i>
                 @endif
               </a>
               <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden">
@@ -148,7 +148,7 @@
                   <img alt="Image placeholder" src="{{ asset('user-img/user-img-default.png') }}">
                   </span>
                   <div class="media-body  ml-2  d-none d-lg-block">
-                  <span class="mb-0 text-sm  text-dark font-weight-bold">{{ Auth::user()->name }}</span>
+                  <span class="mb-0 text-sm  text-white font-weight-bold">{{ Auth::user()->name }}</span>
                   </div>
                 </div>
               </a>

@@ -102,5 +102,8 @@
             loadMoreProduct(page);
         }
     });
+    $('.carousel').carousel({
+        interval: 5000
+        })
 </script>
 @endpush
