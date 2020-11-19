@@ -8,6 +8,6 @@ class AboutUs extends Model
 {
     public $timestamps = false;
     protected $fillable = [
-        'name', 'img_company', 'phone', 'address', 'about'
+        'name', 'img_company', 'phone', 'address', 'about', 'notelp'
     ];
 }

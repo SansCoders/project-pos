@@ -1,44 +1,57 @@
 @extends('dashboard-layout.master')
+@section('add-css')
+<link rel="stylesheet" href="{{asset('assets/vendor/sweetalert2/dist/sweetalert2.min.css')}}">
+@endsection
 @section('content')
-    <div class="container-fluid">
+<div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <span class="mask bg-primary opacity-8"></span>
+</div>
+<div class="container-fluid mt--6">
         <h1 class="h3 text-muted">Manajemen Pengguna Sales</h1>
         @if(session()->get('success'))
             <div class="alert alert-success">
-                asd &times;
+                {{session()->get('success')}}
             </div>
         @endif
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center border-0">
+                <strong>Sales</strong>
                 <button class="btn btn-success" data-toggle="modal" data-target="#addSales"><i class="fa fa-plus"></i> tambah</button>
             </div>
-            <div class="card-body pl-0 pr-0">
-                <div class="table-responsive">
-                    <table class="table table-hover ">
-                        <thead>
-                            <th>no</th>
-                            <th>username</th>
-                            <th>nama</th>
-                            <th>action</th>
-                        </thead>
-                        <tbody>
-                            @foreach ($sales as $index => $user)
-                            <tr class="data-row">
+            <div class="table-responsive">
+                <table class="table table-hover ">
+                    <thead>
+                        <th>no</th>
+                        <th>nama</th>
+                        <th>username</th>
+                        <th>action</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($sales as $index => $user)
+                        <tr class="data-row">
                             <td>{{ $sales->firstitem() + $index }}</td>
-                            <td>{{$user->username}}</td>
                             <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
-                                <td class="table-actions">
-                                    <a href="{{route('admin.users-sales.edit',$user->id)}}" class="table-action text-light ec" data-toggle="tooltip"  data-original-title="Edit Pengguna">
-                                        <i class="fas fa-user-edit"></i>
-                                    </a>
-                                    <a href="#" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus Pengguna">
-                                      <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                            <td>{{$user->username}}</td>
+                            <td class="table-actions d-flex">
+                                <a href="{{route('admin.users-sales.edit',$user->id)}}" class="btn btn-white btn-sm" data-toggle="tooltip"  data-original-title="Edit Pengguna">
+                                    <i class="fas fa-user-edit"></i> Edit
+                                </a>
+                                <form action="{{ route('admin.changestatususer') }}" method="POST" class="formHpsUser-{{$user->id}}">
+                                    @csrf
+                                    <input type="hidden" name="type" value="sales">
+                                    <input type="hidden" name="iduser" value="{{$user->id}}">
+                                    <button class="btn btn-danger btn-sm  hpsbtn" data-userid="{{$user->id}}" data-name_user="{{$user->name}}" type="button">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                {{$sales->links()}}
             </div>
         </div>
     </div>
@@ -63,10 +76,21 @@
                     <div class="form-group">
                         <label class="form-control-label" for="new_username">Username<span class="text-danger">*</span> &nbsp;<span data-toggle="tooltip" data-placement="right" title="Username pengguna wajib diisi"><i class="fa fa-question-circle"></i></span> </label>
                         <input id="new_username" type="text" class="form-control" name="username" value="{{ old('username') }}"  required>
+                        @error('username')
+                            <span class="text-danger">{{$message}}</span>   
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" for="new_password">Password<span class="text-danger">*</span> &nbsp;<span data-toggle="tooltip" data-placement="right" title="kata sandi pengguna wajib diisi"><i class="fa fa-question-circle"></i></span> </label>
                         <input id="new_password" type="password" class="form-control" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="new_phone">Phone<span class="text-danger"></label>
+                        <input id="new_phone" type="number" class="form-control" name="new_phone">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="new_alamat">Alamat<span class="text-danger"></label>
+                        <textarea id="new_alamat" rows="3" name="new_alamat" class="form-control"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -105,10 +129,34 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('assets/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
     <script>
         $('.ec').on('click',function(){
             $(this).addClass('edit-user-trigger-clicked');
             console.log($(this).data('user-id'));
         });
-    </script>
+
+  $('.hpsbtn').click(function(){
+        var user = $(this).data('name_user');
+        var userid = $(this).data('userid');
+        Swal.fire({
+            title: 'Konfirmasi Penghapusan ?',
+            html: "Pengguna <strong>"+user+"</strong> akan dihapus, dan tidak dapat kembali",
+            icon: 'warning',
+            
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                    'Deleted.',
+                    'success'
+                    );
+                    $('.formHpsUser-'+userid).submit();
+                }
+            });
+    });
+</script>
 @endpush

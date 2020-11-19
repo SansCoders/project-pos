@@ -2,28 +2,28 @@
 
 @section('add-css')
 <link rel="stylesheet" href="{{ asset('assets/vendor/animate.css/animate.min.css') }}">
+<link rel="stylesheet" href="{{asset('assets/vendor/sweetalert2/dist/sweetalert2.min.css')}}">
 @endsection
 
 @section('content')
-@if(session()->get('success'))
-<div class="alert alert-success">
-    s
-</div>
-@endif
-<div class="header pb-6 d-flex align-items-center" style="min-height: 250px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
-    <span class="mask bg-gradient-danger opacity-8"></span>
+<div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <span class="mask bg-primary opacity-8"></span>
 </div>
 <div class="container-fluid mt--6">
+    {{-- @if(session()->get('success'))
+    <div class="alert alert-success">
+        berhasil
+    </div>
+    @endif --}}
     <div class="row">
         <div class="col">
-            <div class="card shadow-sm">
-                <div class="card-header  border-0">
+            <div class="card shadow">
+                <div class="card-header bg-transparent border-0">
                     <div class="row">
                         <div class="col-6" style="place-self: center">
                             <h3 class="mb-0">Daftar Kategori Produk</h3>
                         </div>
                         <div class="col-6 text-right">
-                            <button class="btn btn-light rounded-circle" type="button"><i class="fa fa-search"></i></button>
                             <button class="btn btn-success" data-toggle="modal" data-target="#addCategory"><i class="fa fa-plus"></i> Tambah</button>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                                     <th>No</th>
                                     <th>Nama Kategori</th>
                                     <th>Total Produk</th>
-                                    <th></th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody> 
@@ -59,15 +59,22 @@
                                             }
                                         @endphp
                                     </td>
-                                    <td class="table-actions">
+                                    <td class="table-actions d-flex">
                                         <span data-toggle="modal" data-target="#editCategory">
-                                            <a href="#!" class="table-action text-light ec" data-toggle="tooltip" data-original-title="Ubah kategori">
-                                                    <i class="fas fa-edit"></i>
+                                            <a href="#!" class="btn btn-white btn-sm ec" data-toggle="tooltip" data-original-title="Ubah kategori">
+                                                    <i class="fas fa-edit"></i> Edit
                                             </a>
                                         </span>
-                                        <a href="#!" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus kategori">
-                                          <i class="fas fa-trash"></i>
-                                        </a>
+                                        <form action="{{ route('admin.changestatus') }}" id="formHpsCategory" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="type" value="category">
+                                            <input type="hidden" name="id" value="{{$category->id}}">
+                                            <span data-toggle="tooltip" data-original-title="Hapus kategori">
+                                                <button class="btn btn-danger text-white btn-sm hpsbtn" type="button" data-categname="{{ $category->name }}">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </button>
+                                            </span>
+                                        </form>
                                       </td>
                                 </tr>
                                 @endforeach
@@ -136,6 +143,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('assets/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 <script src="{{asset('assets/vendor/bootstrap-notify/bootstrap-notify.min.js')}}"></script>  
 
 <script>
@@ -157,6 +165,27 @@
             var zz = '{{ route('admin.categorys.update', '+id+') }}';
             return zz;
         }
+    });
+    $('.hpsbtn').click(function(){
+        var categName = $(this).data('categname');
+        Swal.fire({
+            title: 'Konfirmasi Penghapusan ?',
+            html: "Kategori <strong>"+categName+"</strong> akan dihapus, dan tidak dapat kembali",
+            icon: 'warning',
+            
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                    'Deleted.',
+                    'success'
+                    );
+                    $('#formHpsCategory').submit();
+                }
+            });
     });
 </script>
 

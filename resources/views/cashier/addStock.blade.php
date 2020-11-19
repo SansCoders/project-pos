@@ -12,14 +12,18 @@
                 <div class="d-flex justify-content-between">
                     <h3 class="mb-0">Manajeman Stock</h3>
                     <div class="">
-                        <a data-toggle="modal" href="#addStock" role="button" class="btn btn-sm btn-success btn-round btn-icon" >
+                        <form method="GET" class="form-inline">
+                          <input type="text" name="search" class="form-control" placeholder="cari" id="">
+                          <button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button>
+                        </form>
+                        {{-- <a data-toggle="modal" href="#addStock" role="button" class="btn btn-sm btn-success btn-round btn-icon" >
                             <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
                             <span class="btn-inner--text">Tambah</span>
                         </a>
                         <a href="#" role="button" class="btn btn-sm btn-primary btn-round btn-icon" data-toggle="tooltip" data-original-title="Filter product">
                             <span class="btn-inner--icon"><i class="fas fa-sliders-h"></i></span>
                             <span class="btn-inner--text">Filter</span>
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
             </div>
@@ -27,10 +31,14 @@
                 <table class="table align-items-center table-flush table-hover">
                     <thead class="thead-light">
                         <tr>
-                            <th>no</th>
-                            <th>Produk</th>
-                            <th>Stock</th>
-                            <th></th>
+                            <th rowspan="2">no</th>
+                            <th colspan="2" class="text-center">Produk</th>
+                            <th rowspan="2">Stock</th>
+                            <th rowspan="2"></th>
+                        </tr>
+                        <tr>
+                          <th>kode barang</th>
+                          <th>nama barang</th>
                         </tr>
                     </thead>
                     <tbody class="list">
@@ -38,34 +46,37 @@
                             $i = 1;
                         @endphp
                         @foreach ($products as $index => $product)
-                        <tr>
-                            <td>{{$products->firstItem() + $index}}</td>
-                            <th scope="row">
-                                <div class="media align-items-center">
-                                    <a href="#" class="avatar rounded-circle mr-3">
-                                      <img alt="Image placeholder" style="height: inherit" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
-                                    </a>
-                                    <div class="media-body">
-                                      <span class="name mb-0 text-sm">{{$product->nama_product}}</span>
-                                      <span class="badge badge-pill badge-info">{{$product->category->name}}</span>
+                          @if ($product->product_status != 'hide')
+                            <tr>
+                                <td>{{$i++}}</td>
+                                <td>{{$product->kodebrg}}</td>
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <a href="#" class="avatar rounded-circle mr-3">
+                                          <img alt="Image placeholder" style="height: inherit" src="{{ asset($product->img) }}" alt="gambar {{ $product->nama_product }}">
+                                        </a>
+                                        <div class="media-body">
+                                          <span class="name mb-0 text-sm">{{$product->nama_product}}</span>
+                                          <span class="badge badge-pill badge-info">{{$product->category->name}}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </th>
-                            <td>@isset($product->stocks)
-                                  @if ($product->stocks->stock < 1)
-                                  <span class="text-danger">{{ $product->stocks->stock }} {{ $product->unit->unit }}</span>
-                                  @else    
-                                  <span>{{ $product->stocks->stock }} {{ $product->unit->unit }}</span>
-                                  @endif
-                                @else
-                                    <span class="text-danger">stok habis</span>
-                                @endisset</td>
-                            <td class="table-actions">
-                            <a href="{{ route('stock.add.process',$product->id) }}" class="btn btn-sm btn-primary text-white" data-toggle="tooltip" data-original-title="tambah stock">
-                                    <i class="fas fa-plus-square"></i>
-                                </a>
-                            </td>
-                        </tr>
+                                </th>
+                                <td>@isset($product->stocks)
+                                      @if ($product->stocks->stock < 1)
+                                      <span class="text-danger">{{ $product->stocks->stock }} {{ $product->unit->unit }}</span>
+                                      @else    
+                                      <span>{{ $product->stocks->stock }} {{ $product->unit->unit }}</span>
+                                      @endif
+                                    @else
+                                        <span class="text-danger">stok habis</span>
+                                    @endisset</td>
+                                <td class="table-actions">
+                                <a href="{{ route('stock.add.process',$product->id) }}" class="btn btn-sm btn-primary text-white" data-toggle="tooltip" data-original-title="tambah stock">
+                                        <i class="fas fa-plus-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                          @endif
                         @endforeach
                     </tbody>
                 </table>

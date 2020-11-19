@@ -8,7 +8,7 @@ class Keranjang extends Model
 {
     public $timestamps = false;
     protected $fillable = [
-        'user_id', 'product_id', 'buy_value'
+        'user_id', 'product_id', 'buy_value', 'user_type', 'custom_price'
     ];
     public function product()
     {

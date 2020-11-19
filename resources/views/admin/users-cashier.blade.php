@@ -1,11 +1,16 @@
 @extends('dashboard-layout.master')
+@section('add-css')
+<link rel="stylesheet" href="{{asset('assets/vendor/sweetalert2/dist/sweetalert2.min.css')}}">
+@endsection
+
 @section('content')
-<div class="header pb-2">
+<div class="header pb-6 d-flex align-items-center" style="min-height: 135px; background-image: url(../assets/img/theme/bg.jpg); background-size: cover; background-position: center top;">
+    <span class="mask bg-primary opacity-8"></span>
     <div class="container-fluid">
       <div class="header-body">
         <!-- Card stats -->
-        <div class="row  py-4">
-          <div class="col-xl-3 col-md-6">
+        <div class="row py-4">
+          <div class="col-xl-6 col-md-6">
             <div class="card card-stats">
               <!-- Card body -->
               <div class="card-body">
@@ -28,8 +33,6 @@
                       </a>
                     @endforeach
                   </div>
-                  {{-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                  <span class="text-nowrap">Since last month</span> --}}
                 </p>
               </div>
             </div>
@@ -38,44 +41,49 @@
       </div>
     </div>
 </div>
-<div class="container-fluid">
-   @if(session()->get('success'))
+<div class="container-fluid mt--6">
+        @if(session()->get('success'))
             <div class="alert alert-success">
-                asd &times;
+               {{session()->get('success')}}
             </div>
-            @endif
-  <div class="card">
-                <div class="card-header">
+        @endif
+          <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                   <strong>Kasir</strong>
                     <button class="btn btn-success" data-toggle="modal" data-target="#addCashier"><i class="fa fa-plus"></i> tambah</button>
                 </div>
-                <div class="card-body pl-0 pr-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover ">
-                            <thead>
-                                <th>no</th>
-                                <th>nama</th>
-                                <th>action</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($cashier as $index => $user)
-                                <tr class="data-row">
-                                <td>{{ $cashier->firstitem() + $index }}</td>
-                                <td><a href="{{route('user.profile',$user->id)}}" class="text-default">{{$user->name}}</a></td>
-                                    <td class="table-actions">
-                                        <span data-toggle="modal" data-target="#editUser">
-                                            <a href="#!" class="table-action text-light ec" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
-                                                    <i class="fas fa-user-edit"></i>
-                                            </a>
-                                        </span>
-                                        <a href="#!" class="table-action table-action-delete text-light" data-toggle="tooltip" data-original-title="Hapus Pengguna">
-                                          <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover ">
+                        <thead>
+                            <th>no</th>
+                            <th>nama</th>
+                            <th style="width: 10%">action</th>
+                        </thead>
+                        <tbody>
+                            @foreach ($cashier as $index => $user)
+                            <tr class="data-row">
+                            <td>{{ $cashier->firstitem() + $index }}</td>
+                            <td>{{$user->name}}</td>
+                                <td class="table-actions d-flex">
+                                    <a href="{{route('admin.users-cashier.edit',$user->id)}}" class="btn btn-white btn-sm" data-toggle="tooltip"  data-user-id="{{$user->id}}" data-original-title="Edit Pengguna">
+                                                <i class="fas fa-user-edit"></i> Edit
+                                    </a>
+                                    <form action="{{ route('admin.changestatususer') }}" method="POST" class="formHpsUser-{{$user->id}}">
+                                        @csrf
+                                        <input type="hidden" name="type" value="cashier">
+                                        <input type="hidden" name="iduser" value="{{$user->id}}">
+                                        <button class="btn btn-danger btn-sm hpsbtn" data-userid="{{$user->id}}" data-name_user="{{$user->name}}" type="button">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                  {{$cashier->links()}}
                 </div>
   </div>
 </div>
@@ -100,6 +108,9 @@
               <div class="form-group">
                   <label class="form-control-label" for="new_username">Username<span class="text-danger">*</span> &nbsp;<span data-toggle="tooltip" data-placement="right" title="Username pengguna wajib diisi"><i class="fa fa-question-circle"></i></span> </label>
                   <input id="new_username" type="text" class="form-control" name="username" value="{{ old('username') }}"  required>
+                  @error('username')
+                    <span class="text-danger">{{$message}}</span>   
+                  @enderror
               </div>
               <div class="form-group">
                   <label class="form-control-label" for="new_password">Password<span class="text-danger">*</span> &nbsp;<span data-toggle="tooltip" data-placement="right" title="kata sandi pengguna wajib diisi"><i class="fa fa-question-circle"></i></span> </label>
@@ -114,3 +125,32 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('assets/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
+
+<script>
+  $('.hpsbtn').click(function(){
+        var user = $(this).data('name_user');
+        var userid = $(this).data('userid');
+        Swal.fire({
+            title: 'Konfirmasi Penghapusan ?',
+            html: "Pengguna <strong>"+user+"</strong> akan dihapus, dan tidak dapat kembali",
+            icon: 'warning',
+            
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                    'Deleted.',
+                    'success'
+                    );
+                    $('.formHpsUser-'+userid).submit();
+                }
+            });
+    });
+</script>
+@endpush

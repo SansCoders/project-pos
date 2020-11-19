@@ -100,7 +100,7 @@
                     <h1 class="mb-n-6 text-center font-weight-bolder">OUR PRODUCT</h1>
                     <div class="row">
                         @foreach ($g_products as $i_p)
-                            <div class="col-lg-4 mb-n-6 text-center">
+                            <div class="col-lg-4 col-md-4 col-sm-6 mb-n-6 text-center">
                                 <img src="{{asset($i_p->img)}}" class="card-img" style="border-radius: 10px" alt="">
                                 <span class="h2">{{strtoupper($i_p->nama_product)}}</span>
                             </div>
@@ -158,6 +158,7 @@
             $(document).click(function(){
                 $('body').removeClass('g-sidenav-pinned');
             });
+            $('img').attr('draggable', false);
         </script>
     </body>
 </html>

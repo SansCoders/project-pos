@@ -1,12 +1,14 @@
 @extends('dashboard-layout.master')
-
+@include('dashboard-layout.footer')
 @section('content')
 
-<div class="container-fluid my-4">
-        <a href="{{ url()->previous() }}" class="btn btn-neutral">back</a>
-        <h2 class="mb-4"><i class="fa fa-shopping-cart"></i> Keranjang</h2>
+<div class="container-fluid mt-5 pb-5">
+        <div class="d-flex mb-4 align-items-center">
+            <a href="{{ url('home') }}" class="btn btn-neutral"><i class="fa fa-arrow-alt-circle-left"></i></a>
+            <h2 class="ml-2 mb-0"><i class="fa fa-shopping-cart"></i> Keranjang</h2>
+        </div>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-8 mb-n-5">
                 @if ($message = Session::get('err'))
                     <div class="alert alert-danger alert-block">
                         <button type="button" class="close" data-dismiss="alert">×</button> 
@@ -18,76 +20,72 @@
                         <h2 class="text-muted">keranjang masih kosong</h2>
                     </div>
                 @endif
+                
                 @foreach ($cart as $item)
-                    <div class="card shadow-none">
-                        <div class="card-body d-flex align-items-center flex-wrap">
-                            <img class="img-thumbnail mr-2" style="max-width: 120px" src="{{ asset($item->product->img) }}" alt="">
-                            <a href="{{route('details.product',$item->product->slug)}}" class="font-weight-bold text-dark">{{$item->product->nama_product}}</a>
-                            <div class="d-flex ml-auto mr-0 justify-content-between">
-                                <h3 class="text-muted">{{ $item->buy_value }} {{ $item->product->unit->unit }}</h3>
-                                {{-- <button class="btn btn-icon text-success mr-1">+</button>
-                                <input type="number" style="max-width: 60px;min-width: 60px" class="form-control" value="{{$item->buy_value}}">
-                                <button class="btn btn-icon ml-1">-</button> --}}
-                                <button type="button" class="btn text-muted ml-5"><i class="fa fa-pencil-alt"></i></button>
-                                <form action="{{ route('checkout.destroy', $item->id)}}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    {{-- <button class="btn btn-danger" type="submit">Delete</button> --}}
-                                    <button type="submit" class="btn btn-icon text-danger ml-auto"><i class="fa fa-trash"></i></button>
-                                </form>
-                            </div>
-                        </div>
+                <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img style="max-width: 150px" src="{{ asset($item->product->img) }}" alt="">
+                        </a>
                     </div>
+                    <div class="col ml--2">
+                        <h4 class="mb-1">
+                            <a href="{{route('details.product',$item->product->slug)}}" class="font-weight-bold text-dark">{{$item->product->nama_product}}</a>
+                        </h4>
+                        @if ($item->custom_price != $item->product->price)
+                           <s><b class="text-sm">@currency($item->buy_value * $item->product->price)</b></s>
+                           <b class="text-sm text-danger">@currency($item->buy_value * $item->custom_price)</b>
+                           <br/>
+                        @else    
+                            <b class="text-sm">@currency($item->buy_value * $item->product->price)</b><br/>
+                        @endif
+                        <small>Quantitiy : {{$item->buy_value}}</small>
+                    </div>
+                    <button class="btn btn-primary editQty" data-icp="{{$item->id}}" data-toggle="modal" data-target="#exampleModal">edit</button>
+                    <form action="{{ route('checkout.destroy', $item->id)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-icon text-danger ml-auto"><i class="fa fa-trash"></i> Hapus</button>
+                    </form>
+                </div>
+                </div>
+                </div>
                 @endforeach
             </div>
             <div class="col-lg-4">
-                <div class="card bg-gradient-white border-default shadow-none" style="border: 1px solid black">
-                    <div class="card-body">
-                        <h3 class="font-weight-bold text-center mb-3">
-                            Order Summary
-                        </h3>
-                        <div class="d-flex flex-column">
-                            <div class="row mb-2 mt-4">
-                                <div class="col-lg-6 font-weight-bold">product</div>
-                                <div class="col-lg-6 d-flex justify-content-between">
-                                    <h4 class="font-weight-300 text-center">Qty</h4>
-                                    <h5 class="font-weight-normal text-center">price</h5>
-                                    <h5 class=" text-center">total</h5>
-                                </div>
-                            </div>
-                            @foreach ($cart as $item)
-                                <div class="product row">
-                                    <div class="col-lg-6">
-                                        <h4 class="font-weight-300">{{$item->product->nama_product}}</h4>
-                                    </div>
-                                    <div class="col-lg-6 d-flex justify-content-between">
-                                        <h4 class="font-weight-300">{{$item->buy_value}}</h4>
-                                        <h5 class="font-weight-normal">@currency($item->product->price)</h5>
-                                        <h5>@currency($item->buy_value * $item->product->price)</h5>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <hr class="my-3">
-                        <div class="font-weight-bold text-center justify-content-between d-flex">
-                            <h2>Total</h2>
-                            <h2>
-                            @php
-                                $priceTotal = 0;
-                            @endphp
-                            @foreach ($cart as $item)
-                                @php
-                                    $priceTotal += ($item->buy_value * $item->product->price);
-                                @endphp
-                            @endforeach
-                                @currency($priceTotal)
+                <div class="position-sticky top-4">
+                    <div class="card bg-gradient-white border-default shadow-none" style="border: 1px solid black">
+                        <div class="card-body">
+                            <h2 class="font-weight-bold text-center mb-3">
+                                Keranjang
                             </h2>
+                            <hr class="my-3">
+                            <div class="font-weight-bold text-center justify-content-between d-flex">
+                                <h2>Total</h2>
+                                <h2>
+                                @php
+                                    $priceTotal = 0;
+                                @endphp
+                                @foreach ($cart as $item)
+                                    @php
+                                        if($item->custom_price != $item->product->price)
+                                        {
+                                            $priceTotal += ($item->buy_value * $item->custom_price);
+                                        }else{
+                                            $priceTotal += ($item->buy_value * $item->product->price);
+                                        }
+                                    @endphp
+                                @endforeach
+                                    @currency($priceTotal)
+                                </h2>
+                            </div>
                         </div>
                     </div>
+                    @if ($cart->count() > 0)
+                        <button class="btn btn-primary w-100" data-toggle="modal" data-target="#proses">kirim ke kasir</button>
+                    @endif
                 </div>
-                @if ($cart->count() > 0)
-                    <button class="btn btn-primary w-100" data-toggle="modal" data-target="#proses">kirim ke kasir</button>
-                @endif
             </div>
         </div>
     </div>
@@ -112,12 +110,62 @@
                     <div class="modal-footer">
                         <form action="{{ route('checkout.process') }}" method="post">
                             @csrf
+                            <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-white">Kirim</button>
                         </form>
-                        <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Batal</button>
                     </div>
                 </div>
             </div>
         </div>
     @endif
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Ubah Quantity</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="contentEditQty">
+              Mohon Tunggu
+            </div>
+          </div>
+        </div>
+      </div>
 @endsection
+@push('scripts')
+    <script>
+        let val_tc = $('#valtocart').val();
+        $('#addvaltocart').on('click',function(e){
+            e.preventDefault();
+            val_tc = Number(val_tc) + 1;
+            $('#valtocart').val(val_tc);
+        });
+        $('#minvaltocart').on('click',function(e){
+            e.preventDefault();
+            if(val_tc != 1){
+                val_tc = Number(val_tc) - 1;
+                $('#valtocart').val(val_tc);
+            }
+        });
+        $('#add2cart').click((e) => {
+            console.log('asdasd');
+        });
+
+        $('.editQty').click(function(){
+                var idCart = $(this).data("icp");
+                $.ajax({
+                    url : "/editcartqty",
+                    method:"post",
+                    data : {"_token":"{{ csrf_token() }}","idCart" : idCart},
+                    success: function(resp){
+                        $('#contentEditQty').html(resp);
+                    }
+                });
+            });
+    </script>
+    
+@endpush

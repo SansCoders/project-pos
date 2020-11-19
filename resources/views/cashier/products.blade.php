@@ -1,6 +1,7 @@
 @extends('dashboard-layout.master')
 
 @section('add-css')
+<link rel="stylesheet" href="{{asset('assets/vendor/sweetalert2/dist/sweetalert2.min.css')}}">
 <style>
 .modal-dialog {
     max-width: 900px;
@@ -40,6 +41,11 @@
           {{ session()->get('success') }}
         </div>
       @endif
+      @if(session()->has('error'))
+        <div class="alert alert-danger">
+          {{ session()->get('error') }}
+        </div>
+      @endif
           <div class="card">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
@@ -48,10 +54,24 @@
                 </div>
                 
                 <div class="col text-right">
+                  @isset($cari)
+                  @else    
                   <button class="btn btn-success"  data-toggle="modal" data-target="#addProduct">Tambah Produk</button>
+                  @endisset
                 </div>
               </div>
           </div>
+          <form action="{{route('cashier.products.search')}}" class="mt-2" method="post">
+            @csrf
+            <div class="d-flex justify-content-center">
+              <div class="input-group " style="max-width: 300px">
+                <input type="text" class="form-control" name="search" placeholder="Cari Product" aria-label="Cari Product" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="submit" id="button-addon2"><i class="fa fa-search"></i></button>
+                </div>
+              </div>
+            </div>
+          </form>
           <div class="card-body pl-0 pr-0">
             <div class="table-responsive">
               <table class="table align-items-center">
@@ -65,17 +85,32 @@
                   </tr>
                 </thead>
                 <tbody class="list">
+                    @php
+                        $i = 1;
+                    @endphp
                     @foreach ($products as $index => $product)
-                      <tr>
-                        <th role="row">{{ $products->firstItem() + $index }}</th>
-                        <td>{{ $product->kodebrg }}</td>
-                        <td class="d-flex align-items-center">
-                          <img src="{{ asset($product->img) }}" class="rounded-circle avatar" style="max-width: 50px" alt="">
-                          <span class="ml-2">{{ $product->nama_product }}</span>
-                        </td>
-                        <td>@currency($product->price)</td>
-                        <td><a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a></td>
-                      </tr>
+                      @if ($product->product_status == "show")
+                        <tr>
+                          <th role="row">{{ $i++ }}</th>
+                          <td>{{ $product->kodebrg }}</td>
+                          <td class="d-flex align-items-center">
+                            <img src="{{ asset($product->img) }}" class="rounded-circle avatar" style="max-width: 50px" alt="">
+                            <span class="ml-2">{{ $product->nama_product }}</span>
+                          </td>
+                          <td>@currency($product->price)</td>
+                          <td>
+                            <a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a>
+                            <form action="{{ route('cashier.products.destroyTemp',$product->id) }}" id="fdelet" method="POST" style="display: contents">
+                              @csrf
+                              @method('PUT')
+                              <button class="btn btn-icon btn-danger hpsbtn" type="button">
+                                  <span class="btn-inner--icon"><i class="fa fa-trash"></i></span>
+                                  <span class="btn-inner--text">Hapus</span>
+                              </button>
+                            </form>
+                          </td>
+                        </tr>
+                      @endif
                     @endforeach
                 </tbody>
               </table>
@@ -117,6 +152,8 @@
     </div>
   </div>
 
+  @isset($cari)
+  @else    
   <div class="modal fade" id="addProduct" tabindex="-1" role="dialog" aria-labelledby="addProductLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -133,7 +170,6 @@
                 <div class="card-body">
                   <div id="preview_img" class="text-center"></div>
                   <h2 id="preview_pNama" class="mb-1 text-muted">Nama Produk</h2>
-                  {{-- <h6 class="text-muted" id="preview_pKode">Kode Produk</h6> --}}
                   <h2 class="text-dark" id="preview_pPrice">IDR 0,00</h2>
                   <p id="preview_description"></p>
                   <div class="text-right">
@@ -169,26 +205,29 @@
                   </div>
                   <div class="row">
                     <div class="form-group col-6">
-                        <label for="pStok" class="form-control-label">Stok</label>
+                        <label for="pStok" class="form-control-label">Stok <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
                         <div class="input-group input-group-merge">
-                          <input type="text" class="form-control justnumber" name="pStok" placeholder="0">
+                          <input type="text" value="{{old('pStok')}}" class="form-control justnumber" name="pStok" placeholder="0" required>
                           <select name="pUnit" id="pUnit" class="form-control">
-                            @if ($units->isEmpty())
-                            <option disabled>no record</option>
+                            @if (count($units) < 1)
+                              <option disabled>no record</option>
                             @endif
                             @foreach ($units as $u)
                               <option value="{{ $u->id }}">{{ $u->unit }}</option>
                             @endforeach
                           </select>
                         </div>
+                        @error('pStok')
+                          <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                       </div>
                     <div class="form-group col-6">
-                      <label for="pPrice" class="form-control-label">Harga</label>
+                      <label for="pPrice" class="form-control-label">Harga <span class="text-danger" data-toggle="tooltip" data-placement="right" title="Harus Diisi">*</span></label>
                       <div class="input-group input-group-merge">
                           <div class="input-group-prepend">
                               <span class="input-group-text" id="basic-addon1">IDR</span>
                           </div>
-                          <input id="pPrice" type="text" class="form-control text-right justnumber" name="pPrice" onkeyup="ppPrice()" placeholder="0" aria-label="0" aria-describedby="basic-addon1">
+                          <input id="pPrice" type="text" class="form-control text-right justnumber" name="pPrice" onkeyup="ppPrice()" placeholder="0" aria-label="0" aria-describedby="basic-addon1" required>
                       </div>
                     </div>
                   </div>
@@ -212,10 +251,12 @@
         </div>
       </div>
   </div>
+  @endisset
 </div>
 @endsection
 
 @push('scripts')
+<script src="{{ asset('assets/vendor/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
 <script>
   $(document).ready(function(){
@@ -226,6 +267,29 @@
         .catch( error => {
             console.error( error );
         } );
+  });
+  $('.hpsbtn').click(function(){
+    Swal.fire({
+      title: 'Yakin ingin menghapus product tersebut?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: `Hapus`,
+      icon: 'warning',
+      denyButtonText: `Batal`,
+    }).then((result) => {
+      if(result.isConfirmed){
+        $('#fdelet').submit();
+        Swal.fire({
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+          title: 'berhasil dihapus'
+        });
+        setTimeout(function(){
+            location.reload(); 
+        }, 1800);
+      }
+    });
   });
 
   $(".infop").click(function(e){
@@ -257,17 +321,9 @@
       $(this).html('RP ' +$(this).text().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
   });
   $(document).on('keydown', '#pKode', function(e) {
+      $(this).val($(this).val().toUpperCase());
     if (e.keyCode == 32) return false;
   });
-  // function ppKode()
-  // {
-  //   $("#preview_pKode").html($("#pKode").val());
-  //   $('#pKode').change(function(){
-  //     if($("#preview_pKode").text().length === 0){
-  //       $("#preview_pKode").text("Kode Produk");
-  //     }
-  //   });
-  // }
   function ppNama()
   {
     $("#preview_pNama").html($("#pNama").val());
@@ -287,25 +343,12 @@
       }
     });
   }
-  // $('.justnumber').keyup(function(event) {
-  //    // skip for arrow keys
-  //     if(event.which >= 37 && event.which <= 40) return;
-
-  //     // format number
-  //     $(this).val(function(index, value) {
-  //       return value
-  //       .replace(/\D/g, "")
-  //       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  //       ;
-  //     });
-  // });
   function readURL(input) {
       if (input.files && input.files[0]) {
         var reader = new FileReader();
         
         reader.onload = function(e) {
           $('#preview_img').html('<img src="' +e.target.result+'" class="img-fluid" />');
-          // $('#blah').attr('src', e.target.result);
         }
         reader.readAsDataURL(input.files[0]); // convert to base64 string
       }

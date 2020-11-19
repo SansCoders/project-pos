@@ -17,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('p/find', 'apiController@getApiDetailsProduct');
+Route::post('p/cfind', 'apiController@getApiChangePriceCustomProduct');

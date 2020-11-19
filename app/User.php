@@ -13,10 +13,15 @@ class User extends Authenticatable
 
     protected $guard = 'sales';
     protected $fillable = [
-        'name', 'username', 'password',
+        'name', 'username', 'password', 'status', 'phone', 'address'
     ];
 
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function profile()
+    {
+        return $this->hasOne(ProfileUser::class, 'user_id', 'id');
+    }
 }

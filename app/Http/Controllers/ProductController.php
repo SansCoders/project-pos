@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\CategoryProduct;
+use App\Faktur;
 use App\Keranjang;
+use App\Prices_Custom;
 use App\Product;
 use App\Receipts_Transaction;
 use App\Stock;
@@ -14,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use PDO;
+
 
 class ProductController extends Controller
 {
@@ -25,24 +27,20 @@ class ProductController extends Controller
 
     public function getInfoProduct($id)
     {
-        $getProduct = Product::where('id', $id)->first();
-        $categors = CategoryProduct::where('id', $getProduct->category_id)->first();
-        $categories = CategoryProduct::get();
-        $units = Unit::get();
-        $unitss = Unit::where('id', $getProduct->unit_id)->first();
-        $stock = Stock::where('id', $getProduct->id)->first();
-        if ($getProduct == null) {
-            return json_encode('error');
-        }
+        $constCompany = DB::table('about_us')->first();
+        if ($constCompany == null) return redirect()->back();
 
-        return view('cashier.productDetail', compact(['getProduct', 'stock', 'categories', 'categors', 'unitss', 'units']));
+        $product = Product::where('id', $id)->where('product_status', 'show')->first();
+        if ($product == null) return redirect()->back();
+        $categories = CategoryProduct::get();
+        return view('cashier.productDetail', compact(['product', 'categories']));
     }
 
     public function getAllProducts()
     {
-        $products = Product::paginate(10);
-        $categories = CategoryProduct::get();
-        $units = Unit::get();
+        $products = Product::where('product_status', 'show')->paginate(10);
+        $categories = CategoryProduct::where('status', 1)->get();
+        $units = Unit::where('status', 1)->get();
         if (Auth::guard('admin')->check()) {
             return view('admin.products', compact('products', 'units'));
         } elseif (Auth::guard('cashier')->check()) {
@@ -51,17 +49,27 @@ class ProductController extends Controller
     }
     public function getAllUnits()
     {
-        $units = Unit::paginate(10);
+        $units = Unit::where('status', 1)->paginate(10);
         return view('admin.units', compact('units'));
+    }
+
+    public function searchProducts(Request $request)
+    {
+        $cari = $request->search;
+        $products = Product::where('product_status', 'show')->where('kodebrg', 'LIKE', "%$cari%")->orWhere('nama_product', 'LIKE', "%{$cari}%")
+            ->paginate(10);
+        $categories = CategoryProduct::where('status', 1)->get();
+        $units = Unit::where('status', 1)->get();
+        return view('cashier.products', compact(['products', 'categories', 'units', 'cari']));
     }
 
     public function searchProduct(Request $request)
     {
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
-        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         $categories = CategoryProduct::all();
         $cari = $request->get('cari');
-        $products = Product::where('nama_product', 'LIKE', '%' . $cari . '%')->get();
+        $products = Product::where('nama_product', 'LIKE', '%' . $cari . '%')->where('product_status', 'show')->get();
         if (count($products) > 0) {
             return view('home', compact(['products', 'categories', 'cart', 'cekTransactions', 'cari']));
         } else {
@@ -74,6 +82,7 @@ class ProductController extends Controller
         $products = Product::find($request->id);
         $request->validate([
             'pNama' => 'required|min:3|max:90',
+            'pPrice' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014'
         ]);
 
@@ -99,16 +108,18 @@ class ProductController extends Controller
         if ($slife) {
             return redirect()->route('cashier.products')->with('success', 'Product Telah Di Perbaharui');
         }
+        dd($request);
+        return redirect()->back()->with('error', 'kesalahan');
     }
 
     public function storeProduct(Request $request)
     {
         $user = Auth::user();
         $request->validate([
-            // 'pCategory' => 'numeric|required|min:3',
             'pKode' => 'required|min:3|unique:products,kodebrg',
             'pNama' => 'required|min:3|max:90',
             'pStok' => 'required|numeric',
+            'pPrice' => 'required|numeric',
             'imgproduct' => 'mimes:jpeg,png|max:1014',
         ], [
             'pKode.unique' => 'kode sudah digunakan, silahkan gunakan kode lain'
@@ -162,60 +173,113 @@ class ProductController extends Controller
 
     public function detailsProduct($slug)
     {
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
-        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
-        $data = Product::where('slug', $slug)->get();
+        $constCompany = DB::table('about_us')->first();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
+        $data = Product::where('slug', $slug)->where('product_status', 'show')->get();
         if ($data->count() > 0) {
-            return view('product-overview', compact('data', 'cart', 'cekTransactions'));
+            return view('product-overview', compact('data', 'cart', 'cekTransactions', 'constCompany'));
         } else {
             return redirect()->back()->with('error', 'product not found');
         }
     }
-
     public function addToCart(Request $request)
     {
         $user = Auth::user();
+        if (Auth::guard('admin')->check()) {
+            $user_type = 1;
+        } elseif (Auth::guard('cashier')->check()) {
+            $user_type = 2;
+        } elseif (Auth::guard('web')->check()) {
+            $user_type = 3;
+        } else {
+            $user_type = 4;
+        }
         $request->validate([
             'valbuy' => 'required|min:1|numeric',
             'dataproduct' => 'required|numeric',
         ]);
-        $data = Product::where('id', $request->dataproduct)->get();
-        foreach ($data as $p) {
-            if (!isset($p->stocks->stock)) {
-                return redirect()->back()->with('error', 'stock tidak tersedia');
-            }
-            if ($request->valbuy > $p->stocks->stock) {
-                return redirect()->back()->with('error', 'melebihi persediaan barang');
-            }
+        $data = Product::where('id', $request->dataproduct)->first();
+        // foreach ($data as $p) {
+        if (!isset($data->stocks->stock)) {
+            return redirect()->back()->with('error', 'stock tidak tersedia');
         }
-        if ($data->count() == 0) return redirect()->back()->with('error', 'data tidak valid');
-        $exist_cart = Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->first();
+        if ($request->valbuy > $data->stocks->stock) {
+            return redirect()->back()->with('error', 'melebihi persediaan barang');
+        }
+        // }
+        if ($data == null) return redirect()->back()->with('error', 'data tidak valid');
+        $exist_cart = Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->where('user_type', $user_type)->first();
         if ($exist_cart != null) {
-            Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)
+            Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->where('user_type', $user_type)
                 ->update(['buy_value' => ($exist_cart->buy_value + $request->valbuy)]);
-            return redirect()->back()->with('success_added', 'Berhasil ditambah ke keranjang');
+            return redirect()->back()->with('success', 'Berhasil ditambah ke keranjang');
+        }
+
+        $customPrice = Prices_Custom::where('product_id', $request->dataproduct)->where('user_id', $user->id)->where('user_type', 'user')->first();
+        if ($customPrice != null) {
+            $cp_product = $customPrice->prices_c;
+        } else {
+            $cp_product = $data->price;
         }
         $cart = new Keranjang([
             'user_id' => $user->id,
             'product_id' => $request->dataproduct,
-            'buy_value' => $request->valbuy
+            'buy_value' => $request->valbuy,
+            'user_type' => $user_type,
+            'custom_price' => $cp_product
         ]);
         if ($cart->save()) {
             return redirect()->back()->with('success_added', 'Berhasil ditambah ke keranjang');
         } else {
-            dd($data);
+            return redirect()->back();
         }
     }
+
+    public function editQtyCart(Request $request)
+    {
+        $idCart = $request->idCart;
+        $cart = Keranjang::where('id', $idCart)->first();
+        if (!$cart || $cart == null) return "not valid!";
+        $checkProduct = Product::where('id', $cart->product_id)->first();
+        if (!$checkProduct || $checkProduct == null) return "not valid!";
+
+        return view('another.formEditCartQty', compact(['cart', 'checkProduct']));
+    }
+    public function editQtyCart_put(Request $request, $id)
+    {
+        $request->validate(['buy_value' => 'required|numeric']);
+
+        //validasi
+        $cart = Keranjang::where('id', $id)->where('user_type', 3)->first();
+        if (!$cart || $cart == null) return "not valid!";
+        $vStock = Stock::where('product_id', $cart->product_id)->first();
+        if (!$vStock || $vStock == null) return "not valid!";
+
+        $buy = $request->buy_value;
+        if ($buy > $vStock->stock) return redirect()->back()->with('error', 'melebihi stock yang ada');
+
+        $update = Keranjang::where('id', $id)->where('user_type', 3)->update([
+            'buy_value' => $buy
+        ]);
+        if ($update) {
+            return redirect()->back()->with('success', "berhasil di update");
+        } else {
+            return redirect()->back()->with('fail', "gagal di update");
+        }
+    }
+
     public function checkOutProducts()
     {
-        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
-        $cart = Keranjang::where('user_id', Auth::user()->id)->get();
-        return view('checkout', compact('cart', 'cekTransactions'));
+        $constCompany = DB::table('about_us')->first();
+        $cekTransactions = Receipts_Transaction::where('user_id', Auth::user()->id)->where('is_done', 0)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
+        return view('checkout', compact('cart', 'cekTransactions', 'constCompany'));
     }
 
     public function processCheckOut()
     {
-        $cart = Keranjang::where('user_id', Auth::user()->id)->with('product')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->with('product')->get();
         $buyer = Auth::user();
         foreach ($cart as $item) {
             $cekStock = Stock::where('product_id', $item->product_id)->first();
@@ -223,7 +287,10 @@ class ProductController extends Controller
             $products_id[] = $item->product_id;
             $products_list[] = $item->product->nama_product;
             $products_price[] = $item->product->price;
+            $products_totalPrice[] = $item->product->price * $item->buy_value;
             $buy_values[] = $item->buy_value;
+            $custom_prices[] = $item->custom_price;
+            $diskon_product[] = 0;
         }
 
         $latestOrder = Receipts_Transaction::orderBy('created_at', 'DESC')->first();
@@ -231,6 +298,12 @@ class ProductController extends Controller
             $latestOrder = 0;
         } else {
             $latestOrder = $latestOrder->count();
+        }
+        $cekFaktur = Faktur::orderBy('created_at', 'desc')->first();
+        if ($cekFaktur == null) {
+            $fakNum = 0;
+        } else {
+            $fakNum = $cekFaktur->faktur_number;
         }
         $receipt = new Receipts_Transaction([
             'transaction_id' => date('Ymd') . $buyer->id . str_pad($latestOrder + 1, 5, "0", STR_PAD_LEFT),
@@ -244,15 +317,18 @@ class ProductController extends Controller
             'products_prices' => json_encode($products_price),
             'type' => 1,
             'is_done' => 0,
-            'done_time' => null
+            'done_time' => null,
+            'total_productsprices' => json_encode($products_totalPrice),
+            'order_via' => 3,
+            'diskon' =>  json_encode($diskon_product),
+            'custom_prices' => json_encode($custom_prices)
         ]);
         $sreceipt = $receipt->save();
         if ($sreceipt) {
-            // dd($data);
             foreach ($products_id as $p_i) {
                 $changeStock = Stock::where('product_id', $p_i)->first();
                 if ($changeStock != null) {
-                    $scart = Keranjang::where('product_id', $p_i)->first();
+                    $scart = Keranjang::where('product_id', $p_i)->where('user_type', 3)->first();
                     $us = Stock::where('product_id', $p_i)->update(['stock' => ($changeStock->stock - $scart['buy_value'])]);
                     if ($us) {
                         $a_stock = new StockActivity([
@@ -267,7 +343,13 @@ class ProductController extends Controller
                     }
                 }
             }
-            Keranjang::where('user_id', Auth::user()->id)->delete();
+
+            $faktur = new Faktur([
+                'order_id' => $receipt->transaction_id,
+                'faktur_number' => ($fakNum + 1),
+            ]);
+            $faktur->save();
+            Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->delete();
             return redirect()->back()->with('success', 'Berhasil dikirim ke kasir, silahkan menunggu untuk diproses');
         } else {
             dd($receipt);
@@ -279,5 +361,12 @@ class ProductController extends Controller
         $item = Keranjang::find($id);
         $item->delete();
         return redirect()->back()->with('success', 'Item deleted!');
+    }
+    public function destroyTemp($id)
+    {
+        $product = Product::find($id);
+        $product->product_status = 2;
+        $product->save();
+        return redirect()->back();
     }
 }

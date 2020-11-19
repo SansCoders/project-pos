@@ -2,7 +2,7 @@
 
 @if(Auth::guard('web')->check())
 @else
-<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" style="z-index: 1" id="sidenav-main">
+<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" style="z-index: 6" id="sidenav-main">
     <div class="scrollbar-inner">
       <div class="sidenav-header d-flex  align-items-center">
         <a class="navbar-brand d-flex flex-column" href="javascript:void(0)">
@@ -51,12 +51,6 @@
                       <span class="nav-link-text">Kategori Produk</span>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link {{ set_active('admin.products') }}" href="{{route('admin.products')}}">
-                      <i class="ni ni-bag-17 text-default"></i>
-                      <span class="nav-link-text">Produk</span>
-                    </a>
-                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link {{ set_active('admin.common_units') }}" href="{{route('admin.common_units')}}">
                       <i class="ni ni-tag text-default"></i>
@@ -86,14 +80,14 @@
             </ul>
             <ul class="navbar-nav mb-md-3">
               <li class="nav-item">
-                <a class="nav-link collapsed" href="#navbar-log" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
+                <a class="nav-link collapsed {{ set_active('admin.stock-activity') }}" href="#navbar-log" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
                   <i class="fa fa-paperclip text-default"></i>
                   <span class="nav-link-text">Aktivitas</span>
                 </a>
                 <div class="collapse" id="navbar-log">
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
-                      <a href="{{route('admin.users-sales')}}" class="nav-link ">
+                      <a href="{{route('admin.stock-activity')}}" class="nav-link ">
                         <span class=""> Stock </span>
                       </a>
                     </li>
@@ -145,33 +139,33 @@
                         <span class=""> Stock In </span>
                       </a>
                     </li>
-                    <li class="nav-item">
-                      <a href="#" class="nav-link "> 
-                        <span class=""> Stock Out </span>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="#" class="nav-link">
-                        <span class=""> Stock Retur </span>
-                      </a>
-                    </li>
                   </ul>
                 </div>
               </li>
               <li class="nav-item">
-                <a class="nav-link collapsed" href="#navbar-reports" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
+                <a class="nav-link collapsed {{ set_active('cashier.listTransactions') }}" href="#navbar-reports" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-tables">
                   <i class="ni ni-chart-bar-32 text-default"></i>
                   <span class="nav-link-text">Reports</span>
                 </a>
                 <div class="collapse" id="navbar-reports">
                   <ul class="nav nav-sm flex-column">
                     <li class="nav-item">
-                      <a href="#" class="nav-link "> 
-                        <span class=""> summary </span>
+                      <a href="{{route('cashier.listTransactions')}}" class="nav-link "> 
+                        <span class=""> list transactions </span>
                       </a>
                     </li>
                   </ul>
                 </div>
+              </li>
+            </ul>
+            
+            <div class="my-3"></div>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link {{ set_active('cashier.customprice*') }}" href="{{route('cashier.customprice')}}">
+                  <i class="fa fa-money-bill text-default"></i>
+                  <span class="nav-link-text">Custom Prices</span>
+                </a>
               </li>
             </ul>
             @else

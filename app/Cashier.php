@@ -14,7 +14,7 @@ class Cashier extends Authenticatable
     protected $guard = 'cashier';
 
     protected $fillable = [
-        'name', 'username', 'password',
+        'name', 'username', 'password', 'status',
     ];
     protected $hidden = [
         'password', 'remember_token',

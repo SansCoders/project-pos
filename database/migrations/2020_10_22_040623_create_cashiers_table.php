@@ -16,7 +16,7 @@ class CreateCashiersTable extends Migration
         Schema::create('cashiers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('username');
             $table->string('password');
             $table->rememberToken();

@@ -14,7 +14,7 @@ class UnitsController extends Controller
     public function storeUnit(Request $request)
     {
         $request->validate([
-            'unit' => 'required|min:3|max:90|unique:units',
+            'unit' => 'required|min:3|max:90',
         ]);
 
         $unit = new Unit([

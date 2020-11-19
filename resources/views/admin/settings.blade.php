@@ -11,7 +11,18 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid mt--6">
+    <div class="container-fluid mt--6 mb-5">
+      
+      @if(session()->get('success'))
+      <div class="alert alert-success">
+          {{session()->get('success')}}
+      </div>
+      @endif
+      @if(session()->get('error'))
+      <div class="alert alert-danger">
+         {{session()->get('error')}}
+      </div>
+      @endif
         <div class="row">
             <div class="col-xl-4">
                 <div class="card card-profile">
@@ -65,11 +76,11 @@
                             <li class="nav-item">
                                 <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">Profile</a>
                             </li>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Logo</a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Summary</a>
+                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Change Password</a>
                             </li>
                         </ul>
                     </div>
@@ -97,7 +108,7 @@
                                           <div class="col-lg-6">
                                               <div class="form-group">
                                                   <label for="info-telp-company" class="form-control-label">Telp</label>
-                                                  <input class="form-control" type="text" value="(123) 123456" id="info-telp-company" disabled>
+                                                  <input class="form-control" type="text" value="" id="info-telp-company" disabled>
                                               </div>
                                           </div>
                                       </div>
@@ -119,7 +130,7 @@
                                 </div>
                               </form>   
                             </div>
-                            <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+                            {{-- <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
                               <div class="row">
                                 <div class="col-lg-4">
                                   <img style="max-width: 200px" src="{{ asset($aboutUs->img_company) }}" alt="">
@@ -134,9 +145,26 @@
                                     </form>
                                 </div>
                               </div>  
-                            </div>
+                            </div> --}}
                             <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
-                                <p class="description">Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>
+                              <form action="{{ route('admin.update-settings.cp') }}" method="post">
+                                  @csrf
+                                  <div class="form-group">
+                                    <label for="oldpass" class="form-control-label">Kata sandi lama</label>
+                                    <input type="password" name="oldpassword" class="form-control" id="oldpass">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="newpass" class="form-control-label">Kata sandi baru</label>
+                                    <input type="password" name="newpass" class="form-control" id="newpass">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="newpass2" class="form-control-label">Ulangi Kata sandi baru</label>
+                                    <input type="password" name="newpass2" class="form-control" id="newpass2">
+                                  </div>
+                                  <div class="form-group">
+                                    <button class="btn btn-block btn-success">ganti password</button>
+                                  </div>
+                                </form>
                             </div>
                         </div>
                     </div>
