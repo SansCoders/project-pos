@@ -87,6 +87,9 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::post('/cashier/cart/delete-{id}', 'CashierController@deleteItemCart')->name('cashier.cart.deleteItem');
 
     Route::get('/cashier/reports/transactions', 'CashierController@listTransactions')->name('cashier.listTransactions');
+    Route::get('/cashier/reports/transactions/search', function () {
+        return abort(404);
+    });
     Route::post('/cashier/reports/transactions/search', 'CashierController@searchTransactions')->name('cashier.searchTransactions');
 
     Route::get('/cashier/add-stock', 'StockController@addStock')->name('stock.add');
@@ -123,6 +126,10 @@ Route::group(['middleware' => ['auth:web']], function () {
 
     Route::get('/my-orders', 'HomeController@myOrders')->name('my-orders');
     Route::post('/my-orders/details', 'HomeController@getdataReceipts');
+    Route::get('/my-orders/search', function () {
+        return abort(404);
+    });
+    Route::post('/my-orders/search', 'HomeController@searchTransactions')->name('searchTransactions');
 
     Route::get('/my', 'HomeController@myProfile');
 

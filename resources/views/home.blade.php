@@ -77,15 +77,19 @@
             }
         })
         .done(function(product){
-            if(product.html == " "){
-                console.log('asdasd');
+            var data = product.html;
+            if(data == ""){
+                $("#load-more-product").hide();
+                
                 return;
             }
+            console.log(data);
             $("#load-more-product").hide();
-            $('#listproducts').append(product.html);
+            $('#listproducts').append(data);
         })
         .fail(function(jqXHR, ajaxOptions, throwError){
             $("#load-more-product").hide();
+                alert('asd');
             // break;
             return false;
         });

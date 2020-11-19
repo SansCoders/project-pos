@@ -14,11 +14,22 @@ class StockController extends Controller
     {
         $this->middleware('auth');
     }
-    public function addStock()
+    public function addStock(Request $request)
     {
         $order = "asc";
         $products = Product::join('stocks', 'products.id', '=', 'stocks.product_id')->where('product_status', 'show')->orderBy('stock')->paginate(10);
-        return view('cashier.addStock', compact('products'));
+        $compact = ['products'];
+        if (isset($request->search)) {
+            $cari = $request->search;
+            $products = Product::join('stocks', 'products.id', '=', 'stocks.product_id')
+                ->where(function ($q) use ($cari) {
+                    $q->where('kodebrg', 'LIKE', "%" . $cari . "%")
+                        ->Orwhere('nama_product', 'LIKE', "%" . $cari . "%");
+                })
+                ->where('product_status', 'show')->orderBy('stock')->paginate(10);
+            $compact = ['products', 'cari'];
+        }
+        return view('cashier.addStock', compact($compact));
     }
 
     public function addStockProduct($id)

@@ -84,6 +84,14 @@
                         <label class="form-control-label" for="new_password">Password<span class="text-danger">*</span> &nbsp;<span data-toggle="tooltip" data-placement="right" title="kata sandi pengguna wajib diisi"><i class="fa fa-question-circle"></i></span> </label>
                         <input id="new_password" type="password" class="form-control" name="password" required>
                     </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="new_phone">Phone<span class="text-danger"></label>
+                        <input id="new_phone" type="number" class="form-control" name="new_phone">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label" for="new_alamat">Alamat<span class="text-danger"></label>
+                        <textarea id="new_alamat" rows="3" name="new_alamat" class="form-control"></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Tambah</button>

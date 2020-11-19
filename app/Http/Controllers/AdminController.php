@@ -48,7 +48,9 @@ class AdminController extends Controller
         $newUser = new User([
             'name' => $request->name,
             'username' => $request->username,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'phone' => $request->new_phone,
+            'address' => $request->new_alamat
         ]);
         $save = $newUser->save();
         if ($save) {

@@ -47,6 +47,11 @@
                 <strong>Warning!</strong> {{ $errors->first('buyer_name') }}
             </div>
         @endif
+        @if(session()->get('error'))
+            <div class="alert alert-danger" role="alert">
+                <strong>Warning!</strong> {{ session()->get('error') }}
+            </div>
+        @endif
         <div class="row" id="listproducts">
             @include('another.cashier-productlist')
         </div>

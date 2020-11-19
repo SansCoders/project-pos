@@ -41,15 +41,14 @@
         <div class="card-header border-0 d-flex justify-content-between align-items-center">
             <b>Transactions Pending</b>
             <div class="form-search">
-                {{-- <form action="{{ route() }}" class="form-inline" method="GET">
-                    @csrf
+                <form class="form-inline" method="GET">
                     <div class="input-group mb-3">
                         <input type="text" name="search" class="form-control" placeholder="search">
                         <div class="input-group-append">
                           <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
-                </form> --}}
+                </form>
             </div>
         </div>
         <div class="table-responsive">
@@ -65,6 +64,45 @@
                     </tr>
                 </thead>
                 <tbody class="list">
+                    @isset($cari)
+                        @if (count($transactions) < 1)
+                            <tr>
+                                <td colspan="6" class="text-center">tidak ditemukan hasil <b>"{{ $cari }}"</b></td>
+                            </tr>
+                        @endif
+                        @foreach ($transactions as $index => $t)
+                            <tr>
+                                <td>#</td>
+                                <td class="d-none">{{ $t->id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="">#{{ $t->transaction_id }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="{{ $t->buyer->name }}">
+                                        <img alt="Image placeholder" src="../assets/img/theme/team-1.jpg">
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span data-toggle="tooltip" data-original-title="{{ strftime('%H:%M, %d %B %Y', strtotime( $t->created_at)) }}">
+                                            {{Carbon\Carbon::parse($t->created_at)->diffForHumans()}}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-dot mr-4">
+                                    <i class="bg-warning"></i>
+                                    <span class="status">pending</span>
+                                    </span>
+                                </td>
+                                <td>
+                                <a href="{{ route('cashier.check.checkout',$t->transaction_id) }}" class="btn btn-success btn-sm process">proses</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
                     @php
                         $transactions_pending_count = 0;
                     @endphp
@@ -112,6 +150,7 @@
                             <td colspan="6" class="text-center text-muted">semua transaksi sudah diproses</td>
                         </tr>
                     @endif
+                    @endisset
                 </tbody>
             </table>
         </div>

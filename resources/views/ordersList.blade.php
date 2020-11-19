@@ -10,7 +10,12 @@
                 <div class="card col-lg-12 p-0 shadow-none">
                     <div class="card-header border-0 d-flex justify-content-between align-items-center">
                         <span>List Transactions</span>
-                        <input type="text" class="form-control form-control-alternative col-2" placeholder="Cari">
+                        <div class="">
+                            <form action="{{route('searchTransactions')}}" method="POST">
+                                @csrf
+                                <input type="text" name="search" class="form-control form-control-alternative" placeholder="Cari">
+                            </form>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush table-hover">
@@ -25,6 +30,65 @@
                                 </tr>
                             </thead>
                             <tbody class="list">
+                                @isset($cari)
+                                @php
+                                    $i = 1;
+                                @endphp
+                                @if ($searchOrder->count() < 1)
+                                    <tr>
+                                    <td colspan="6" class="text-center">tidak ditemukan pencarian <b>"{{ $cari }}"</b></td>
+                                    </tr>
+                                @endif
+                                @foreach ($searchOrder as $index => $order)
+                                    <tr>
+                                        <td>
+                                            {{$i++}}
+                                        </td>
+                                        <td>
+                                            #{{$order->transaction_id}}
+                                        </td>
+                                        <td>
+                                            {{strftime('%H:%M:%S ,%d %B %Y',strtotime($order->created_at))}}
+                                        </td>
+                                        
+                                        @if ($order->status == 'pending')
+                                            <td class="text-center" colspan="2">
+                                                <span class="badge badge-dot">
+                                                    <i class="bg-warning"></i>
+                                                    <span class="status">pending</span>
+                                                </span>
+                                            </td>
+                                        @elseif ($order->status == 'confirmed')
+                                            <td>
+                                                {{strftime('%H:%M:%S ,%d %B %Y',strtotime($order->done_time))}}
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-dot">
+                                                    <i class="bg-success"></i>
+                                                    <span class="status">done</span>
+                                                </span>
+                                            </td>
+                                        @else    
+                                            <td class="text-center" colspan="2">
+                                                <span class="badge badge-dot">
+                                                    <i class="bg-dark"></i>
+                                                    <span class="status">canceled</span>
+                                                </span>
+                                            </td>
+                                        @endif
+                                        <td class="text-center pl-0 pr-0">
+                                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-info pl-2 pr-2 product_details" data-toggle="modal" data-idpro="{{$order->id}}" data-target="#detailsProduct">Details</button>
+                                                <form action="/invoice" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="orderId" value="{{ $order->id }}" required>
+                                                    <button type="submit" class="btn btn-success btn-icon-only pl-2 pr-2"><i class="fa fa-download"></i></button>
+                                                </form>
+                                              </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                @else    
                                 @if ($allOrders->count() < 1)
                                     <tr>
                                         <td colspan="6">anda belum ada transaksi</td>
@@ -79,8 +143,15 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                                @endisset
                             </tbody>
                         </table>
+                    </div>
+                    <div class="card-footer">
+                        @isset($cari)
+                        @else
+                               {{$allOrders->links()}}                     
+                        @endisset
                     </div>
                 </div>
             </div>

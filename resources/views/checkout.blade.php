@@ -2,7 +2,7 @@
 @include('dashboard-layout.footer')
 @section('content')
 
-<div class="container-fluid my-4">
+<div class="container-fluid mt-5 pb-5">
         <div class="d-flex mb-4 align-items-center">
             <a href="{{ url('home') }}" class="btn btn-neutral"><i class="fa fa-arrow-alt-circle-left"></i></a>
             <h2 class="ml-2 mb-0"><i class="fa fa-shopping-cart"></i> Keranjang</h2>

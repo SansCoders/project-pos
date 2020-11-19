@@ -42,21 +42,6 @@
                         <td>Nama Buyer</td>
                         <td colspan="2"><input type="text" class="form-control" name="buyer_name" id="buyername_i" required></td>
                     </tr>
-                    {{-- <tr>
-                        <td>Diskon</td>
-                        <td colspan="2">
-                            <div class="form-group">
-                                <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">
-                                    <input type="checkbox" class="diskon_c" onclick="add_diskon()">
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" id="input_diskon" disabled>
-                                </div>
-                            </div>
-                        </td>
-                    </tr> --}}
                     <tr>
                         <td colspan="3"><button type="button" class="btn btn-block btn-neutral mm">konfirmasi</button></td>
                     </tr>
@@ -70,7 +55,6 @@
         e.preventDefault();
         var id = $(this).data('itm');
         $('#p-'+id).remove();
-        // $('#delete-item-'+id).submit();
         $.ajax({
             url : "/cashier/cart/delete-"+id,
             method:"post",
@@ -96,7 +80,15 @@
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, konfirmasi'
+        confirmButtonText: 'Ya, konfirmasi',
+        preConfirm: () => {
+            Swal.showLoading()
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(true)
+                }, 1000)
+            })
+        }
         }).then((result) => {
             if (result.isConfirmed) {
                 if($('#buyername_i').val().length < 3)
@@ -107,11 +99,38 @@
                     'error'
                     );
                 }
-                Swal.fire(
-                'Berhasil dikonfirmasi.',
-                'success'
-                );
-                $('#fcb').submit();
+                var form =  $('#fcb');
+                var varFaktur = null;
+                $.ajax({
+                    url : form.attr('action'),
+                    method:"post",
+                    data : form.serialize(),
+                    success: function(resp){
+                        if(resp.status == "error"){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: resp.msg
+                            });
+                        }else if(resp.status == "success"){
+                            var varFaktur = resp.noorder;
+                            Swal.fire({
+                                icon: 'success',
+                                title: resp.msg,
+                                html : '<a href="/invoice/view-'+varFaktur+'" target="_blank" class="btn btn-success text-white">Print Faktur</a>'
+                            });
+                            $.ajax({
+                                url : "/cashier/clt",
+                                method:"post",
+                                data : {_token:"{{ csrf_token() }}"},
+                                success: function(resp){
+                                    $('.content-popup').html(resp);
+                                }
+                            });
+                            window.open("/invoice/view-"+varFaktur);
+                        }
+                    }
+                });
             }
         })
     });

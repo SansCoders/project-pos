@@ -37,10 +37,25 @@ class CashierController extends Controller
         $transactionPending = Receipts_Transaction::where('is_done', 0)->where('status', 1)->get();
         return view('cashier.home', compact(['transactionPending', 'stockCount']));
     }
-    public function transactionProduct()
+    public function transactionProduct(Request $request)
     {
         $transactions = Receipts_Transaction::orderBy('created_at')->get();
-        return view('cashier.transaction', compact('transactions'));
+        $compact = ['transactions'];
+        if (isset($request->search)) {
+            $cari = $request->search;
+            if ($cari == null) return redirect()->back();
+            $firstCharacter = substr($cari, 0, 1);
+            if ($firstCharacter == '#') {
+                $cari = str_replace('#', '', $cari);
+            }
+            $transactions = Receipts_Transaction::orderBy('id', 'DESC')->where('status', 1)->where('is_done', 0)
+                ->where(function ($q) use ($cari) {
+                    $q->where('transaction_id', 'LIKE', "%$cari%")
+                        ->Orwhere('user_name', 'LIKE', "%$cari%");
+                })->get();
+            $compact = ['transactions', 'cari'];
+        }
+        return view('cashier.transaction', compact($compact));
     }
     public function newTransaction(Request $request)
     {
@@ -163,8 +178,9 @@ class CashierController extends Controller
             if ($bv_product[$i] > $cekStock->stock || $bv_product[$i] == 0)
                 return response()->json([
                     'status' => 'error',
-                    'msg' => "Stock yang tersedia kurang"
+                    'msg' => "pembelian produk " . $cekProduct->nama_product . " melebihi stock yang tersedia"
                 ]);
+            // return redirect()->back()->with('error', 'pembelian produk ' . $cekProduct->name . ' melebihi stock yang tersedia');
             $int_productId[] = (int)$idproduct[$i];
             $name_product[] = $cekProduct->nama_product;
             $products_prices[] = $cekProduct->price;
@@ -232,13 +248,14 @@ class CashierController extends Controller
             $faktur->save();
             Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->delete();
             $num_padded = sprintf("%08d", $faktur->faktur_number);
-            return redirect()->route('cashier.transaction')->with('success', 'Berhasil melakukan transaksi dengan no. order #' . $receipt->transaction_id)
-                ->with('id_t', $receipt->transaction_id);
-            // return response()->json([
-            //     'status' => 'success',
-            //     'noorder' => $receipt->transaction_id,
-            //     'nofaktur' => $num_padded
-            // ]);
+            // return redirect()->route('cashier.transaction')->with('success', 'Berhasil melakukan transaksi dengan no. order #' . $receipt->transaction_id)
+            //     ->with('id_t', $receipt->transaction_id);
+            return response()->json([
+                'status' => 'success',
+                'noorder' => $receipt->transaction_id,
+                'nofaktur' => $num_padded,
+                'msg' => 'Transaksi berhasil dilakukan dengan nomor order #' . $receipt->transaction_id
+            ]);
         }
     }
 
@@ -252,13 +269,18 @@ class CashierController extends Controller
     public function searchTransactions(Request $request)
     {
         $cari = $request->search;
-
+        if ($cari == null) return redirect()->back();
         $firstCharacter = substr($cari, 0, 1);
         if ($firstCharacter == '#') {
             $cari = str_replace('#', '', $cari);
         }
         // $fakturs = Faktur::orderBy('id')->get();
-        $transaction = Receipts_Transaction::orderBy('id', 'DESC')->where('transaction_id', 'LIKE', "%$cari%")->get();
+        $transaction = Receipts_Transaction::orderBy('id', 'DESC')
+            ->where(function ($q) use ($cari) {
+                $q->where('transaction_id', 'LIKE', "%$cari%")
+                    ->Orwhere('user_name', 'LIKE', "%$cari%")
+                    ->Orwhere('cashier_name', 'LIKE', "%$cari%");
+            })->get();
         return view('cashier.reports_listTransactions', compact(['transaction', 'cari']));
     }
 

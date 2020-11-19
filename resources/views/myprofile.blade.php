@@ -34,8 +34,8 @@
           <div class="col-xl-3 col-md-6">
             <div class="card card-stats bg-translucent-warning shadow-sm--hover shadow-none text-center">
               <div class="card-body">
-                      <h5 class="card-title text-uppercase font-weight-bolder text-white mb-0">Top Prices Transactions</h5>
-                      <span class="h2 font-weight-bold text-white mb-0">{{$myTransaction->count()}}</span>
+                  <h5 class="card-title text-uppercase font-weight-bolder text-white mb-0">Registered At</h5>
+                  <span class="h2 font-weight-bold text-white mb-0">{{date('d-M-Y',strtotime($user->created_at))}}</span>
               </div>
             </div>
           </div>

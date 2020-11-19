@@ -65,7 +65,23 @@ class HomeController extends Controller
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
         return view('ordersList', compact(['cart', 'allOrders', 'cekTransactions']));
     }
+    public function searchTransactions(Request $request)
+    {
+        $cari = $request->search;
+        if ($cari == null) return redirect()->back();
+        $firstCharacter = substr($cari, 0, 1);
+        if ($firstCharacter == '#') {
+            $cari = str_replace('#', '', $cari);
+        }
+        // $fakturs = Faktur::orderBy('id')->get();
+        $searchOrder = Receipts_Transaction::orderBy('id', 'DESC')->where('user_id', Auth::user()->id)->where('order_via', 3)->where('transaction_id', 'LIKE', "%$cari%")
+            ->get();
 
+        $receipts = Receipts_Transaction::where('user_id', Auth::user()->id)->where('order_via', 3)->where('status', 1);
+        $cekTransactions = $receipts->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
+        $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
+        return view('ordersList', compact(['cart', 'cari', 'cekTransactions', 'searchOrder']));
+    }
     public function getdataReceipts(Request $request)
     {
         $idReceipt = $request->idReceipts;

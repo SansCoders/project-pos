@@ -26,10 +26,8 @@
           @endif
           <!-- Navbar links -->
           <ul class="navbar-nav align-items-center ml-auto ml-md-auto ">
-            {{-- <li class="nav-item d-xl-none"> --}}
             @if(!Auth::guard('web')->check())
             <li class="nav-item d-xl-none">
-              <!-- Sidenav toggler -->
               <div class="text-left">
                 <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
                   <div class="sidenav-toggler-inner text-left">
@@ -105,11 +103,6 @@
                 @endif
               </a>
               <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden">
-                <!-- Dropdown header -->
-                {{-- <div class="px-3 py-3">
-                  <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">13</strong> notifications.</h6>
-                </div> --}}
-                <!-- List group -->
                 
                 @if ($cekTransactions->count() > 0)
                 <div class="list-group list-group-flush">
@@ -121,7 +114,6 @@
                       <div class="row align-items-center">
                         <div class="col-auto">
                           <!-- Avatar -->
-                          {{-- <img alt="Image placeholder" src="../assets/img/theme/team-1.jpg" class="avatar rounded-circle"> --}}
                           <i class="fa fa-receipt avatar rounded-circle"></i>
                         </div>
                         <div class="col ml--2">
@@ -140,7 +132,7 @@
                   @endforeach
                 </div>
                 <!-- View all -->
-                <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
+                <a href="{{route('my-orders')}}" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
                 @else
                   <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">Tidak ada aktivitas terbaru</a>
                 @endif
@@ -189,36 +181,7 @@
       </div>
     </nav>
     @yield('header-content')
-    <!-- Page content -->
-    {{-- <div class="container-fluid"> --}}
     @yield('content')
     @yield('footer')
-      <!-- Footer -->
-      {{-- <footer class="footer pt-0">
-        <div class="row align-items-center justify-content-lg-between">
-          <div class="col-lg-6">
-            <div class="copyright text-center  text-lg-left  text-muted">
-              &copy; 2020 <a href="#" class="font-weight-bold ml-1" target="_blank">Site Link</a>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-              <li class="nav-item">
-                <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
-              </li>
-              <li class="nav-item">
-                <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
-              </li>
-              <li class="nav-item">
-                <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">MIT License</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </footer> --}}
-    {{-- </div> --}}
   </div>
 @endsection
