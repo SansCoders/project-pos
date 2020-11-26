@@ -8,7 +8,7 @@
         <i class="ni ni-cart"></i> Cart
     </div>
     <hr class="my-3">
-    <form action="{{ route('cashier.confirm.viacashier') }}" id="fcb" method="POST">
+    <form action="{{ route('cashier.confirm.viacashier') }}" id="fcb" method="POST" style="width: 100%">
         @csrf
         <table class="table table-borderless table-hover">
                 <thead>
@@ -38,12 +38,12 @@
                     </tr>
                 </tbody>
                 <tfoot>
-                    <tr>
+                    {{-- <tr>
                         <td>Nama Buyer</td>
                         <td colspan="2"><input type="text" class="form-control" name="buyer_name" id="buyername_i" required></td>
-                    </tr>
+                    </tr> --}}
                     <tr>
-                        <td colspan="3"><button type="button" class="btn btn-block btn-neutral mm">konfirmasi</button></td>
+                        <td colspan="3"><a href="{{route('cashier.myCheckout')}}" class="btn btn-block btn-neutral">Checkout</a></td>
                     </tr>
                 </tfoot>
         </table>

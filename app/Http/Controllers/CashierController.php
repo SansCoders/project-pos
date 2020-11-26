@@ -80,9 +80,6 @@ class CashierController extends Controller
     public function getdatalistCartContent(Request $request)
     {
         $data = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->get();
-        // if ($request->data == null) return "cart kosong";
-        // $data = $request->data;
-        // return view('another.cartLoadCashier', compact('data'));
         if (count($data) == 0 || count($data) == null) return "cart kosong";
         return view('another.cartLoadCashier', compact('data'));
     }
@@ -100,7 +97,7 @@ class CashierController extends Controller
             'valbuy' => 'required|integer'
         ]);
 
-        dd($request);
+        // dd($request);
     }
     public function processCheckout($orderid)
     {
@@ -161,84 +158,103 @@ class CashierController extends Controller
         $d_cashier = Auth::user();
 
         $request->validate([
-            'productsId.*' => 'required|integer',
-            'buyvalue.*' => 'required|integer',
-            'buyer_name' => 'required|min:3|string'
+            'user_type' => 'required',
         ], [
-            'buyer_name.required' => 'nama buyer wajib diisi'
+            'user_type.required' => 'nama customer wajib diisi'
         ]);
-        $idproduct = $request->productsId;
-        $bv_product = $request->buyvalue;
-        $buyer_name = $request->buyer_name;
-        for ($i = 0; $i < count($idproduct); $i++) {
-            $cekProduct = Product::where('id', $idproduct[$i])->first();
-            if (!$cekProduct || $cekProduct == null) return false;
-            $cekStock = Stock::where('product_id', $cekProduct->id)->first();
 
-            if ($bv_product[$i] > $cekStock->stock || $bv_product[$i] == 0)
-                return response()->json([
-                    'status' => 'error',
-                    'msg' => "pembelian produk " . $cekProduct->nama_product . " melebihi stock yang tersedia"
-                ]);
-            // return redirect()->back()->with('error', 'pembelian produk ' . $cekProduct->name . ' melebihi stock yang tersedia');
-            $int_productId[] = (int)$idproduct[$i];
-            $name_product[] = $cekProduct->nama_product;
-            $products_prices[] = $cekProduct->price;
-            $total_productsprices[] = $cekProduct->price * (int)$bv_product[$i];
-            $int_buyvalue[] = (int)$bv_product[$i];
-        }
 
-        $latestOrder = Receipts_Transaction::orderBy('created_at', 'DESC')->first();
+        $now = Carbon::now();
+        $cek = "date(created_at) = date(now()) Order By created_at DESC";
+        $latestOrder = Receipts_Transaction::whereRaw($cek)->get();
         if ($latestOrder == null) {
             $latestOrder = 0;
         } else {
             $latestOrder = $latestOrder->count();
         }
+        // dd($latestOrder);
         $cekFaktur = Faktur::orderBy('created_at', 'desc')->first();
         if ($cekFaktur == null) {
             $fakNum = 0;
         } else {
             $fakNum = $cekFaktur->faktur_number;
         }
-        $r = date('Ymd') . $d_cashier->id . "2" . str_pad($latestOrder + 1, 4, "0", STR_PAD_LEFT);
-        $now = Carbon::now();
+
+        if (!isset($request->user_type)) return redirect()->back()->with("error", 'tidak ada info buyer');
+        if ($request->user_type == "cns") {
+            if (isset($request->buyer_name)) {
+                $buyer_id = $d_cashier->id;
+                $buyer_name = $request->buyer_name;
+                $r = date('Ymd') . $d_cashier->id . "2" . str_pad($latestOrder + 1, 4, "0", STR_PAD_LEFT);
+            } else {
+                return redirect()->back()->with("error", 'tidak ada info buyer');
+            }
+        } elseif ($request->user_type == "cr") {
+            if (isset($request->user_registered)) {
+                $cekUser = User::where('id', $request->user_registered)->first();
+                if (!$cekUser || $cekUser == null) return redirect()->back();
+                $buyer_name = $cekUser->name;
+                $buyer_id = $cekUser->id;
+                $r = date('Ymd') . $buyer_id . str_pad($latestOrder + 1, 5, "0", STR_PAD_LEFT);
+            } else {
+                return redirect()->back()->with("error", 'tidak ada info buyer');
+            }
+        } else {
+            return redirect()->back()->with("error", 'tidak ada info buyer');
+        }
+        if (!isset($buyer_name)) {
+            return redirect()->back()->with("error", 'tidak ada info buyer');
+        }
+        $cart = Keranjang::where('user_id', $d_cashier->id)->where('user_type', 2)->get();
+        foreach ($cart as $item) {
+            $cekStock = Stock::where('product_id', $item->product_id)->first();
+            if ($item->buy_value > $cekStock->stock) return redirect()->back()->with('error', 'Transaksi Gagal! Pembelian Produk ' . $item->product->nama_product . ' melebihi stock yang tersedia, yaitu ' . $cekStock->stock . ' ' . $item->product->unit->unit);
+            $products_id[] = $item->product_id;
+            $products_list[] = $item->product->nama_product;
+            $products_price[] = $item->product->price;
+            $products_totalPrice[] = $item->product->price * $item->buy_value;
+            $buy_values[] = $item->buy_value;
+            $custom_prices[] = $item->custom_price;
+            $diskon_product[] = 0;
+        }
         $receipt = new Receipts_Transaction([
             'transaction_id' => $r,
-            'user_id' => $d_cashier->id,
+            'user_id' => $buyer_id,
             'user_name' => $buyer_name,
             'cashier_id' => $d_cashier->id,
             'cashier_name' => $d_cashier->name,
-            'products_id' => json_encode($int_productId),
-            'products_list' => json_encode($name_product),
-            'products_buyvalues' => json_encode($int_buyvalue),
-            'products_prices' => json_encode($products_prices),
+            'products_id' => json_encode($products_id),
+            'products_list' => json_encode($products_list),
+            'products_buyvalues' => json_encode($buy_values),
+            'products_prices' => json_encode($products_price),
             'type' => 1,
             'is_done' => 1,
-            'done_time' => $now->toDateTimeString(),
-            'total_productsprices' => json_encode($total_productsprices),
+            'done_time' => $now,
+            'total_productsprices' => json_encode($products_totalPrice),
             'order_via' => 2,
+            'diskon' =>  json_encode($diskon_product),
+            'custom_prices' => json_encode($custom_prices),
             'status' => 2
         ]);
-        $save = $receipt->save();
-        if ($save) {
-            $i = 0;
-            foreach ($int_productId as $p_i) {
+        $sreceipt = $receipt->save();
+        if ($sreceipt) {
+            foreach ($products_id as $p_i) {
                 $changeStock = Stock::where('product_id', $p_i)->first();
                 if ($changeStock != null) {
-                    $us = Stock::where('product_id', $p_i)->update(['stock' => ($changeStock->stock - $int_buyvalue[$i])]);
+                    $scart = Keranjang::where('product_id', $p_i)->where('user_id', $d_cashier->id)->where('user_type', 2)->first();
+                    $us = Stock::where('product_id', $p_i)->update(['stock' => ($changeStock->stock - $scart['buy_value'])]);
                     if ($us) {
                         $a_stock = new StockActivity([
                             'stocks_id' => $changeStock->id,
                             'product_id' => $p_i,
                             'users_id' => $d_cashier->id,
                             'user_type_id' => 2,
-                            'type_activity' => 2,
-                            'stock' => $int_buyvalue[$i]
+                            'type_activity' => 3,
+                            'stock' => $scart['buy_value']
                         ]);
                         $a_stock->save();
                     }
                 }
-                $i++;
             }
 
             $faktur = new Faktur([
@@ -246,23 +262,100 @@ class CashierController extends Controller
                 'faktur_number' => ($fakNum + 1),
             ]);
             $faktur->save();
-            Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->delete();
-            $num_padded = sprintf("%08d", $faktur->faktur_number);
-            // return redirect()->route('cashier.transaction')->with('success', 'Berhasil melakukan transaksi dengan no. order #' . $receipt->transaction_id)
-            //     ->with('id_t', $receipt->transaction_id);
-            return response()->json([
-                'status' => 'success',
-                'noorder' => $receipt->transaction_id,
-                'nofaktur' => $num_padded,
-                'msg' => 'Transaksi berhasil dilakukan dengan nomor order #' . $receipt->transaction_id
-            ]);
+            Keranjang::where('user_id', $d_cashier->id)->where('user_type', 2)->delete();
+            return redirect()->route('cashier.transaction')->with('success', 'order id #' . $receipt->transaction_id . ' berhasil diproses')->with('id_t', $receipt->transaction_id);
+        } else {
+            return redirect()->back()->with('error', 'tidak bisa diproses, ada kesalahan');
         }
+        // for ($i = 0; $i < count($idproduct); $i++) {
+        //     $cekProduct = Product::where('id', $idproduct[$i])->first();
+        //     if (!$cekProduct || $cekProduct == null) return false;
+        //     $cekStock = Stock::where('product_id', $cekProduct->id)->first();
+
+        //     if ($bv_product[$i] > $cekStock->stock || $bv_product[$i] == 0)
+        //         return response()->json([
+        //             'status' => 'error',
+        //             'msg' => "pembelian produk " . $cekProduct->nama_product . " melebihi stock yang tersedia"
+        //         ]);
+        //     $int_productId[] = (int)$idproduct[$i];
+        //     $name_product[] = $cekProduct->nama_product;
+        //     $products_prices[] = $cekProduct->price;
+        //     $total_productsprices[] = $cekProduct->price * (int)$bv_product[$i];
+        //     $int_buyvalue[] = (int)$bv_product[$i];
+        // }
+
+        // $latestOrder = Receipts_Transaction::orderBy('created_at', 'DESC')->first();
+        // if ($latestOrder == null) {
+        //     $latestOrder = 0;
+        // } else {
+        //     $latestOrder = $latestOrder->count();
+        // }
+        // $cekFaktur = Faktur::orderBy('created_at', 'desc')->first();
+        // if ($cekFaktur == null) {
+        //     $fakNum = 0;
+        // } else {
+        //     $fakNum = $cekFaktur->faktur_number;
+        // }
+        // $r = date('Ymd') . $d_cashier->id . "2" . str_pad($latestOrder + 1, 4, "0", STR_PAD_LEFT);
+        // $now = Carbon::now();
+        // $receipt = new Receipts_Transaction([
+        //     'transaction_id' => $r,
+        //     'user_id' => $d_cashier->id,
+        //     'user_name' => $buyer_name,
+        //     'cashier_id' => $d_cashier->id,
+        //     'cashier_name' => $d_cashier->name,
+        //     'products_id' => json_encode($int_productId),
+        //     'products_list' => json_encode($name_product),
+        //     'products_buyvalues' => json_encode($int_buyvalue),
+        //     'products_prices' => json_encode($products_prices),
+        //     'type' => 1,
+        //     'is_done' => 1,
+        //     'done_time' => $now->toDateTimeString(),
+        //     'total_productsprices' => json_encode($total_productsprices),
+        //     'order_via' => 2,
+        //     'status' => 2
+        // ]);
+        // $save = $receipt->save();
+        // if ($save) {
+        //     $i = 0;
+        //     foreach ($int_productId as $p_i) {
+        //         $changeStock = Stock::where('product_id', $p_i)->first();
+        //         if ($changeStock != null) {
+        //             $us = Stock::where('product_id', $p_i)->update(['stock' => ($changeStock->stock - $int_buyvalue[$i])]);
+        //             if ($us) {
+        //                 $a_stock = new StockActivity([
+        //                     'stocks_id' => $changeStock->id,
+        //                     'product_id' => $p_i,
+        //                     'users_id' => $d_cashier->id,
+        //                     'user_type_id' => 2,
+        //                     'type_activity' => 2,
+        //                     'stock' => $int_buyvalue[$i]
+        //                 ]);
+        //                 $a_stock->save();
+        //             }
+        //         }
+        //         $i++;
+        //     }
+
+        //     $faktur = new Faktur([
+        //         'order_id' => $receipt->transaction_id,
+        //         'faktur_number' => ($fakNum + 1),
+        //     ]);
+        //     $faktur->save();
+        //     Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->delete();
+        //     $num_padded = sprintf("%08d", $faktur->faktur_number);
+        //     return response()->json([
+        //         'status' => 'success',
+        //         'noorder' => $receipt->transaction_id,
+        //         'nofaktur' => $num_padded,
+        //         'msg' => 'Transaksi berhasil dilakukan dengan nomor order #' . $receipt->transaction_id
+        //     ]);
+        // }
     }
 
 
     public function listTransactions()
     {
-        // $fakturs = Faktur::orderBy('id')->get();
         $transaction = Receipts_Transaction::orderBy('id', 'DESC')->paginate(10);
         return view('cashier.reports_listTransactions', compact(['transaction']));
     }
@@ -274,7 +367,6 @@ class CashierController extends Controller
         if ($firstCharacter == '#') {
             $cari = str_replace('#', '', $cari);
         }
-        // $fakturs = Faktur::orderBy('id')->get();
         $transaction = Receipts_Transaction::orderBy('id', 'DESC')
             ->where(function ($q) use ($cari) {
                 $q->where('transaction_id', 'LIKE', "%$cari%")
@@ -335,7 +427,6 @@ class CashierController extends Controller
                 $a_stock->save();
             }
         }
-        // dd($Receipt, $retur);
         $Receipt->status = 3;
         $Receipt->save();
         return redirect()->route('cashier.transaction')->with('canceled', 'Transaksi #' . $Receipt->transaction_id . ' di batalkan');
@@ -431,5 +522,11 @@ class CashierController extends Controller
         $hapus = $data->delete();
         if ($hapus) return redirect()->back()->with('message', 'harga kembali normal');
         return redirect()->back();
+    }
+
+    public function cashierCheckout()
+    {
+        $data = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->get();
+        return view('cashier.cashierChekout', compact('data'));
     }
 }
