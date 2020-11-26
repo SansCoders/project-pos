@@ -96,7 +96,7 @@
                         </div>
                     </div>
                 </div>
-                @if ($data->count() === 1)
+                @if ($data->count() > 0)
                     <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#confirmCheckout">KONFIRMASI & CETAK FAKTUR</button>
                 @endif
             </div>
@@ -104,7 +104,7 @@
     </div>
 </div>
 
-@if ($data->count() === 1)
+@if ($data->count() > 0)
 <div class="modal fade" id="confirmCheckout" tabindex="-1" role="dialog" aria-labelledby="confirmCheckout" aria-hidden="true">
     <div class="modal-dialog modal-dark modal-dialog-centered" role="document">
         <div class="modal-content bg-gradient-dark">
