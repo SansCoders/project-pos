@@ -72,6 +72,14 @@ Route::group(['middleware' => ['auth:cashier']], function () {
 
     Route::get('/cashier/transaction', 'CashierController@transactionProduct')->name('cashier.transaction');
     Route::get('/cashier/transaction/new', 'CashierController@newTransaction')->name('cashier.newtransaction');
+    Route::get('/cashier/transaction/checkout', 'CashierController@cashierCheckout')->name('cashier.myCheckout');
+    Route::delete('/cashier/transaction/checkout/{id}', 'ProductController@destroyItemFromCheckout')->name('cashier.checkout.destroy');
+    Route::get('/cashier/product/{slug}', 'ProductController@detailsProduct')->name('cashier.details.product');
+    Route::post('/cashier/editcartqty', 'ProductController@editQtyCart')->name('cashier.editQtyCart');
+    Route::post('/cashier/editcartprice', 'ProductController@editPriceCart')->name('cashier.editPriceCart');
+    Route::put('/cashier/editcartprice/{id}', 'ProductController@editPriceCart_put')->name('cashier.editPriceCart.put');
+    Route::post('/cashier/editreceiptprice', 'ProductController@editPriceReceipt')->name('cashier.editPriceReceipt');
+    Route::put('/cashier/editreceiptprice/{id}', 'ProductController@editPriceReceipt_put')->name('cashier.editPriceReceipt.put');
     // Route::get('/cashier/transaction/registred-user', 'CashierController@newTransactionUserRegisterd')->name('cashier.transaction.registereduser');
     Route::get('/cashier/transaction/search-product', 'CashierController@SearchinnewTransaction')->name('cashier.newtransaction.search');
 
@@ -83,6 +91,7 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::post('/cashier/t/{orderid}/confirm', 'CashierController@confirmCheckout')->name('cashier.confirm.checkout');
     Route::put('/cashier/t/{orderid}/cancel', 'CashierController@canceledCheckout')->name('cashier.confirm.checkout-canceled');
 
+    Route::post('/cashier//checkout/process', 'CashierController@confirmCheckOutDirect')->name('cashier.checkout.confirmDirect');
     Route::post('/cashier/t/confirm', 'CashierController@confirmCheckoutviaCashier')->name('cashier.confirm.viacashier');
     Route::post('/cashier/cart/delete-{id}', 'CashierController@deleteItemCart')->name('cashier.cart.deleteItem');
 
@@ -116,7 +125,7 @@ Route::group(['middleware' => ['auth:web']], function () {
     });
     Route::post('/addtocart', 'ProductController@addToCart')->name('addtocart');
     Route::post('/editcartqty', 'ProductController@editQtyCart')->name('editQtyCart');
-    Route::put('/editcartqty/{id}', 'ProductController@editQtyCart_put')->name('editQtyCart.put');
+    // Route::put('/editcartqty/{id}', 'ProductController@editQtyCart_put')->name('editQtyCart.put');
 
     Route::get('/category/{name}', 'HomeController@getProductbyCategorybyName')->name('categ.name');
 
@@ -140,4 +149,7 @@ Route::group(['middleware' => ['auth:web']], function () {
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');
+});
+Route::group(['middleware' => ['auth:admin,cashier,web']], function () {
+    Route::put('/editcartqty/{id}', 'ProductController@editQtyCart_put')->name('editQtyCart.put');
 });

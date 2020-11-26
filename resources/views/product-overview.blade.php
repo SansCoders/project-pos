@@ -53,6 +53,11 @@
                     </ol>
                 </nav>
             </div>
+            @if (session()->get('error'))
+                <div class="alert alert-danger">
+                    {{session()->get('error')}}
+                </div>
+            @endif
             <div class="card shadow-none">
                 <div class="card-body row">
                     <div class="col-lg-6 col-sm-6 mb-4">

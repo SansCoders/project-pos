@@ -152,29 +152,30 @@
                         <td style="border-right: 1px solid" class=" text-center">{{$item['buy_values']}} {{$item['product_unit']}}</td>
                         @if ($Receipt->custom_prices != null)
                             @if ($item['custom_prices'] != $item['product_satuan'])
-                                <td style="border-right: 1px solid" class="text-center">@currency($item['custom_prices'])</td>
-                                <td style="border-right: 1px solid" class=" text-center" >@currency($item['custom_prices']*$item['buy_values'])</td>
+                                <td style="border-right: 1px solid" class="text-center">@currency($item['product_satuan'])</td>
+                                <td style="border-right: 1px solid" class=" text-center" >@currency($data[$i]['total_productsprices'])</td>
                             @else    
                                 <td style="border-right: 1px solid" class="text-center">@currency($item['product_satuan'])</td>
-                                <td style="border-right: 1px solid" class=" text-center" >@currency($item['product_prices']*$item['buy_values'])</td>
+                                <td style="border-right: 1px solid" class=" text-center" >@currency($data[$i]['total_productsprices'])</td>
                             @endif
                         @else
                             <td style="border-right: 1px solid" class="text-center">@currency($item['product_satuan'])</td>
-                            <td style="border-right: 1px solid" class=" text-center" >@currency($item['product_prices']*$item['buy_values'])</td>
+                            <td style="border-right: 1px solid" class=" text-center" >@currency($data[$i]['total_productsprices'])</td>
                         @endif
                     </tr>
                     @if ($Receipt->custom_prices != null)
                         @php
-                            if ($item['custom_prices'] != $item['product_satuan']){
-                                $totHargas += $item['custom_prices'] * $item['buy_values'];
-                            }else{
-                                $totHargas += $item['product_prices'] * $item['buy_values'];
-                            }
+                            // if ($item['custom_prices'] != $item['product_satuan']){
+                            //     $totHargas += $item['custom_prices'] * $item['buy_values'];
+                            // }else{
+                                $totHargas += $data[$i]['total_productsprices'];
+                            // }
                             $i++;
                         @endphp
                     @else
                        @php
-                           $totHargas += $item['product_prices'] * $item['buy_values'];
+                        //    $totHargas += $item['product_prices'] * $item['buy_values'];
+                           $totHargas += $data[$i]['total_productsprices'];
                            $i++;
                        @endphp     
                     @endif

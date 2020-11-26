@@ -2,13 +2,25 @@
 @include('dashboard-layout.footer')
 @section('content')
 
-<div class="container-fluid mt-5 pb-5">
+    <div class="container-fluid mt-5 pb-5">
         <div class="d-flex mb-4 align-items-center">
             <a href="{{ url('home') }}" class="btn btn-neutral"><i class="fa fa-arrow-alt-circle-left"></i></a>
             <h2 class="ml-2 mb-0"><i class="fa fa-shopping-cart"></i> Keranjang</h2>
         </div>
         <div class="row">
             <div class="col-lg-8 mb-n-5">
+                @if (session()->get('error'))
+                    <div class="alert alert-danger alert-block">
+                        <button type="button" class="close" data-dismiss="alert">×</button> 
+                        <strong>{{ session()->get('error') }}</strong>
+                    </div>
+                @endif
+                @if (session()->get('success'))
+                    <div class="alert alert-success alert-block">
+                        <button type="button" class="close" data-dismiss="alert">×</button> 
+                        <strong>{{ session()->get('success') }}</strong>
+                    </div>
+                @endif
                 @if ($message = Session::get('err'))
                     <div class="alert alert-danger alert-block">
                         <button type="button" class="close" data-dismiss="alert">×</button> 
@@ -33,9 +45,9 @@
                         <h4 class="mb-1">
                             <a href="{{route('details.product',$item->product->slug)}}" class="font-weight-bold text-dark">{{$item->product->nama_product}}</a>
                         </h4>
-                        @if ($item->custom_price != $item->product->price)
+                        @if ($item->custom_price != ($item->buy_value * $item->product->price))
                            <s><b class="text-sm">@currency($item->buy_value * $item->product->price)</b></s>
-                           <b class="text-sm text-danger">@currency($item->buy_value * $item->custom_price)</b>
+                           <b class="text-sm text-danger">@currency($item->custom_price)</b>
                            <br/>
                         @else    
                             <b class="text-sm">@currency($item->buy_value * $item->product->price)</b><br/>
@@ -71,7 +83,7 @@
                                     @php
                                         if($item->custom_price != $item->product->price)
                                         {
-                                            $priceTotal += ($item->buy_value * $item->custom_price);
+                                            $priceTotal += ($item->custom_price);
                                         }else{
                                             $priceTotal += ($item->buy_value * $item->product->price);
                                         }
@@ -92,7 +104,7 @@
 
     @if ($cart->count() > 0)
         <div class="modal fade" id="proses" tabindex="-1" role="dialog" aria-labelledby="proses" aria-hidden="true">
-            <div class="modal-dialog modal-dark modal-dialog-centered modal-" role="document">
+            <div class="modal-dialog modal-dark modal-dialog-centered" role="document">
                 <div class="modal-content bg-gradient-dark">
                     <div class="modal-header">
                         <h6 class="modal-title" id="modal-title-notification"></h6>

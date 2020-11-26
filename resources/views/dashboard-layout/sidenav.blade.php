@@ -159,7 +159,7 @@
               </li>
             </ul>
             
-            <div class="my-3"></div>
+            {{-- <div class="my-3"></div>
             <ul class="navbar-nav">
               <li class="nav-item">
                 <a class="nav-link {{ set_active('cashier.customprice*') }}" href="{{route('cashier.customprice')}}">
@@ -167,7 +167,7 @@
                   <span class="nav-link-text">Custom Prices</span>
                 </a>
               </li>
-            </ul>
+            </ul> --}}
             @else
             <ul class="navbar-nav">
               <li class="nav-item">

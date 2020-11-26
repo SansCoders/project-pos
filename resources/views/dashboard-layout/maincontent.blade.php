@@ -78,8 +78,8 @@
                             </div>
                           </div>
                           
-                          @if ($item->custom_price != $item->product->price)
-                          <p class="text-sm mb-0">@currency($item->buy_value * $item->custom_price) ({{$item->buy_value}} x @currency($item->custom_price))</p>
+                          @if ($item->custom_price != ($item->product->price*$item->buy_value))
+                          <p class="text-sm mb-0">@currency($item->custom_price) ({{$item->buy_value}} x @currency($item->product->price))</p>
                           @else
                           <p class="text-sm mb-0">@currency($item->buy_value * $item->product->price ) ({{$item->buy_value}} x @currency($item->product->price))</p>
                           @endif

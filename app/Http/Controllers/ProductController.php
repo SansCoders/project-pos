@@ -108,7 +108,6 @@ class ProductController extends Controller
         if ($slife) {
             return redirect()->route('cashier.products')->with('success', 'Product Telah Di Perbaharui');
         }
-        dd($request);
         return redirect()->back()->with('error', 'kesalahan');
     }
 
@@ -209,25 +208,35 @@ class ProductController extends Controller
         }
         // }
         if ($data == null) return redirect()->back()->with('error', 'data tidak valid');
-        $exist_cart = Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->where('user_type', $user_type)->first();
-        if ($exist_cart != null) {
-            Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->where('user_type', $user_type)
-                ->update(['buy_value' => ($exist_cart->buy_value + $request->valbuy)]);
-            return redirect()->back()->with('success', 'Berhasil ditambah ke keranjang');
-        }
-
-        $customPrice = Prices_Custom::where('product_id', $request->dataproduct)->where('user_id', $user->id)->where('user_type', 'user')->first();
+        $customPrice = Prices_Custom::where('product_id', $request->dataproduct)->where('user_id', $user->id)->where('user_type', $user_type)->first();
         if ($customPrice != null) {
             $cp_product = $customPrice->prices_c;
         } else {
             $cp_product = $data->price;
+        }
+        $exist_cart = Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->where('user_type', $user_type)->first();
+        if ($exist_cart != null) {
+            if (($request->valbuy + $exist_cart->buy_value) > $data->stocks->stock) {
+                return redirect()->back()->with('error', 'melebihi persediaan barang');
+            }
+            // if (($request->valbuy + $exist_cart->buy_value) > $exist_cart->buy_value) {
+            //     $cp_product = $cp_product * ($request->valbuy + $exist_cart->buy_value);
+            // } elseif(($request->valbuy + $exist_cart->buy_value) < $exist_cart->buy_value) {
+            //     $cp_product = $cp_product * ($request->valbuy + $exist_cart->buy_value);
+            // }
+            Keranjang::where('user_id', $user->id)->where('product_id', $request->dataproduct)->where('user_type', $user_type)
+                ->update([
+                    'buy_value' => ($exist_cart->buy_value + $request->valbuy),
+                    'custom_price' => $cp_product * ($exist_cart->buy_value + $request->valbuy)
+                ]);
+            return redirect()->back()->with('success', 'Berhasil ditambah ke keranjang');
         }
         $cart = new Keranjang([
             'user_id' => $user->id,
             'product_id' => $request->dataproduct,
             'buy_value' => $request->valbuy,
             'user_type' => $user_type,
-            'custom_price' => $cp_product
+            'custom_price' => $cp_product * $request->valbuy
         ]);
         if ($cart->save()) {
             return redirect()->back()->with('success_added', 'Berhasil ditambah ke keranjang');
@@ -236,6 +245,104 @@ class ProductController extends Controller
         }
     }
 
+    public function editPriceReceipt(Request $request)
+    {
+        $transaction = Receipts_Transaction::where('transaction_id', $request->idReceipt)->first();
+        if ($transaction == null) {
+            return "kesalahan!";
+        }
+        $product_id = $request->idProduct;
+        $checkProduct = Product::where('id', $product_id)->first();
+        if (!$checkProduct || $checkProduct == null) return "not valid!";
+        $p_id = json_decode($transaction->products_id);
+        $tp_prices = json_decode($transaction->total_productsprices);
+        foreach ($p_id as $index => $pid) {
+            if ($pid == $product_id) {
+                $previousTotalPrice = $tp_prices[$index];
+                return view('another.formEditReceiptPrice', compact(['product_id', 'transaction', 'previousTotalPrice', 'checkProduct']));
+            }
+        }
+        return "kesalahan!";
+        // $idCart = $request->idCart;
+        // $cart = Keranjang::where('id', $idCart)->first();
+        // if (!$cart || $cart == null) return "not valid!";
+        // $checkProduct = Product::where('id', $cart->product_id)->first();
+        // if (!$checkProduct || $checkProduct == null) return "not valid!";
+
+    }
+    public function editPriceReceipt_put(Request $request, $id)
+    {
+        $Datatransaction = Receipts_Transaction::where('id', $id);
+        $customTotalPrice = $request->priceTotalCustom;
+        $product_id = $request->idproduct;
+        $getDataTransaction = $Datatransaction->first();
+        if ($getDataTransaction == null) {
+            return "kesalahan!";
+        }
+        $request->validate(['priceTotalCustom' => 'required|numeric']);
+
+        $p_id = json_decode($getDataTransaction->products_id);
+        $tp_prices = json_decode($getDataTransaction->total_productsprices);
+        foreach ($p_id as $index => $pid) {
+            if ($pid == $product_id) {
+
+                $data[] = (int)$customTotalPrice;
+            } else {
+                $data[] = $tp_prices[$index];
+            }
+        }
+        $update = $Datatransaction->update([
+            'total_productsprices' => json_encode($data)
+        ]);
+        if ($update) {
+            return redirect()->back()->with('success', 'berhasil di ubah');
+        } else {
+            dd($data);
+        }
+        //validasi
+        // $cart = Keranjang::where('id', $id)->where('user_type', $ut)->first();
+        // if (!$cart || $cart == null) return "not valid!";
+        // $update = Receipts_Transaction::where('id', $id)->update([
+        //     'custom_price' => $request->priceCustom
+        // ]);
+        // if ($update) {
+        //     return redirect()->back()->with('success', "berhasil di update");
+        // } else {
+        //     return redirect()->back()->with('fail', "gagal di update");
+        // }
+    }
+    public function editPriceCart(Request $request)
+    {
+        $idCart = $request->idCart;
+        $cart = Keranjang::where('id', $idCart)->first();
+        if (!$cart || $cart == null) return "not valid!";
+        $checkProduct = Product::where('id', $cart->product_id)->first();
+        if (!$checkProduct || $checkProduct == null) return "not valid!";
+
+        return view('another.formEditPriceCart', compact(['cart', 'checkProduct']));
+    }
+    public function editPriceCart_put(Request $request, $id)
+    {
+        $request->validate(['priceCustom' => 'required|numeric']);
+        if (Auth::guard("cashier")->check()) {
+            $ut = 2;
+        } elseif (Auth::guard("web")->check()) {
+            $ut = 3;
+        } else {
+            return redirect()->back();
+        }
+        //validasi
+        $cart = Keranjang::where('id', $id)->where('user_type', $ut)->first();
+        if (!$cart || $cart == null) return "not valid!";
+        $update = Keranjang::where('id', $id)->where('user_type', $ut)->update([
+            'custom_price' => $request->priceCustom
+        ]);
+        if ($update) {
+            return redirect()->back()->with('success', "berhasil di update");
+        } else {
+            return redirect()->back()->with('fail', "gagal di update");
+        }
+    }
     public function editQtyCart(Request $request)
     {
         $idCart = $request->idCart;
@@ -248,24 +355,41 @@ class ProductController extends Controller
     }
     public function editQtyCart_put(Request $request, $id)
     {
+        $user = Auth::user();
         $request->validate(['buy_value' => 'required|numeric']);
-
+        if (Auth::guard("cashier")->check()) {
+            $ut = 2;
+        } elseif (Auth::guard("web")->check()) {
+            $ut = 3;
+        } else {
+            return redirect()->back();
+        }
         //validasi
-        $cart = Keranjang::where('id', $id)->where('user_type', 3)->first();
+        $Keranjang = Keranjang::where('id', $id)->where('user_type', $ut);
+        $cart = $Keranjang->first();
         if (!$cart || $cart == null) return "not valid!";
         $vStock = Stock::where('product_id', $cart->product_id)->first();
         if (!$vStock || $vStock == null) return "not valid!";
-
+        $product = Product::where('id', $cart->product_id)->first();
+        if (!$product || $product == null) return "not valid!";
         $buy = $request->buy_value;
         if ($buy > $vStock->stock) return redirect()->back()->with('error', 'melebihi stock yang ada');
+        // $data = Product::where('id', $cart->product_id)->first();
 
-        $update = Keranjang::where('id', $id)->where('user_type', 3)->update([
-            'buy_value' => $buy
+        // $customPrice = Prices_Custom::where('product_id', $cart->product_id)->where('user_id', $user->id)->where('user_type', $ut)->first();
+        // if ($customPrice != null) {
+        //     $cp_product = $customPrice->prices_c;
+        // } else {
+        //     $cp_product = $data->price;
+        // }
+        $update = $Keranjang->update([
+            'buy_value' => $buy,
+            'custom_price' => $product->price * $buy
         ]);
         if ($update) {
             return redirect()->back()->with('success', "berhasil di update");
         } else {
-            return redirect()->back()->with('fail', "gagal di update");
+            return redirect()->back()->with('error', "gagal di update");
         }
     }
 
@@ -292,8 +416,8 @@ class ProductController extends Controller
             $custom_prices[] = $item->custom_price;
             $diskon_product[] = 0;
         }
-
-        $latestOrder = Receipts_Transaction::orderBy('created_at', 'DESC')->first();
+        $cek = "user_id = $buyer->id AND order_via = 3 AND date(created_at) = date(now()) Order By created_at DESC";
+        $latestOrder = Receipts_Transaction::whereRaw($cek)->get();
         if ($latestOrder == null) {
             $latestOrder = 0;
         } else {
@@ -352,7 +476,7 @@ class ProductController extends Controller
             Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->delete();
             return redirect()->back()->with('success', 'Berhasil dikirim ke kasir, silahkan menunggu untuk diproses');
         } else {
-            dd($receipt);
+            return redirect()->back()->with('error', 'tidak bisa diproses, ada kesalahan');
         }
     }
 

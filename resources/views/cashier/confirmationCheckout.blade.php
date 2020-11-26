@@ -38,7 +38,8 @@
         // $i = 0;
         foreach ($cp_prices as $index => $item) {
             $data['cp_prices'][$i] = $item;
-            $data['tcp_prices'][$i] = $item * $p_bv[$index];
+            // $data['tcp_prices'][$i] = $item * $p_bv[$index];
+            $data['tcp_prices'][$i] = $item;
             $i++;
         }
     @endphp
@@ -71,17 +72,20 @@
                                     <div class="col-lg-6 d-flex justify-content-between">
                                         <h4 class="font-weight-300">{{$data['buy_value'][$i]}}</h4>
                                         <h5>
-                                        @if ($data['tcp_prices'][$i] != ($data['price'][$i] * $data['buy_value'][$i]))
-                                            @currency($data['tcp_prices'][$i])
+                                        @if ($data['tcp_prices'][$i] != $data['tp_prices'][$i])
+                                            @currency($data['tp_prices'][$i])
+                                
+                                            @php
+                                                $priceTotal += $data['tp_prices'][$i];
+                                            @endphp
                                         @else
                                             @currency($data['price'][$i] * $data['buy_value'][$i])
+                                            @php
+                                                $priceTotal += $data['tcp_prices'][$i];
+                                            @endphp
                                         @endif</h5>
                                     </div>
                                 </div>
-                                
-                                @php
-                                    $priceTotal += $data['tcp_prices'][$i];
-                                @endphp
                             @endfor
                             <hr class="my-3">
                             <div class="font-weight-bold text-center justify-content-between d-flex">
@@ -159,22 +163,26 @@
                                 </div>
                                 <div class="ml-auto text-right">
                                     <h4 class="text-muted">(
-                                        @if ($product->price != $data['cp_prices'][$i])
-                                        <s>@currency($product->price)</s> <span class="text-danger">@currency($data['cp_prices'][$i])</span> 
+                                        @if (($product->price * $data['buy_value'][$i]) != $data['cp_prices'][$i])
+                                            <s>@currency($product->price)</s> <span class="text-danger">@currency($data['cp_prices'][$i])</span> 
                                         @else
                                         @currency($product->price)    
                                         @endif
+                                        {{-- @currency($data['cp_prices'][$i])     --}}
                                          x {{$data['buy_value'][$i]}} ) 
 
-                                         @if ($data['tcp_prices'][$i] != ($product->price * $data['buy_value'][$i]))
+                                         {{-- @if ($data['tcp_prices'][$i] != ($product->price * $data['buy_value'][$i])) --}}
+                                         @if ($data['tcp_prices'][$i] != $data['tp_prices'][$i])
                                             <s>@currency($product->price * $data['buy_value'][$i])</s>
                                             <span class="text-danger">
-                                                @currency($data['tcp_prices'][$i])
+                                                @currency($data['tp_prices'][$i])
                                             </span>
-                                         @else
+                                        @else
                                             @currency($product->price * $data['buy_value'][$i])
-                                         @endif
+                                        @endif
                                     </h4>
+                                    
+                                    <button class="btn ml-2 btn-info btn-sm editHarga" data-ip="{{$item}}" data-idreceipt="{{$transaction->transaction_id}}" data-toggle="modal" data-target="#customPrice">ubah harga</button>
                                     {{-- <span class="badge badge-primary badge-pill">{{$data['buy_value'][$i]}} {{$product->unit->unit}}</span> --}}
                                     {{-- <button class="btn ml-2 btn-neutral btn-sm">beri harga khusus</button> --}}
                                     {{-- <button class="btn ml-2 btn-neutral btn-sm">beri diskon</button> --}}
@@ -190,4 +198,38 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="customPrice" tabindex="-1" role="dialog" aria-labelledby="customPriceLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="customPriceLabel">Ubah Total Harga</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="contentcustomPrice">
+              <i class="fa fa-spinner fa-spin"></i> Mohon Tunggu
+            </div>
+          </div>
+        </div>
+      </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $('.editHarga').click(function(){
+                var idProduct = $(this).data("ip");
+                var idReceipt = $(this).data("idreceipt");
+                $.ajax({
+                    url : "/cashier/editreceiptprice",
+                    method:"post",
+                    data : {"_token":"{{ csrf_token() }}","idProduct" : idProduct,"idReceipt" : idReceipt},
+                    success: function(resp){
+                        $('#contentcustomPrice').html(resp);
+                    }
+                });
+        });
+    </script>
+    
+@endpush
