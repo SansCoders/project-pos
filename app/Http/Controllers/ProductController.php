@@ -292,7 +292,7 @@ class ProductController extends Controller
             }
         }
         $update = $Datatransaction->update([
-            'total_productsprices' => json_encode($data)
+            'custom_prices' => json_encode($data)
         ]);
         if ($update) {
             return redirect()->back()->with('success', 'berhasil di ubah');

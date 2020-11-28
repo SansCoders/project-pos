@@ -73,15 +73,14 @@
                                         <h4 class="font-weight-300">{{$data['buy_value'][$i]}}</h4>
                                         <h5>
                                         @if ($data['tcp_prices'][$i] != $data['tp_prices'][$i])
-                                            @currency($data['tp_prices'][$i])
-                                
+                                            @currency($data['tcp_prices'][$i])
                                             @php
-                                                $priceTotal += $data['tp_prices'][$i];
+                                                $priceTotal += $data['tcp_prices'][$i];
                                             @endphp
                                         @else
                                             @currency($data['price'][$i] * $data['buy_value'][$i])
                                             @php
-                                                $priceTotal += $data['tcp_prices'][$i];
+                                                $priceTotal += $data['tp_prices'][$i];
                                             @endphp
                                         @endif</h5>
                                     </div>
@@ -163,22 +162,22 @@
                                 </div>
                                 <div class="ml-auto text-right">
                                     <h4 class="text-muted">(
-                                        @if (($product->price * $data['buy_value'][$i]) != $data['cp_prices'][$i])
+                                        {{-- @if (($product->price * $data['buy_value'][$i]) != $data['cp_prices'][$i])
                                             <s>@currency($product->price)</s> <span class="text-danger">@currency($data['cp_prices'][$i])</span> 
-                                        @else
-                                        @currency($product->price)    
-                                        @endif
+                                        @else --}}
+                                            @currency($product->price)    
+                                        {{-- @endif --}}
                                         {{-- @currency($data['cp_prices'][$i])     --}}
                                          x {{$data['buy_value'][$i]}} ) 
 
                                          {{-- @if ($data['tcp_prices'][$i] != ($product->price * $data['buy_value'][$i])) --}}
                                          @if ($data['tcp_prices'][$i] != $data['tp_prices'][$i])
-                                            <s>@currency($product->price * $data['buy_value'][$i])</s>
+                                            <s>@currency($data['tp_prices'][$i])</s>
                                             <span class="text-danger">
-                                                @currency($data['tp_prices'][$i])
+                                                @currency($data['tcp_prices'][$i])
                                             </span>
                                         @else
-                                            @currency($product->price * $data['buy_value'][$i])
+                                            @currency($data['tp_prices'][$i])
                                         @endif
                                     </h4>
                                     
