@@ -130,14 +130,15 @@
                         <td>{{$item['buy_values']}} {{$item['product_unit']}}</td>
                         <td>@currency($item['product_satuan'])</td>
                         @if ($item['total_productsprices'] != $item['tcp_prices'])
-                        <td>@currency($item['total_productsprices'])</td>
+                        <td>@currency($item['tcp_prices'])</td>
                             @php
-                                $totHargas += $item['total_productsprices'];
+                                $totHargas += $item['tcp_prices'];
                             @endphp
                         @else
-                        <td>@currency($item['product_prices']*$item['buy_values'])</td>
+                        <td>@currency($item['total_productsprices'])</td>
                             @php
-                                $totHargas += $item['product_prices']*$item['buy_values'];
+                                // $totHargas += $item['product_prices']*$item['buy_values'];
+                                $totHargas += $item['total_productsprices'];
                             @endphp
                         @endif
                         {{-- @if ($item['custom_prices'] != $item['product_prices'])
