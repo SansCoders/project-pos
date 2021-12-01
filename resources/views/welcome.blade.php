@@ -7,9 +7,9 @@
     <meta name="description" content="POS APP">
     <title>
         @php
-            $g_products = App\Product::paginate(12);
-            $count_Allproducts = App\Product::count();
-            $g_categ = App\CategoryProduct::paginate(10);
+            $g_products = App\Product::where('product_status','show')->paginate(12);
+            $count_Allproducts = App\Product::where('product_status','show')->count();
+            $g_categ = App\CategoryProduct::where('status',1)->paginate(10);
             $constCompany = App\AboutUs::first();
             if($constCompany == null) {
                 $constNamaCompany = "App POS";
