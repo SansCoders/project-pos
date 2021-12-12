@@ -189,7 +189,7 @@
         <div class="margin-top: 60px;">
             &nbsp;
             <div class="text-right w-100 mb-4">
-                Cikarang Utara, {{ \Carbon\Carbon::now()->formatLocalized('%d %B %Y') }}
+                {{env('STORE_LOCATION','Place')}}, {{ \Carbon\Carbon::now()->formatLocalized('%d %B %Y') }}
             </div>
         </div>
         <div style="float: left">
