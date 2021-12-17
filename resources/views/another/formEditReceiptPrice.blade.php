@@ -4,7 +4,7 @@
         <div class="card-body">
             {{$checkProduct->nama_product}}
             <br>
-            Total Harga <strong>@currency($previousTotalPrice)</strong>
+            Total Harga Normal <strong>@currency($previousTotalPrice)</strong>
         </div>
     </div>
     <form action="{{ route('cashier.editPriceReceipt.put',$transaction->id)}}" method="POST">
