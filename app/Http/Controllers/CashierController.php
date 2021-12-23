@@ -40,22 +40,29 @@ class CashierController extends Controller
     public function transactionProduct(Request $request)
     {
         $transactions = Receipts_Transaction::orderBy('created_at')->get();
-        $compact = ['transactions'];
-        if (isset($request->search)) {
-            $cari = $request->search;
-            if ($cari == null) return redirect()->back();
-            $firstCharacter = substr($cari, 0, 1);
-            if ($firstCharacter == '#') {
-                $cari = str_replace('#', '', $cari);
-            }
-            $transactions = Receipts_Transaction::orderBy('id', 'DESC')->where('status', 1)->where('is_done', 0)
-                ->where(function ($q) use ($cari) {
-                    $q->where('transaction_id', 'LIKE', "%$cari%")
-                        ->Orwhere('user_name', 'LIKE', "%$cari%");
-                })->get();
-            $compact = ['transactions', 'cari'];
+        $products = Product::paginate(12);
+
+        if ($request->ajax()) {
+            $view = view('another.cashier-productlist2', compact('products'))->render();
+            return response()->json(['html' => $view]);
         }
-        return view('cashier.transaction', compact($compact));
+        $compact = ['transactions', 'products'];
+        // if (isset($request->search)) {
+        //     $cari = $request->search;
+        //     if ($cari == null) return redirect()->back();
+        //     $firstCharacter = substr($cari, 0, 1);
+        //     if ($firstCharacter == '#') {
+        //         $cari = str_replace('#', '', $cari);
+        //     }
+        //     $transactions = Receipts_Transaction::orderBy('id', 'DESC')->where('status', 1)->where('is_done', 0)
+        //         ->where(function ($q) use ($cari) {
+        //             $q->where('transaction_id', 'LIKE', "%$cari%")
+        //                 ->Orwhere('user_name', 'LIKE', "%$cari%");
+        //         })->get();
+        //     $compact = ['transactions', 'cari'];
+        // }
+        // return view('cashier.transaction', compact($compact));
+        return view('cashier.transaction2', compact($compact));
     }
     public function newTransaction(Request $request)
     {
