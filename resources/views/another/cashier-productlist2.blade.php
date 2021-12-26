@@ -8,7 +8,7 @@
                         <div class="ket ml-3 d-flex flex-column">
                             <strong class="text-dark">{{ $item->nama_product }}</strong>
                             <span class="text-dark mb-3">Stocks : {{ $item->stocks->stock }}&nbsp;{{ $item->unit->unit }}</span>
-
+                            
                             <button class="btn btn-success btn-sm mt-auto">+ Keranjang</button>
                         </div>
                     </div>
