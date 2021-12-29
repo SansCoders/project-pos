@@ -16,6 +16,7 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Illuminate\Support\Facades\Auth;
+use stdClass;
 
 class CashierController extends Controller
 {
@@ -23,6 +24,7 @@ class CashierController extends Controller
     {
         $this->middleware('auth');
     }
+
     public function index()
     {
         $stockCount = 0;
@@ -40,22 +42,30 @@ class CashierController extends Controller
     public function transactionProduct(Request $request)
     {
         $transactions = Receipts_Transaction::orderBy('created_at')->get();
-        $compact = ['transactions'];
-        if (isset($request->search)) {
-            $cari = $request->search;
-            if ($cari == null) return redirect()->back();
-            $firstCharacter = substr($cari, 0, 1);
-            if ($firstCharacter == '#') {
-                $cari = str_replace('#', '', $cari);
-            }
-            $transactions = Receipts_Transaction::orderBy('id', 'DESC')->where('status', 1)->where('is_done', 0)
-                ->where(function ($q) use ($cari) {
-                    $q->where('transaction_id', 'LIKE', "%$cari%")
-                        ->Orwhere('user_name', 'LIKE', "%$cari%");
-                })->get();
-            $compact = ['transactions', 'cari'];
+        $products = Product::paginate(12);
+
+        if ($request->ajax()) {
+            $view = view('another.cashier-productlist2', compact('products'))->render();
+            return response()->json(['html' => $view]);
         }
-        return view('cashier.transaction', compact($compact));
+
+        $compact = ['transactions', 'products'];
+        // if (isset($request->search)) {
+        //     $cari = $request->search;
+        //     if ($cari == null) return redirect()->back();
+        //     $firstCharacter = substr($cari, 0, 1);
+        //     if ($firstCharacter == '#') {
+        //         $cari = str_replace('#', '', $cari);
+        //     }
+        //     $transactions = Receipts_Transaction::orderBy('id', 'DESC')->where('status', 1)->where('is_done', 0)
+        //         ->where(function ($q) use ($cari) {
+        //             $q->where('transaction_id', 'LIKE', "%$cari%")
+        //                 ->Orwhere('user_name', 'LIKE', "%$cari%");
+        //         })->get();
+        //     $compact = ['transactions', 'cari'];
+        // }
+        // return view('cashier.transaction', compact($compact));
+        return view('cashier.transaction2', compact($compact));
     }
     public function newTransaction(Request $request)
     {
@@ -82,6 +92,169 @@ class CashierController extends Controller
         $data = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->get();
         if (count($data) == 0 || count($data) == null) return "cart kosong";
         return view('another.cartLoadCashier', compact('data'));
+    }
+
+    public function searchProduct(Request $request)
+    {
+        $products = Product::where('nama_product', 'LIKE', '%' . $request->cari . '%')->get();
+
+        // if ($request->ajax()) {
+        //     $view = view('another.cashier-productlist2', compact('products'))->render();
+        //     return response()->json(['html' => $view]);
+        // }
+        return view('another.cashier-productlist2', compact('products'));
+    }
+
+    public function getDataCartProductsCheckoutContent(Request $request)
+    {
+        $data = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->get();
+        if (count($data) == 0 || count($data) == null) return "cart kosong";
+        $Cart = [];
+        // $Cart = new stdClass();
+        foreach ($data as $key => $value) {
+            $Cart[$key] =  new stdClass();
+            $Cart[$key]->id = $value->id;
+            $Cart[$key]->kode_product = $value->product->kodebrg;
+            $Cart[$key]->nama_product = $value->product->nama_product;
+            $Cart[$key]->buy_value = $value->buy_value;
+            $Cart[$key]->total_harga = $value->product->price * $value->buy_value;
+            $Cart[$key]->custom_price = $value->custom_price;
+        }
+        return view('another.cashier-loadListProductsInCart', compact('Cart'));
+    }
+
+    public function addToCart(Request $request)
+    {
+        $request->validate([
+            'idp' => 'required',
+            'valbuy' => 'required|numeric',
+        ]);
+        $userid = Auth::user()->id;
+        $data = Product::where('id', $request->idp)->first();
+        if ($data == null) return false;
+
+        if (!isset($data->stocks->stock)) {
+            return false;
+        }
+
+        if ($request->valbuy > $data->stocks->stock) {
+            return false;
+        }
+
+        $customPrice = Prices_Custom::where('product_id', $request->idp)->where('user_id', $userid)->where('user_type', 2)->first();
+        if ($customPrice != null) {
+            $cp_product = $customPrice->prices_c;
+        } else {
+            $cp_product = $data->price;
+        }
+
+        $exist_cart = Keranjang::where('user_id', $userid)->where('product_id', $request->idp)->where('user_type', 2)->first();
+        if ($exist_cart != null) {
+            if (($request->valbuy + $exist_cart->buy_value) > $data->stocks->stock) {
+                return false;
+            }
+            // if (($request->valbuy + $exist_cart->buy_value) > $exist_cart->buy_value) {
+            //     $cp_product = $cp_product * ($request->valbuy + $exist_cart->buy_value);
+            // } elseif(($request->valbuy + $exist_cart->buy_value) < $exist_cart->buy_value) {
+            //     $cp_product = $cp_product * ($request->valbuy + $exist_cart->buy_value);
+            // }
+            Keranjang::where('user_id', $userid)->where('product_id', $request->idp)->where('user_type', 2)
+                ->update([
+                    'buy_value' => ($exist_cart->buy_value + $request->valbuy),
+                    'custom_price' => $cp_product * ($exist_cart->buy_value + $request->valbuy)
+                ]);
+            return redirect()->back()->with('success', 'Berhasil ditambah ke keranjang');
+        }
+        $cart = new Keranjang([
+            'user_id' => $userid,
+            'product_id' => $request->idp,
+            'buy_value' => $request->valbuy, //default
+            'user_type' => 2,
+            'custom_price' => $cp_product * $request->valbuy
+        ]);
+        if ($cart->save()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function updateCart(Request $request)
+    {
+        $request->validate([
+            'cartid' => 'required',
+            'valbuy' => 'required|numeric'
+        ]);
+        $userid = Auth::user()->id;
+        $dataCart = Keranjang::where('id', $request->cartid)->first();
+        if ($dataCart == null) return false;
+
+        $data = Product::where('id', $dataCart->product_id)->first();
+        if ($data == null) return false;
+
+        if (!isset($data->stocks->stock)) {
+            return false;
+        }
+
+        if ($request->valbuy > $data->stocks->stock) {
+            return false;
+        }
+
+        $customPrice = Prices_Custom::where('product_id', $dataCart->product_id)->where('user_id', $userid)->where('user_type', 2)->first();
+        if ($customPrice != null) {
+            $cp_product = $customPrice->prices_c;
+        } else {
+            $cp_product = $data->price;
+        }
+
+        $exist_cart = Keranjang::where('user_id', $userid)->where('product_id', $dataCart->product_id)->where('user_type', 2)->first();
+        if ($exist_cart != null) {
+            // if (($request->valbuy + $exist_cart->buy_value) > $data->stocks->stock) {
+            //     return false;
+            // }
+            Keranjang::where('user_id', $userid)->where('product_id', $dataCart->product_id)->where('user_type', 2)
+                ->update([
+                    'buy_value' => $request->valbuy,
+                    'custom_price' => $cp_product * $request->valbuy
+                ]);
+            return true;
+        }
+        $cart = new Keranjang([
+            'user_id' => $userid,
+            'product_id' => $dataCart->product_id,
+            'buy_value' => $request->valbuy, //default
+            'user_type' => 2,
+            'custom_price' => $cp_product * $request->valbuy
+        ]);
+        if ($cart->save()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function deleteCart(Request $request)
+    {
+        $request->validate([
+            'cartid' => "required"
+        ]);
+
+        $delete = Keranjang::find($request->cartid);
+        if ($delete->delete()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getDataTotalHarga(Request $request)
+    {
+        $data = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->get();
+        $TotalHarga = 0;
+        if (count($data) == 0 || count($data) == null) return $TotalHarga;
+        foreach ($data as $value) {
+            $TotalHarga += $value->product->price * $value->buy_value;
+        }
+        return $TotalHarga;
     }
 
     public function getdataSeeProduct(Request $request)
@@ -159,10 +332,10 @@ class CashierController extends Controller
 
         $request->validate([
             'user_type' => 'required',
+            'check' => 'accepted',
         ], [
             'user_type.required' => 'nama customer wajib diisi'
         ]);
-
 
         $now = Carbon::now();
         $cek = "date(created_at) = date(now()) Order By created_at DESC";
@@ -353,6 +526,13 @@ class CashierController extends Controller
         // }
     }
 
+
+    public function checkoutCheck()
+    {
+        $data = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->get();
+        if (count($data) == 0 || count($data) == null) return "cart kosong";
+        return view('another.cashierConfirmCheckoutContent', compact('data'));
+    }
 
     public function listTransactions()
     {

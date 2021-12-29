@@ -118,6 +118,7 @@
             }
         });
     }
+    
     function closeCart()
     {
         $('.cbtn').toggleClass('btn-default');
