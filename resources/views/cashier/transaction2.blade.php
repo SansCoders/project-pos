@@ -6,7 +6,7 @@
     #listproducts {
         flex: 100%;
         overflow-y: scroll;
-        height: 100vh;
+        /* height: 100vh; */
         gap: 5px;
     }
 
@@ -65,8 +65,13 @@
         </div>
     </div>
     @endif
-
     <div class="search-form mb-3 position-sticky" style="max-width: 350px; top:20px; z-index: 1">
+        
+        <div class="mb-2">
+            <a href="#transactionPending" class="badge badge-warning">
+                Transaksi Pending <span class="ml-3 badge badge-secondary">0</span>
+            </a>
+        </div>
         <!-- <form action="{{ route('cashier.newtransaction.search') }}" method="get"> -->
         <div class="form-group d-flex align-items-center">
             <input type="text" name="search" id="searchbrg" placeholder="cari barang" class="form-control">
@@ -167,8 +172,128 @@
                 </div>
             </div>
             {{-- @if ($data->count() > 0) --}}
-            <button id="konfir_checkout" class="btn btn-block btn-primary" data-toggle="modal" data-target="#confirmCheckout">KONFIRMASI & CETAK FAKTUR</button>
+            <button id="konfir_checkout" class="btn btn-block btn-primary disabled" data-toggle="modal" data-target="#confirmCheckout">KONFIRMASI & CETAK FAKTUR</button>
             {{-- @endif --}}
+        </div>
+    </div>
+    <div class="mt-5" id="transactionPending">
+        <div class="card shadow-sm">
+            <div class="card-header border-0 d-flex justify-content-between align-items-center">
+                <b>Transactions Pending</b>
+                <div class="form-search">
+                    <form class="form-inline" method="GET">
+                        <div class="input-group mb-3">
+                            <input type="text" name="search" class="form-control" placeholder="search">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-flush">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>no</th>
+                            <th>order id</th>
+                            <th>sales</th>
+                            <th>tanggal</th>
+                            <th>status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        @isset($cari)
+                            @if (count($transactions) < 1)
+                                <tr>
+                                    <td colspan="6" class="text-center">tidak ditemukan hasil <b>"{{ $cari }}"</b></td>
+                                </tr>
+                            @endif
+                            @foreach ($transactions as $index => $t)
+                                <tr>
+                                    <td>#</td>
+                                    <td class="d-none">{{ $t->id }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="">#{{ $t->transaction_id }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="{{ $t->buyer->name }}">
+                                            <img alt="Image placeholder" src="../assets/img/theme/team-1.jpg">
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span data-toggle="tooltip" data-original-title="{{ strftime('%H:%M, %d %B %Y', strtotime( $t->created_at)) }}">
+                                                {{Carbon\Carbon::parse($t->created_at)->diffForHumans()}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-dot mr-4">
+                                        <i class="bg-warning"></i>
+                                        <span class="status">pending</span>
+                                        </span>
+                                    </td>
+                                    <td>
+                                    <a href="{{ route('cashier.check.checkout',$t->transaction_id) }}" class="btn btn-success btn-sm process">proses</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                        @php
+                            $transactions_pending_count = 0;
+                        @endphp
+                        @foreach ($transactions as $index => $t)
+                            @if ($t->is_done == 0 && $t->status == 'pending')   
+                            <tr>
+                                <td>#</td>
+                                <td class="d-none">{{ $t->id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="">#{{ $t->transaction_id }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip" data-original-title="{{ $t->buyer->name }}">
+                                        <img alt="Image placeholder" src="../assets/img/theme/team-1.jpg">
+                                      </a>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span data-toggle="tooltip" data-original-title="{{ strftime('%H:%M, %d %B %Y', strtotime( $t->created_at)) }}">
+                                            {{Carbon\Carbon::parse($t->created_at)->diffForHumans()}}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-dot mr-4">
+                                      <i class="bg-warning"></i>
+                                      <span class="status">pending</span>
+                                    </span>
+                                </td>
+                                <td>
+                                <a href="{{ route('cashier.check.checkout',$t->transaction_id) }}" class="btn btn-success btn-sm process">proses</a>
+                                </td>
+                            </tr>
+                            @php
+                                $transactions_pending_count += 1;
+                            @endphp
+                            @endif
+                            
+                        @endforeach
+                        
+                        @if ($transactions_pending_count == 0)
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">semua transaksi sudah diproses</td>
+                            </tr>
+                        @endif
+                        @endisset
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -183,6 +308,7 @@
                 </button>
             </div>
             <div class="modal-body" id="contentConfirmCheckout">
+                <div class="alert alert-warning mb-2"><i class="fa fa-exclamation-triangle"></i> pastikan nama pembeli sudah diisi</div>
                 <i class="fa fa-spinner fa-spin"></i> Mohon Tunggu
             </div>
         </div>
@@ -205,19 +331,28 @@
             var cartid = $(this).data('cartid');
             var vQty = parseInt($('input.cvqty[data-cartid=' + cartid + ']').val());
             var fvQty = vQty - 1;
-            $('input.cvqty[data-cartid=' + cartid + ']').val(fvQty);
-            ajaxUCart(cartid, fvQty);
+            if(validationStock(fvQty)){
+                $('input.cvqty[data-cartid=' + cartid + ']').val(fvQty);
+                ajaxUCart(cartid, fvQty);
+            }
         });
         $('.plus-qty').click(function(e) {
             e.preventDefault();
             var cartid = $(this).data('cartid');
             var vQty = parseInt($('input.cvqty[data-cartid=' + cartid + ']').val());
             var fvQty = vQty + 1;
-            $('input.cvqty[data-cartid=' + cartid + ']').val(fvQty);
-            ajaxUCart(cartid, fvQty);
+            if(validationStock(fvQty)){
+                $('input.cvqty[data-cartid=' + cartid + ']').val(fvQty);
+                ajaxUCart(cartid, fvQty);
+            }
 
         });
-
+        function validationStock(qty,cartid = null){
+            if(qty > 0){
+                return true;
+            }
+            return false;
+        }
         function ajaxUCart(cartid, qty) {
             $.ajax({
                 url: "/cashier/updateCart",
@@ -239,7 +374,6 @@
         $('.delete-item').click(function(e) {
             e.preventDefault();
             var cartid = $(this).data('cartid');
-            alert(cartid);
             $.ajax({
                 url: "/cashier/deleteCart",
                 method: "post",
@@ -257,10 +391,26 @@
         $(".cvqty").on("input", function() {
             var cartid = $(this).data('cartid');
             var fvQty = parseInt($(this).val());
-            ajaxUCart(cartid, fvQty);
+            if(validationStock(fvQty)){
+                ajaxUCart(cartid, fvQty);
+            }
         });
     }
-
+    function toggleBtnKonfir(type = null) {
+        if(type == "active"){
+            $('#konfir_checkout').removeClass('disabled');
+        }else{
+            $('#konfir_checkout').addClass('disabled')
+        }
+    }
+    $("input[name=ibuyer_name]").on("input", function() {
+        var isi = $(this).val();
+        if(isi.length > 0){
+            toggleBtnKonfir("active");
+        }else{
+            toggleBtnKonfir();
+        }
+    });
     $('.seeProduct').click(function(e) {
         e.preventDefault();
         var idp = $(this).data('idp');
@@ -401,25 +551,26 @@
         showCheckoutCartProducts();
         showTotalHargaCart();
     }
-
+    
     $('#konfir_checkout').click(function(e) {
         e.preventDefault();
-
-        $.ajax({
-            url: "/cashier/checkout-check",
-            method: "post",
-            data: {
-                "_token": "{{ csrf_token() }}",
-            },
-            beforeSend: function() {
-                $('#contentConfirmCheckout').html(loadingCompt);
-            },
-            success: function(resp) {
-                $('#contentConfirmCheckout').html(resp);
-                $('#buyername').text($('input[name=ibuyer_name]').val());
-                $('#input_buyername').val($('input[name=ibuyer_name]').val());
-            }
-        });
+        if(!$(this).hasClass('disabled')){
+            $.ajax({
+                url: "/cashier/checkout-check",
+                method: "post",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                },
+                beforeSend: function() {
+                    $('#contentConfirmCheckout').html(loadingCompt);
+                },
+                success: function(resp) {
+                    $('#contentConfirmCheckout').html(resp);
+                    $('#buyername').text($('input[name=ibuyer_name]').val());
+                    $('#input_buyername').val($('input[name=ibuyer_name]').val());
+                }
+            });
+        }
     });
 
     function loadMoreProduct(page) {

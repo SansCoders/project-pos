@@ -9,7 +9,7 @@
                     <strong class="text-dark">{{ $item->nama_product }}</strong>
                     <span class="text-dark mb-3">Stocks : {{ $item->stocks->stock }}&nbsp;{{ $item->unit->unit }}</span>
 
-                    <button class="btn btn-success btn-sm mt-auto addKeranjang" onclick="addKeranjang('{{$item->id}}')" data-idp="{{$item->id}}" type="button">+ Keranjang</button>
+                    <button class="btn btn-success btn-sm mt-auto" onclick="addKeranjang('{{$item->id}}')" data-idp="{{$item->id}}" type="button">+ Keranjang</button>
                 </div>
             </div>
         </div>
