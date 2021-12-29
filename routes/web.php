@@ -84,6 +84,13 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::get('/cashier/transaction/search-product', 'CashierController@SearchinnewTransaction')->name('cashier.newtransaction.search');
 
     Route::post('/cashier/clt', 'CashierController@getdatalistCartContent')->name('cashier.listCart');
+    Route::post('/cashier/cartproductscheckout', 'CashierController@getDataCartProductsCheckoutContent');
+    Route::post('/cashier/get/totalharga', 'CashierController@getDataTotalHarga');
+    Route::post('/cashier/addToCart', 'CashierController@addToCart');
+    Route::post('/cashier/updateCart', 'CashierController@updateCart');
+    Route::post('/cashier/deleteCart', 'CashierController@deleteCart');
+    Route::post('/cashier/checkout-check', 'CashierController@checkoutCheck');
+    Route::post('/cashier/search-brg', 'CashierController@searchProduct');
     // Route::post('/cashier/sendtocart', 'CashierController@sendDataSeeProduct')->name('cashier.sendtocart');
     Route::post('/cashier/sendtocart', 'ProductController@addToCart')->name('cashier.sendtocart');
     Route::post('/cashier/seeproduct', 'CashierController@getdataSeeProduct')->name('cashier.SeeProduct');
