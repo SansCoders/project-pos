@@ -3,10 +3,14 @@
 @section('add-css')
 
 <style>
+    #cProducts {
+        gap: 20px;
+    }
+
     #listproducts {
         flex: 100%;
         overflow-y: scroll;
-        /* height: 100vh; */
+        height: 500px;
         gap: 5px;
     }
 
@@ -16,6 +20,10 @@
 
     #checkoutProducts {
         flex: 40%
+    }
+
+    #countTransactionPending{
+        font-weight: 800
     }
 
     /* Chrome, Safari, Edge, Opera */
@@ -31,14 +39,31 @@
     }
 
 
-    @media (max-width: 800px) {
-        #checkoutProducts {
-            flex: 0;
-            display: none;
+    @media (max-width: 968px) {
+        #listproducts {
+            order: 2;
         }
 
-        #listproducts> {
-            flex: 100%;
+        #listproducts > div {
+            max-width: 100%;
+        }
+        #cProducts {
+            flex-wrap: wrap;
+        }
+
+        #checkoutProducts {
+           order: 1;
+        }
+
+    }
+    @media (max-width: 800px) {
+        #checkoutProducts {
+            /* flex: 1; */
+            /* display: none; */
+        }
+
+        #listproducts > div {
+            max-width: 100%;
         }
     }
 </style>
@@ -68,8 +93,8 @@
     <div class="search-form mb-3 position-sticky" style="max-width: 350px; top:20px; z-index: 1">
         
         <div class="mb-2">
-            <a href="#transactionPending" class="badge badge-warning">
-                Transaksi Pending <span class="ml-3 badge badge-secondary">0</span>
+            <a href="#transactionPending" class="badge badge-light">
+                Transaksi Pending <span class="ml-3 text-danger" id="countTransactionPending">0</span>
             </a>
         </div>
         <!-- <form action="{{ route('cashier.newtransaction.search') }}" method="get"> -->
@@ -91,7 +116,7 @@
         <strong>Warning!</strong> {{ session()->get('error') }}
     </div>
     @endif
-    <div class="d-flex flex-row" style="gap: 20px">
+    <div class="d-flex" id="cProducts">
         <div class="d-flex flex-wrap" style="" id="listproducts">
             @include('another.cashier-productlist2')
         </div>
@@ -103,19 +128,6 @@
                     </h2>
                     <hr class="my-3">
                     <div class="" id="listCheckoutProducts">
-                        <!-- <div class="d-flex align-items-center">
-                            <div class="">lorem</div>
-                            <div class="ml-auto">
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-secondary btn-sm">-</button>
-                                    <input type="number" style="max-width: 50px;" min="1" class="form-control" value="1" name="" id="">
-                                    <button type="button" class="btn btn-secondary btn-sm">+</button>
-                                </div>
-                            </div>
-                            <div class="ml-2">
-                                10,000
-                            </div>
-                        </div> -->
                     </div>
                     <div class="font-weight-bold text-center justify-content-between d-flex mt-3">
                         <h2>Total</h2>
@@ -293,6 +305,11 @@
                         @endisset
                     </tbody>
                 </table>
+                <div class="">
+                    <span>
+                        Total <strong id="totalPendingT">{{$transactions_pending_count}}</strong> item
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -323,6 +340,7 @@
     $(document).ready(function() {
         showCheckoutCartProducts();
         showTotalHargaCart();
+        $('#countTransactionPending').text($('#totalPendingT').text());
     });
 
     function qtyChange() {
@@ -454,25 +472,6 @@
         }).done(qtyChange);
     }
 
-    // $('input[name=search]').keyup(function() {
-    //     var cari = $(this).val();
-    //     console.log(cari);
-    //     $.ajax({
-    //         url: "/cashier/search-brg",
-    //         method: "post",
-    //         data: {
-    //             "_token": "{{ csrf_token() }}",
-    //             cari: cari
-    //         },
-    //         beforeSend: function() {
-    //             $('#lodingsearch').html(loadingCompt);
-    //         },
-    //         success: function(resp) {
-    //             $('#lodingsearch').html('<span>hasil untuk </span><b>"' + cari + '"</b>');
-    //             $('#listproducts').html(resp);
-    //         }
-    //     });
-    // });
     function ajaxSearch(params) {
         $.ajax({
             url: "/cashier/search-brg",
