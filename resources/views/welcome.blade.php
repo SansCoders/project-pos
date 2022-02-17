@@ -6,9 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="POS APP">
     <title>
+        @if (request()->has('category'))
         @php
-            $g_products = App\Product::where('product_status','show')->paginate(12);
-            $count_Allproducts = App\Product::where('product_status','show')->count();
+             $g_products = App\Product::where('product_status','show')->where('category_id',request()->category)->inRandomOrder()->get();
+             $count_Allproducts = App\Product::where('product_status','show')->where('category_id',request()->category)->count();
+        @endphp
+        @else
+        @php
+             $g_products = App\Product::where('product_status','show')->inRandomOrder()->get();
+             $count_Allproducts = App\Product::where('product_status','show')->count();
+        @endphp
+        @endif
+        @php
+           
+            $category_products = App\CategoryProduct::where('status',1)->inRandomOrder()->get();
+
             $g_categ = App\CategoryProduct::where('status',1)->paginate(10);
             $constCompany = App\AboutUs::first();
             if($constCompany == null) {
@@ -29,9 +41,29 @@
                 background: dimgray;
                 opacity: 20%;
             }
+            /* ===== Scrollbar CSS ===== */
+            /* Firefox */
+            * {
+                scrollbar-width: auto;
+                scrollbar-color: #696969;
+            }
+
+            /* Chrome, Edge, and Safari */
+            .categList::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            .categList::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .categList::-webkit-scrollbar-thumb {
+                background-color: #696969;
+                border-radius: 10px;
+            }
         </style>
 </head>
-    <body>
+    <body class="" style="min-height: 100vh">
         <div class="main-content" id="panel">    
             <nav class="navbar navbar-horizontal navbar-expand-lg navbar-dark bg-primary">
                 <div class="container">
@@ -97,18 +129,34 @@
             </div>
             <main>
                 <div class="container mt-n-5">
-                    <h1 class="mb-n-6 text-center font-weight-bolder">OUR PRODUCT</h1>
-                    <div class="row">
-                        @foreach ($g_products as $i_p)
-                            <div class="col-lg-4 col-md-4 col-sm-6 mb-n-6 text-center">
-                                <img src="{{asset($i_p->img)}}" class="card-img" style="border-radius: 10px" alt="">
-                                <span class="h2">{{strtoupper($i_p->nama_product)}}</span>
-                            </div>
-                        @endforeach
+                    <div class="mb-5">
+                        <div class="d-flex categList" style="gap: 20px; overflow-x: scroll">
+                            @if (request()->has('category'))
+                            <a href="/" class="p-4 " style="background: rgb(227, 242, 255);border-radius: 20px; text-transform: lowercase; font-weight: 700; color: rgb(141, 200, 255);">semua</a>
+                            @else
+                            @endif
+                            @foreach ($category_products as $cp)
+                            <a href="?category={{$cp->id}}" class="p-4 " style="background: rgb(227, 242, 255);border-radius: 20px; text-transform: lowercase; font-weight: 700; color: rgb(141, 200, 255);">{{$cp->name}}</a>
+                            @endforeach
+                        </div>
                     </div>
-                    @if(($count_Allproducts - $g_products->count()) > 0)
-                    <h1 class="mb-n-6 text-center font-weight-bolder">AND {{$count_Allproducts - $g_products->count()}} MORE</h1>
-                    @endif
+                    <div class="">
+                        <h1 class="mb-n-6 text-center font-weight-bolder">OUR PRODUCT</h1>
+                        <div class="row">
+                            @foreach ($g_products as $i_p)
+                                <div class="col-lg-2 col-md-2 col-sm-6 mb-n-6 text-center">
+                                    <img src="{{asset($i_p->img)}}" class="card-img" style="border-radius: 10px" alt="">
+                                    <div class="d-flex flex-column text-left mt-3 p-2">
+                                        <span class="h5 font-weight-bolder">{{strtoupper($i_p->nama_product)}}</span>
+                                        <span class="h5">@currency($i_p->price)</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @if(($count_Allproducts - $g_products->count()) > 0)
+                        <h1 class="mb-n-6 text-center font-weight-bolder">AND {{$count_Allproducts - $g_products->count()}} MORE</h1>
+                        @endif
+                    </div>
                 </div>
             </main>
             <footer class="footer pt-0 pb-0">
