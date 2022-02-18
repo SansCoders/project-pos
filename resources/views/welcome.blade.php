@@ -11,6 +11,11 @@
              $g_products = App\Product::where('product_status','show')->where('category_id',request()->category)->inRandomOrder()->get();
              $count_Allproducts = App\Product::where('product_status','show')->where('category_id',request()->category)->count();
         @endphp
+        @elseif(request()->has('cari'))
+        @php
+             $g_products = App\Product::where('product_status','show')->where('nama_product',"like",'%'.request()->cari.'%')->inRandomOrder()->get();
+             $count_Allproducts = App\Product::where('product_status','show')->where('nama_product',"like",'%'.request()->cari.'%')->count();
+        @endphp
         @else
         @php
              $g_products = App\Product::where('product_status','show')->inRandomOrder()->get();
@@ -119,7 +124,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text"><i class="fas fa-search"></i></span>
                         </div>
-                        <input class="form-control" placeholder="Cari Apa ?" type="text">
+                        <input class="form-control" placeholder="Cari Apa ?" name="cari" type="text">
                       </div>
                     </div>
                     <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main" aria-label="Close">
