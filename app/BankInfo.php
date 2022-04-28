@@ -9,4 +9,9 @@ class BankInfo extends Model
     protected $fillable = [
         'bank_name', 'rekening_number', 'rekening_owner_name', 'qr_code'
     ];
+
+    public static function getAllBankInfos()
+    {
+        return BankInfo::all();
+    }
 }

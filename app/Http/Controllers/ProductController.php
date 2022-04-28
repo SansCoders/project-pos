@@ -474,7 +474,8 @@ class ProductController extends Controller
             ]);
             $faktur->save();
             Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->delete();
-            return redirect()->back()->with('success', 'Berhasil dikirim ke kasir, silahkan menunggu untuk diproses');
+            return redirect()->route('pembayaran.details', $faktur->order_id)->with('success', 'Berhasil dikirim ke kasir, silahkan melakukan pembayaran untuk diproses');
+            // return redirect()->back()->with('success', 'Berhasil dikirim ke kasir, silahkan menunggu untuk diproses');
         } else {
             return redirect()->back()->with('error', 'tidak bisa diproses, ada kesalahan');
         }

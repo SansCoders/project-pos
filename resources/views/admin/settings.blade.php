@@ -76,11 +76,11 @@
                             <li class="nav-item">
                                 <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab" data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">Profile</a>
                             </li>
-                            {{-- <li class="nav-item">
-                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">Logo</a>
-                            </li> --}}
                             <li class="nav-item">
                                 <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab" data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">Change Password</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-4-tab" data-toggle="tab" href="#tabs-icons-text-4" role="tab" aria-controls="tabs-icons-text-4" aria-selected="false">Bank Account</a>
                             </li>
                         </ul>
                     </div>
@@ -165,6 +165,92 @@
                                     <button class="btn btn-block btn-success">ganti password</button>
                                   </div>
                                 </form>
+                            </div>
+                            <div class="tab-pane fade" id="tabs-icons-text-4" role="tabpanel" aria-labelledby="tabel-icons-text-4-tab">
+                              <div class="mb-3">
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#bankInfo">
+                                  tambah
+                                </button>
+                                
+                                <!-- Modal -->
+                                <div class="modal fade" id="bankInfo" tabindex="-1" aria-labelledby="bankInfoLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="bankInfoLabel">Tambah Data Bank</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <form action="add_bank_info" method="post">
+                                        @csrf
+                                        <div class="modal-body">
+                                          <div class="form-group">
+                                            <label>Jenis Bank</label>
+                                              <div class="input-group mb-3">
+                                                <input type="text" name="bank_name" class="form-control" placeholder="BCA, BNI, BRI, etc" required>
+                                              </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label>atas nama</label>
+                                              <div class="input-group mb-3">
+                                                <input type="text" name="owner_acc" class="form-control" placeholder="nama pemilik bank" required>
+                                              </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label>nomor rekening</label>
+                                              <div class="input-group mb-3">
+                                                <input type="text" name="rekening_number" class="form-control" placeholder="nomor rekening" required>
+                                              </div>
+                                          </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                          <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <table class="table">
+                                <tr>
+                                  <td>no</td>
+                                  <td>Bank</td>
+                                  <td>Atas Nama</td>
+                                  <td>Details</td>
+                                </tr>
+                                @foreach (App\BankInfo::getAllBankInfos() as $index => $bankInfo)
+                                    <tr>
+                                      <td>{{$index+1}}</td>
+                                      <td>{{$bankInfo->bank_name}}</td>
+                                      <td>{{$bankInfo->rekening_owner_name}}</td>
+                                      <td>
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#bankDetails{{$index}}">
+                                          details
+                                        </button>
+                                      </td>
+                                    </tr>
+                                    
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="bankDetails{{$index}}" tabindex="-1" aria-labelledby="bankDetails{{$index}}Label" aria-hidden="true">
+                                      <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <h5 class="modal-title" id="bankDetails{{$index}}Label">Details</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                          <div class="modal-body">
+                                            {{$bankInfo}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                @endforeach
+                              </table>
                             </div>
                         </div>
                     </div>

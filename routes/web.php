@@ -59,6 +59,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/admin/settings', 'AdminController@settingsPage')->name('admin.settings');
     Route::post('/admin/settings', 'AdminController@updateInfoPage')->name('admin.update-settings');
     Route::post('/admin/settings/cp', 'AdminController@updatePassword')->name('admin.update-settings.cp');
+    // Route::get('/admin/settings', 'AdminController@settingsPage')->name('admin.settings');
+    Route::post('/admin/add_bank_info', 'BankInfoController@addBankInfo')->name('add_bank_info');
 });
 
 Route::group(['middleware' => ['auth:cashier']], function () {
@@ -153,6 +155,7 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/invoice', function () {
         return redirect()->back();
     });
+    Route::get('pembayaran-{invoice}', 'QRController@pembayaranDetails')->name('pembayaran.details');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');
@@ -160,3 +163,6 @@ Route::group(['middleware' => ['auth:admin,cashier']], function () {
 Route::group(['middleware' => ['auth:admin,cashier,web']], function () {
     Route::put('/editcartqty/{id}', 'ProductController@editQtyCart_put')->name('editQtyCart.put');
 });
+
+
+Route::get('generate_qr', 'QRController@qr_test');
