@@ -11,9 +11,8 @@
                     <div class="card-header border-0 d-flex justify-content-between align-items-center">
                         <span>List Transactions</span>
                         <div class="">
-                            <form action="{{route('searchTransactions')}}" method="POST">
-                                @csrf
-                                <input type="text" name="search" class="form-control form-control-alternative" placeholder="Cari">
+                            <form method="GET">
+                                <input type="text" name="search" class="form-control form-control-alternative" value="{{request()->search}}" placeholder="Cari">
                             </form>
                         </div>
                     </div>
@@ -78,7 +77,11 @@
                                         @endif
                                         <td class="text-center pl-0 pr-0">
                                             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                                @if ($order->status == 'pending')
+                                                <a href="{{route('pembayaran.details',$order->transaction_id)}}" class="btn btn-info pl-2 pr-2">upload bukti pembayaran</a>
+                                                @else    
                                                 <button type="button" class="btn btn-info pl-2 pr-2 product_details" data-toggle="modal" data-idpro="{{$order->id}}" data-target="#detailsProduct">Details</button>
+                                                @endif
                                                 <form action="/invoice" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="orderId" value="{{ $order->id }}" required>
@@ -133,13 +136,17 @@
                                         @endif
                                         <td class="text-center pl-0 pr-0">
                                             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                                @if ($order->status == 'pending')
+                                                <a href="{{route('pembayaran.details',$order->transaction_id)}}" class="btn btn-info pl-2 pr-2">upload bukti pembayaran</a>
+                                                @else    
                                                 <button type="button" class="btn btn-info pl-2 pr-2 product_details" data-toggle="modal" data-idpro="{{$order->id}}" data-target="#detailsProduct">Details</button>
+                                                @endif
                                                 <form action="/invoice" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="orderId" value="{{ $order->id }}" required>
                                                     <button type="submit" class="btn btn-success btn-icon-only pl-2 pr-2"><i class="fa fa-download"></i></button>
                                                 </form>
-                                              </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -232,23 +232,55 @@
                                       </td>
                                     </tr>
                                     
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="bankDetails{{$index}}" tabindex="-1" aria-labelledby="bankDetails{{$index}}Label" aria-hidden="true">
-                                      <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                          <div class="modal-header">
-                                            <h5 class="modal-title" id="bankDetails{{$index}}Label">Details</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                              <span aria-hidden="true">&times;</span>
-                                            </button>
+                                  </div>
+                                  {{-- <!-- Modal -->
+                                  <div class="modal fade" id="bankDetails{{$index}}" tabindex="-1" aria-labelledby="bankDetails{{$index}}Label" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="bankDetails{{$index}}Label">Details</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <div class="">
+                                            <table class="table">
+                                              <thead>
+                                                <tr>
+                                                  <th>Bank</th>
+                                                  <th>Nomor Rekening</th>
+                                                  <th>Atas Nama</th>
+                                                  <th>Aksi</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <td>{{$bankInfo}}</td>
+                                                  <td></td>
+                                                  <td></td>
+                                                  <td>#</td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
-                                          <div class="modal-body">
-                                            {{$bankInfo}}
-                                          </div>
+                                          @if($bankInfo->qr_code == "" || $bankInfo->qr_code == "#")
+                                            <form action="" method="post">
+                                              @csrf
+                                              <input type="hidden" name="biId" value="{{$bankInfo->id}}">
+                                              <button class="btn btn-success">generate qr</button>
+                                            </form>
+                                          @else
+                                          <form action="" method="post">
+                                            @csrf
+                                            <input type="hidden" name="biId" value="{{$bankInfo->id}}">
+                                            <button class="btn btn-success btn-sm">regenerate qr</button>
+                                          </form>
+                                          @endif
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  </div> --}}
                                 @endforeach
                               </table>
                             </div>
@@ -258,6 +290,73 @@
             </div>
         </div>
     </div>
+    @foreach (App\BankInfo::getAllBankInfos() as $index => $bankInfo)
+    <!-- Modal -->
+    <div class="modal fade" id="bankDetails{{$index}}" tabindex="-1" aria-labelledby="bankDetails{{$index}}Label" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="bankDetails{{$index}}Label">Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Bank</th>
+                    <th>Nomor Rekening</th>
+                    <th>Atas Nama</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{$bankInfo->bank_name}}</td>
+                    <td>{{$bankInfo->rekening_number}}</td>
+                    <td>{{$bankInfo->rekening_owner_name}}</td>
+                    <td>
+                      <div class="">
+                        <form action="{{route('admin.regenerate-qr',)}}" method="get">
+                          <input type="hidden" name="dBid" value="{{$bankInfo->id}}">
+                          <button type="submit" class="btn btn-sm btn-info">ubah</button>
+                        </form>
+                        <form action="{{route('delete.bank')}}" method="post">
+                          @csrf
+                          @method('delete')
+                          <input type="hidden" name="id" value="{{$bankInfo->id}}">
+                          <button type="submit" class="btn btn-sm btn-outline-danger">hapus</button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            @if($bankInfo->qr_code == "" || $bankInfo->qr_code == "#")
+            <div class="alert alert-danger">
+              <strong>QR Code Belum Di Generate</strong>
+            </div>
+              <form action="" method="post">
+                @csrf
+                <input type="hidden" name="biId" value="{{$bankInfo->id}}">
+                <button class="btn btn-success">generate qr</button>
+              </form>
+            @else
+            <img src="{{asset($bankInfo->qr_code)}}" alt="">
+            {{-- <form action="" method="post">
+              @csrf
+              <input type="hidden" name="biId" value="{{$bankInfo->id}}">
+              <button class="btn btn-success btn-sm">regenerate qr</button>
+            </form> --}}
+            @endif
+          </div>
+        </div>
+      </div>
+    </div>
+    @endforeach
 @endsection
 
 @push('scripts')

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome-v2');
 });
 
 Auth::routes(['register' => false]);
@@ -60,7 +60,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::post('/admin/settings', 'AdminController@updateInfoPage')->name('admin.update-settings');
     Route::post('/admin/settings/cp', 'AdminController@updatePassword')->name('admin.update-settings.cp');
     // Route::get('/admin/settings', 'AdminController@settingsPage')->name('admin.settings');
+    Route::post('/admin/regenerate_qr_bank', 'BankInfoController@regenerateQr')->name('admin.regenerate-qr');
     Route::post('/admin/add_bank_info', 'BankInfoController@addBankInfo')->name('add_bank_info');
+    Route::delete('/admin/delete_bank_info', 'BankInfoController@deleteBank')->name('delete.bank');
 });
 
 Route::group(['middleware' => ['auth:cashier']], function () {
@@ -144,10 +146,10 @@ Route::group(['middleware' => ['auth:web']], function () {
 
     Route::get('/my-orders', 'HomeController@myOrders')->name('my-orders');
     Route::post('/my-orders/details', 'HomeController@getdataReceipts');
-    Route::get('/my-orders/search', function () {
-        return abort(404);
-    });
-    Route::post('/my-orders/search', 'HomeController@searchTransactions')->name('searchTransactions');
+    // Route::get('/my-orders/search', function () {
+    //     return abort(404);
+    // });
+    // Route::get('/my-orders', 'HomeController@searchTransactions')->name('searchTransactions');
 
     Route::get('/my', 'HomeController@myProfile');
 
@@ -156,6 +158,8 @@ Route::group(['middleware' => ['auth:web']], function () {
         return redirect()->back();
     });
     Route::get('pembayaran-{invoice}', 'QRController@pembayaranDetails')->name('pembayaran.details');
+    Route::post('upload-pembayaran/{invoiceNumber}', 'QRController@uploadPembayaran')->name('upload-bukti-pembayaran');
+    Route::delete('delete-pembayaran/{invoiceNumber}', 'QRController@deleteBuktiPembayaran')->name('delete-bukti-pembayaran');
 });
 Route::group(['middleware' => ['auth:admin,cashier']], function () {
     Route::get('/profile/{userid}', 'ProfileController@detailsUser')->name('user.profile');
@@ -164,5 +168,5 @@ Route::group(['middleware' => ['auth:admin,cashier,web']], function () {
     Route::put('/editcartqty/{id}', 'ProductController@editQtyCart_put')->name('editQtyCart.put');
 });
 
-
+Route::get('details_bank/id={idbank}', 'BankInfoController@detailsBankInfo')->name('details-bank-info');
 Route::get('generate_qr', 'QRController@qr_test');

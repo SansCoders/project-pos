@@ -11,6 +11,25 @@
             <a href="#" class="btn btn-neutral"><i class="fa fa-arrow-alt-circle-left"></i></a>
             <h2 class="ml-2 mb-0"><i class="fa fa-receipt"></i> Order Details</h2>
         </div>
+        
+        @if (session()->get('error'))
+                    <div class="alert alert-danger alert-block">
+                        <button type="button" class="close" data-dismiss="alert">×</button> 
+                        <strong>{{ session()->get('error') }}</strong>
+                    </div>
+                @endif
+                @if (session()->get('success'))
+                    <div class="alert alert-success alert-block">
+                        <button type="button" class="close" data-dismiss="alert">×</button> 
+                        <strong>{{ session()->get('success') }}</strong>
+                    </div>
+                @endif
+                @if ($message = Session::get('err'))
+                    <div class="alert alert-danger alert-block">
+                        <button type="button" class="close" data-dismiss="alert">×</button> 
+                        <strong>{{ $message }}</strong>
+                    </div>
+        @endif
         <div class="card">
             <div class="card-body" id="content-Receipts_d" data-order-id="{{$FakturDetails->id}}">
                 <div id="loading">
@@ -33,7 +52,7 @@
                             </ul>
                         </div>
                         <div class="">
-                            <button class="btn btn-lg btn-success">upload bukti pembayaran</button>
+                            <button class="btn btn-lg btn-success" type="button" data-toggle="modal" data-target="#formUploadBukti">upload bukti pembayaran</button>
                         </div>
                     </div>
                     <div class="tab-content" id="pills-tabContent">
@@ -62,6 +81,67 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="formUploadBukti" tabindex="-1" role="dialog" aria-labelledby="formUploadBuktiLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="formUploadBuktiLabel">Upload Bukti Pembayaran</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{route('upload-bukti-pembayaran',$FakturDetails->order_id)}}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="d-flex flex-wrap">
+                        <div class="form-group">
+                            <label>Bank</label>
+                            <select class="form-control" name="bank_id" required>
+                                @foreach (\App\BankInfo::getAllBankInfos() as $key => $bankInfo)
+                                <option value="{{$bankInfo->id}}">{{$bankInfo->bank_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group ml-2">
+                            <label>Bukti Pembayaran</label>
+                            <input type="file" name="file" class="form-control">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">upload</button>
+                </form>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>No</th>
+                            <th>Bukti Pembayaran</th>
+                            <th>Tanggal Upload</th>
+                            <th>Aksi</th>
+                        </tr>
+                        @foreach (\App\BuktiTransfer::getBuktiTF($FakturDetails->id) as $index => $item)
+                        <tr>
+                            <td>{{$index + 1}}</td>
+                            <td>
+                                <a href="{{asset($item->bukti_transfer_image_path)}}" target="_blank">lihat</a>
+                            </td>
+                            <td>{{$item->created_at}}</td>
+                            <td>
+                                <form action="{{route('delete-bukti-pembayaran',$FakturDetails->order_id)}}" method="post">
+                                    @csrf
+                                    @method('delete')
+                                    <input type="hidden" name="id"value="{{$item->id}}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">delete</button>
+                                </form>
+                        </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+          </div>
         </div>
     </div>
 @endsection

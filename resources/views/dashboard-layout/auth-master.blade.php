@@ -61,7 +61,7 @@
       <div class="row align-items-center justify-content-xl-between">
         <div class="col-xl-6">
           <div class="copyright text-center text-xl-left text-muted">
-          &copy; 2020 <a href="{{url('/')}}" class="font-weight-bold ml-1">
+          &copy; <script>document.write(new Date().getFullYear());</script> <a href="{{url('/')}}" class="font-weight-bold ml-1">
           @isset ($company_profile->name)
             {{$company_profile->name}}
           @endisset</a>
