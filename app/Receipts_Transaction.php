@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Receipts_Transaction extends Model
 {
@@ -19,5 +20,10 @@ class Receipts_Transaction extends Model
     public function facktur()
     {
         return $this->hasOne(Faktur::class, 'order_id', 'transaction_id');
+    }
+
+    public static function getTransaction()
+    {
+        return self::where('user_id', Auth::user()->id)->where('is_done', 0)->where('status', 'pending')->orderBy('created_at', 'DESC')->get();
     }
 }

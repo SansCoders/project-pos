@@ -110,7 +110,7 @@
                     $notifcount = 0;    
                   @endphp
                   @foreach ($cekTransactions->take(5) as $itemT)
-                    <a href="#!" class="list-group-item list-group-item-action">
+                    <a href="{{route('my-orders',['search'=>$itemT->transaction_id])}}" class="list-group-item list-group-item-action">
                       <div class="row align-items-center">
                         <div class="col-auto">
                           <!-- Avatar -->

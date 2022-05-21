@@ -144,6 +144,28 @@
                         </div>
                       </div>
                 </div>
+                <div class="card">
+                    <div class="card-header p-1">
+                        <h4 class=" m-0">Bukti Pembayaran</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            @if (count(\App\BuktiTransfer::getBuktiTF($transaction->id)) == 0)
+                                <div class="alert alert-secondary">belum ada bukti pembayaran.</div>
+                            @endif
+                            @foreach (\App\BuktiTransfer::getBuktiTF($transaction->id) as $item)
+                            <a href="{{asset($item->bukti_transfer_image_path)}}" class="list-group-item list-group-item-action d-flex justify-content-between" target="_blank">
+                                <div class="">{{$item->keterangan}}</div>
+                                <div class="">
+                                    <h6 class="badge badge-sm badge-secondary">{{$item->created_at}}</h6>
+                                </div>
+                            </a>
+                            @endforeach
+                          </div>
+                        <div class="d-flex flex-wrap">
+                        </div>
+                    </div>
+                </div>
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <ul class="list-group list-group-flush" data-toggle="checklist">
