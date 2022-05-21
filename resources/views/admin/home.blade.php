@@ -221,7 +221,11 @@
                   @endphp
                     @foreach ($activitiesStock as $a_stock)
                         <tr>
-                          <th scope="row">{{$a_stock->product->nama_product}}</th>
+                          <th scope="row">
+                            @isset($a_stock->product)
+                            {{$a_stock->product->nama_product}}
+                            @endisset
+                          </th>
                           <td>{{Carbon\Carbon::parse($a_stock->created_at)->diffForHumans()}}</td>
                           <td>
                             @if ($a_stock->type_activity == "in" || $a_stock->type_activity == "add")
