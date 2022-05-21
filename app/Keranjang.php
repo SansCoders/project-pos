@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Keranjang extends Model
 {
@@ -13,5 +14,10 @@ class Keranjang extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public static function getCart()
+    {
+        return self::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
     }
 }

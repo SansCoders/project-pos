@@ -57,12 +57,15 @@ class HomeController extends Controller
         return view('myprofile', compact(['user', 'cart', 'cekTransactions', 'myTransaction']));
     }
 
-    public function myOrders()
+    public function myOrders(Request $request)
     {
         $receipts = Receipts_Transaction::where('user_id', Auth::user()->id)->where('order_via', 3)->where('status', 1);
         $allOrders = Receipts_Transaction::where('user_id', Auth::user()->id)->where('order_via', 3)->orderByRaw('status, "pending", "confirmed", "canceled", transaction_id desc')->paginate(10);
         $cekTransactions = $receipts->where('is_done', 0)->orderBy('created_at', 'DESC')->get();
         $cart = Keranjang::where('user_id', Auth::user()->id)->where('user_type', 3)->get();
+        if ($request->has('search')) {
+            return $this->searchTransactions($request);
+        }
         return view('ordersList', compact(['cart', 'allOrders', 'cekTransactions']));
     }
     public function searchTransactions(Request $request)

@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="copyright text-center mt-3 pt-4 text-muted align-items-center">
-                &copy; 2020 <a href="{{ url('/') }}" class="font-weight-bold ml-1">{{$constNamaCompany}}</a>
+                &copy; <script>document.write(new Date().getFullYear());</script> <a href="{{ url('/') }}" class="font-weight-bold ml-1">{{$constNamaCompany}}</a>
             </div>
         </div>
     </div>
