@@ -85,6 +85,13 @@
                                         <input type="hidden" name="orderId" value="{{ $t->id }}" required>
                                         <button type="submit" class="btn btn-success btn-icon-only pl-2 pr-2"><i class="fa fa-download"></i></button>
                                     </form>
+                                    <form action="{{ route('cashier.printFaktur') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="orderId" value="{{ $t->id }}" required>
+                                        <button type="submit" class="btn btn-info btn-icon-only pl-2 pr-2 mx-2">
+                                            <i class="fa fa-print"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

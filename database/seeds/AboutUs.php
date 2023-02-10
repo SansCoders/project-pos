@@ -12,7 +12,7 @@ class AboutUs extends Seeder
     public function run()
     {
         DB::table('about_us')->insert([
-            'name' => 'Toko Habibi',
+            'name' => 'Toko',
             'img_company' => 'assets/img/brand/favicon.png',
             'phone' => null,
             'address' => "Jl.",

@@ -10,6 +10,17 @@
       'PDF' => 'Barryvdh\\DomPDF\\Facade',
     ),
   ),
+  'charlieuki/receiptprinter' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'charlieuki\\ReceiptPrinter\\ReceiptPrinterServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'ReceiptPrinter' => 'charlieuki\\ReceiptPrinter\\Facades\\ReceiptPrinter',
+    ),
+  ),
   'facade/ignition' => 
   array (
     'providers' => 

@@ -13,6 +13,7 @@ use App\Prices_Custom;
 use Illuminate\Http\Request;
 use App\StockActivity;
 use App\User;
+use App\BuktiTransfer;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Illuminate\Support\Facades\Auth;
@@ -294,7 +295,7 @@ class CashierController extends Controller
         }
         $receipt = Receipts_Transaction::where('transaction_id', $orderid)->where('is_done', 0)->where('status', 1)->first();
         if ($receipt == null) {
-            return redirect()->route('cashier.transaction')->with('error', 'tidak valid!');
+            return redirect()->route('cashier.transaction')->with('error', 'receipt tidak valid!');
         }
 
         $confirm = Receipts_Transaction::where('transaction_id', $orderid)->where('is_done', 0)->update([
@@ -436,94 +437,11 @@ class CashierController extends Controller
             ]);
             $faktur->save();
             Keranjang::where('user_id', $d_cashier->id)->where('user_type', 2)->delete();
+	    PrintController::printFakturByTID($receipt->id);
             return redirect()->route('cashier.transaction')->with('success', 'order id #' . $receipt->transaction_id . ' berhasil diproses')->with('id_t', $receipt->transaction_id);
         } else {
             return redirect()->back()->with('error', 'tidak bisa diproses, ada kesalahan');
         }
-        // for ($i = 0; $i < count($idproduct); $i++) {
-        //     $cekProduct = Product::where('id', $idproduct[$i])->first();
-        //     if (!$cekProduct || $cekProduct == null) return false;
-        //     $cekStock = Stock::where('product_id', $cekProduct->id)->first();
-
-        //     if ($bv_product[$i] > $cekStock->stock || $bv_product[$i] == 0)
-        //         return response()->json([
-        //             'status' => 'error',
-        //             'msg' => "pembelian produk " . $cekProduct->nama_product . " melebihi stock yang tersedia"
-        //         ]);
-        //     $int_productId[] = (int)$idproduct[$i];
-        //     $name_product[] = $cekProduct->nama_product;
-        //     $products_prices[] = $cekProduct->price;
-        //     $total_productsprices[] = $cekProduct->price * (int)$bv_product[$i];
-        //     $int_buyvalue[] = (int)$bv_product[$i];
-        // }
-
-        // $latestOrder = Receipts_Transaction::orderBy('created_at', 'DESC')->first();
-        // if ($latestOrder == null) {
-        //     $latestOrder = 0;
-        // } else {
-        //     $latestOrder = $latestOrder->count();
-        // }
-        // $cekFaktur = Faktur::orderBy('created_at', 'desc')->first();
-        // if ($cekFaktur == null) {
-        //     $fakNum = 0;
-        // } else {
-        //     $fakNum = $cekFaktur->faktur_number;
-        // }
-        // $r = date('Ymd') . $d_cashier->id . "2" . str_pad($latestOrder + 1, 4, "0", STR_PAD_LEFT);
-        // $now = Carbon::now();
-        // $receipt = new Receipts_Transaction([
-        //     'transaction_id' => $r,
-        //     'user_id' => $d_cashier->id,
-        //     'user_name' => $buyer_name,
-        //     'cashier_id' => $d_cashier->id,
-        //     'cashier_name' => $d_cashier->name,
-        //     'products_id' => json_encode($int_productId),
-        //     'products_list' => json_encode($name_product),
-        //     'products_buyvalues' => json_encode($int_buyvalue),
-        //     'products_prices' => json_encode($products_prices),
-        //     'type' => 1,
-        //     'is_done' => 1,
-        //     'done_time' => $now->toDateTimeString(),
-        //     'total_productsprices' => json_encode($total_productsprices),
-        //     'order_via' => 2,
-        //     'status' => 2
-        // ]);
-        // $save = $receipt->save();
-        // if ($save) {
-        //     $i = 0;
-        //     foreach ($int_productId as $p_i) {
-        //         $changeStock = Stock::where('product_id', $p_i)->first();
-        //         if ($changeStock != null) {
-        //             $us = Stock::where('product_id', $p_i)->update(['stock' => ($changeStock->stock - $int_buyvalue[$i])]);
-        //             if ($us) {
-        //                 $a_stock = new StockActivity([
-        //                     'stocks_id' => $changeStock->id,
-        //                     'product_id' => $p_i,
-        //                     'users_id' => $d_cashier->id,
-        //                     'user_type_id' => 2,
-        //                     'type_activity' => 2,
-        //                     'stock' => $int_buyvalue[$i]
-        //                 ]);
-        //                 $a_stock->save();
-        //             }
-        //         }
-        //         $i++;
-        //     }
-
-        //     $faktur = new Faktur([
-        //         'order_id' => $receipt->transaction_id,
-        //         'faktur_number' => ($fakNum + 1),
-        //     ]);
-        //     $faktur->save();
-        //     Keranjang::where('user_id', Auth::user()->id)->where('user_type', 2)->delete();
-        //     $num_padded = sprintf("%08d", $faktur->faktur_number);
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'noorder' => $receipt->transaction_id,
-        //         'nofaktur' => $num_padded,
-        //         'msg' => 'Transaksi berhasil dilakukan dengan nomor order #' . $receipt->transaction_id
-        //     ]);
-        // }
     }
 
 
@@ -562,7 +480,7 @@ class CashierController extends Controller
         $orderId = $id;
         $Receipt = Receipts_Transaction::where('transaction_id', $orderId)->first();
         if ($Receipt == null) {
-            return redirect()->back()->with('error', 'tidak valid');
+            return redirect()->back()->with('error', 'receipt tidak valid');
         }
         $pdf = PDF::loadView('invoice', compact(['Receipt', 'constCompany']));
         $num_padded = sprintf("%02d", $Receipt->facktur->faktur_number);
@@ -577,7 +495,7 @@ class CashierController extends Controller
         $orderId = $request->orderId;
         $Receipt = Receipts_Transaction::where('id', $orderId)->first();
         if ($Receipt == null) {
-            return redirect()->back()->with('error', 'tidak valid');
+            return redirect()->back()->with('error', 'receipt tidak valid');
         }
         $pdf = PDF::loadView('invoice', compact(['Receipt', 'constCompany']));
         $num_padded = sprintf("%02d", $Receipt->facktur->faktur_number);

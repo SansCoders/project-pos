@@ -100,10 +100,10 @@
                           <td>@currency($product->price)</td>
                           <td>
                             <a class="btn btn-primary" href="/cashier/product_info/{{ $product->id }}">Edit</a>
-                            <form action="{{ route('cashier.products.destroyTemp',$product->id) }}" id="fdelet" method="POST" style="display: contents">
+                            <form action="{{ route('cashier.products.destroyTemp',$product->id) }}" id="fdelet{{$product->id}}" method="POST" style="display: contents">
                               @csrf
                               @method('PUT')
-                              <button class="btn btn-icon btn-danger hpsbtn" type="button">
+                              <button class="btn btn-icon btn-danger hpsbtn" data-idp="{{$product->id}}" type="button">
                                   <span class="btn-inner--icon"><i class="fa fa-trash"></i></span>
                                   <span class="btn-inner--text">Hapus</span>
                               </button>
@@ -269,6 +269,7 @@
         } );
   });
   $('.hpsbtn').click(function(){
+    var idp = $(this).data('idp');
     Swal.fire({
       title: 'Yakin ingin menghapus product tersebut?',
       showDenyButton: true,
@@ -278,7 +279,7 @@
       denyButtonText: `Batal`,
     }).then((result) => {
       if(result.isConfirmed){
-        $('#fdelet').submit();
+        $('#fdelet'+idp).submit();
         Swal.fire({
           icon: 'success',
           showConfirmButton: false,

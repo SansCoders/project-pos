@@ -18,6 +18,8 @@ Route::get('/', function () {
     return view('welcome-v2');
 });
 
+Route::get('/print-thermal', 'PrintController@printThermal')->name('print.thermal');
+
 Auth::routes(['register' => false]);
 
 Route::get('/login/admin', 'Auth\LoginController@showAdminLoginForm');
@@ -126,6 +128,7 @@ Route::group(['middleware' => ['auth:cashier']], function () {
     Route::post('/list-orders/details', 'CashierController@getdataReceipts');
     Route::get('/invoice/view-{id}', 'CashierController@previewFaktur')->name('cashier.previewFaktur');
     Route::post('/invoice/download', 'CashierController@cetakFaktur')->name('cashier.downloadFaktur');
+    Route::post('/invoice/print', 'PrintController@printFaktur')->name('cashier.printFaktur');
 });
 
 Route::group(['middleware' => ['auth:web']], function () {

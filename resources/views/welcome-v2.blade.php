@@ -163,7 +163,7 @@
                         <div class="hero__item" style="background-color: #F5F5F5">
                             <div class="hero__text">
                                 <span>Menyediakan</span>
-                                <h2>ATK, Komputer, Elektronik, Aktivitas Kantor (Fotocopy)</h2>
+                                <h2>{{$constCompany->about}}</h2>
                             </div>
                         </div>
                     </div>
